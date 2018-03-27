@@ -28,7 +28,7 @@ class ActivityPubController < ApplicationController
   def activity
     @version = Federated::Version.find(params[:version_id])
     @account = Account.find(@version.federated_message.local_account_id)
-    render template: 'activity_pub/version.json.jbuilder'
+    render template: 'activity_pub/version.json.jbuilder', locals: { version: @version, account: @account }
   end
 
   def inbox_incoming_message

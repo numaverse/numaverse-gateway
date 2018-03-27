@@ -40,6 +40,11 @@ class Federated::Account < ApplicationRecord
     )
   end
 
+  # hack because sometimes class names clash :(
+  def local_account
+    Account.find_by(id: local_account_id)
+  end
+
   private
 
   def generate_keypair
