@@ -41,9 +41,11 @@ class Federated::Account < ApplicationRecord
   end
 
   # hack because sometimes class names clash :(
-  def local_account
-    Account.find_by(id: local_account_id)
-  end
+  # def local_account
+  #   if super == self
+  #     Account.find_by(id: local_account_id)
+  #   end
+  # end
 
   private
 

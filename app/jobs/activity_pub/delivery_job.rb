@@ -8,10 +8,12 @@ class ActivityPub::DeliveryJob < ApplicationJob
       deliver_from_account = follow.to_account
       next unless deliver_to_account.remote? && deliver_from_account.local?
       inbox = deliver_to_account.object_data['inbox']
+      Rails.logger.debug "Delivering to inbox: #{inbox}"
       renderer = ApplicationController.new
-      json = renderer.render_to_string('activity_pub/_version.json.jbuilder', locals: { 
+      account = Account.find(deliver_from_account.local_account_id)
+      json = renderer.render_to_string('activity_pub/version.json.jbuilder', locals: { 
         version: version, 
-        account: deliver_from_account.local_account 
+        account: account,
       })
       request = ActivityPub::Request.new(inbox, 
         from_account: deliver_from_account, 

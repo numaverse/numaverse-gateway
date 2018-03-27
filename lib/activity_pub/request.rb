@@ -36,7 +36,8 @@ module ActivityPub
       # puts string_to_sign
       signed = Base64.strict_encode64(@from_account.key.sign(OpenSSL::Digest::SHA256.new, string_to_sign))
       # puts signed
-      key_id = Rails.application.routes.url_helpers.ap_account_url(@from_account.local_account.hash_address, anchor: 'main-key')
+      local_account = Account.find(@from_account.local_account_id)
+      key_id = Rails.application.routes.url_helpers.ap_account_url(local_account.hash_address, anchor: 'main-key')
       header_keys = signing_headers.keys.join(' ').downcase
 
       signature = "keyId=\"#{key_id}\",algorithm=\"rsa-sha256\",headers=\"#{header_keys}\",signature=\"#{signed}\""
