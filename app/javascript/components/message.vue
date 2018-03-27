@@ -1,0 +1,303 @@
+<template lang="jade">
+  .card.mb-3.message
+    alerts(ref="alerts")
+    notifications(group="hide-errors", :duration="-1")
+    notifications(group="hide-message", :duration="10000")
+    b-dropdown(:id="'message-actions-dropdown-'+messageData.id", class="message-actions-dropdown", size="sm", text="Actions", :right="true")
+      b-dropdown-item(:href="'/transactions/'+messageData.tx_id", v-if="messageData.tx_id") View Transaction
+      b-dropdown-item(:href="'/messages/'+messageData.id") Details
+      b-dropdown-item(:href="'/messages/'+messageData.id+'/edit'", v-if="messageOwnedBycurrentAccount()") Edit
+      b-dropdown-item(href="javascript:;", v-if="messageOwnedBycurrentAccount()", @click="hideMessage") Hide
+    .card-header
+      .row
+        .col-2
+          img.img-fluid.img-thumbnail(:src='messageData.account.avatar.thumb', :alt='messageData.sender')
+        .col
+          h5.mt-1.mb-0.text-truncate.username 
+            a.text-dark(:href="'/u/'+messageData.account.username") @{{ messageData.account.username }}
+          small
+            a.text-dark(:href="'/messages/'+messageData.id"){{ moment(messageData.timestamp).fromNow() }}
+    .card-body
+      .mt-2.mb-3
+        .mt-2
+
+        div(v-if="messageData.json_schema == 'micro'")
+          message-body(:message="message")
+
+        div(v-else-if="messageData.json_schema === 'article'")
+          h5
+            a.text-dark(:href="'/messages/'+messageData.id")
+              {{ messageData.title }}
+          
+          p.small.font-italic {{ messageData.tldr }}
+
+          p.small
+            a(:href="'/messages/'+messageData.id")
+              | Read More
+
+        div(v-else)
+          .alert.alert-warning This message is improperly formatted.
+          p.small {{ messageData.body }}
+        .mb-3
+      .space
+    .card-footer
+      p.mb-0(v-if="messageData.repost")
+        small
+          a.text-muted(:href="'/messages/'+messageData.repost.id")
+            | Reposting a message from @{{ messageData.repost.account.username }}
+
+      p.mb-0(v-if="messageData.reply_to")
+        small
+          a.text-muted(:href="'/messages/'+messageData.reply_to.id")
+            | Replying to a message from @{{ messageData.reply_to.account.username }}
+
+      small.text-muted
+        i.fa.fa-spin.fa-spinner.mr-1(v-if="messageData.is_loading")
+        span(v-if="!messageData.is_loading")
+
+          i.fa.mr-1(title="Reply", v-bind:class="{pointer: (currentAccount && !messageData.is_replied), 'fa-comment-o': !messageData.is_replied, 'fa-comment': messageData.is_replied}", v-on:click="reply", :id="'reply-message-'+messageData.id")
+          span(v-if="messageData.reply_count > 0")
+            {{ messageData.reply_count }}
+
+          i.ml-3.fa.mr-1(title="Favorite", v-bind:class="{pointer: (currentAccount && !messageData.is_favorited), 'fa-star-o': !messageData.is_favorited, 'fa-star': messageData.is_favorited}", v-on:click="toggleFavorite", :id="'favorite-message-'+messageData.id")
+          span(v-if="messageData.favorites_count > 0")
+            {{ messageData.favorites_count }}
+
+          i.ml-3.mr-1.fa.fa-refresh(title="Repost", v-bind:class="{pointer: (currentAccount && !messageData.is_reposted)}", v-on:click="repost", :id="'repost-message-'+messageData.id")
+          span(v-if="messageData.repost_count > 0")
+            {{ messageData.repost_count }}
+
+          //- i.ml-3.mr-1.fa.fa-refresh(title="Tip", v-bind:class="{pointer: (currentAccount && !messageData.is_tipped)}", v-on:click="repost(message)", :id="'repost-message-'+messageData.id")
+          a.text-muted.ml-3.mr-1(title="Tip", v-bind:class="{pointer: (currentAccount && !messageData.is_tipped)}", v-on:click="tip", :id="'tip-message-'+messageData.id")
+            {{ messageData.tips }}
+        
+        b-tooltip(:target="'reply-message-'+messageData.id", title="Reply")
+        b-tooltip(:target="'favorite-message-'+messageData.id", title="Favorite")
+        b-tooltip(:target="'repost-message-'+messageData.id", title="Repost")
+        b-tooltip(:target="'tip-message-'+messageData.id", :title="messageData.is_tipped ? 'Tips' : 'Send a Tip'")
+
+        upload-wizard(ref="replyUploadWizard", model="message", @messageSuccess="replySuccess")
+        upload-wizard(ref="repostUploadWizard", model="message", @messageSuccess="repostSuccess")
+        upload-wizard(ref="hideUploadWizard", model="message", @messageSuccess="hideSuccess")
+        upload-wizard(ref="favoriteUploadWizard", model="favorite", @favoriteSuccess="favoriteSuccess")
+        b-modal(:ref="'reply-modal-'+messageData.id", title="Reply", @ok="submitReply", ok-title="Reply")
+          p
+            small
+              strong Original Message:
+            br
+            {{ messageData.body }}
+          .mt-2
+          textarea.form-control(placeholder="Type your response", v-model="replyBody")
+          p.small
+            span.text-muted  Max 280 characters.
+            span(v-if="replyBody.length > 0", v-bind:class="{ 'text-muted': (replyBody.length <= 280), 'text-danger': (replyBody.length > 280) }")
+              |  Currently {{ replyBody.length }} {{ replyBody.length === 0 ? 'character' : 'characters' }}.
+
+        b-modal(ref="confirmHideModal", title="Are you sure?", @ok="submitHide", ok-title="Hide")
+          p
+            | Because Numa is built on top of a public blockchain, no one can ever permanently 'delete' a record.
+            |  However, you can mark your message as hidden, which will prevent it from being displayed publicly.
+
+          p To confirm that you want to hide this message, click "Hide".
+        
+        send-numa-modal(ref="modal",
+                        :account="messageData.account",
+                        :message="messageData"
+                        @sent="handleTipResponse")
+</template>
+
+<script>
+import moment from 'moment';
+
+export default {
+  props: {
+    message: {
+      type: Object
+    },
+    compact: {
+      type: Boolean,
+      default: true
+    }
+  },
+  data() {
+    return {
+      moment: moment,
+      replyBody: '',
+      currentAccount: window.currentAccount,
+      messageData: this.message,
+    }
+  },
+  methods: {
+    userLink(username) {
+      return `/u/${username}`
+    },
+    async toggleFavorite() {
+      const { messageData } = this;
+      if (!this.currentAccount || messageData.is_favorited) {
+        return true;
+      }
+      const url = `/favorites?message_id=${messageData.id}`;
+
+      messageData.is_loading = true;
+      const uploadWizard = this.$refs.favoriteUploadWizard;
+      uploadWizard.show();
+
+      try {
+        const favorite = await $.ajax({
+          url: url,
+          method: 'POST',
+          dataType: 'json'
+        });
+        uploadWizard.ipfsUploadSuccess(favorite);
+      } catch (error) {
+        messageData.is_loading = false;
+        uploadWizard.hide();
+        this.alertError("Sorry, there was an error when uploading your favorite to IPFS.");
+      }
+    },
+    favoriteSuccess(favorite) {
+      const { messageData } = this;
+      messageData.is_favorited = true;
+      messageData.favorites_count += 1;
+      messageData.is_loading = false;
+    },
+    async repost() {
+      const { messageData } = this;
+      if (!this.currentAccount || messageData.is_reposted) {
+        return true;
+      }  
+      
+      messageData.is_loading = true;
+      const uploadWizard = this.$refs.repostUploadWizard;
+      uploadWizard.loading = true;
+      uploadWizard.show();
+
+      try {
+        const repost = await $.ajax({
+          url: `/messages/${messageData.id}/repost`,
+          method: 'POST',
+          dataType: 'json'
+        }); 
+        uploadWizard.ipfsUploadSuccess(repost)
+      } catch (error) {
+        console.log(error);
+        messageData.is_loading = false;
+        this.alertError("Sorry, there was an error when uploading your repost to IPFS.")
+        uploadWizard.hide();
+        uploadWizard.loading = false;
+      }
+    },
+    repostSuccess(repost) {
+      const { messageData } = this;
+      messageData.is_reposted = true;
+      messageData.repost_count += 1;
+      messageData.is_loading = false;
+
+      this.$emit('repost', repost);
+    },
+    async reply() {
+      const { messageData } = this;
+      if (!this.currentAccount || messageData.is_replied) {
+        return true;
+      }
+      
+      const modal = this.$refs['reply-modal-'+messageData.id];
+      modal.show();
+    },
+    async submitReply(evt) {
+      const { messageData } = this;
+      if (!this.currentAccount || messageData.is_replied || (this.replyBody.length > 280)) {
+        evt.preventDefault();
+        return true;
+      }
+      messageData.is_loading = true;
+      const uploadWizard = this.$refs.replyUploadWizard;
+      uploadWizard.loading = true;
+      uploadWizard.show();
+
+      try {
+        const reply = await $.ajax({
+          url: `messages/${messageData.id}/reply`,
+          method: 'POST',
+          dataType: 'json',
+          data: {
+            body: this.replyBody,
+            json_schema: 'micro'
+          }
+        });
+        console.log(reply);
+        uploadWizard.ipfsUploadSuccess(reply);
+      } catch (error) {
+        console.log(error);
+        messageData.is_loading = false;
+        this.alertError("Sorry, there was an error when uploading your reply to IPFS.")
+        uploadWizard.hide();
+      }
+    },
+    replySuccess(reply) {
+      const { messageData } = this;
+      messageData.is_loading = false;
+      messageData.is_replied = true;
+      messageData.reply_count += 1;
+      this.$emit('reply', reply);
+    },
+    messageOwnedBycurrentAccount() {
+      return this.currentAccount && (this.currentAccount.id == this.messageData.account.id);
+    },
+    tip() {
+      if (!this.currentAccount || this.messageData.is_tipped || this.messageOwnedBycurrentAccount()) {
+        return true;
+      }
+      this.$refs.modal.modal.show();
+    },
+    handleTipResponse(response) {
+      console.log(response);
+      if (response.tip && response.tip.message_tips_sum) {
+        this.messageData.tips = response.tip.message_tips_sum;
+        this.messageData.is_tipped = true;
+      }
+    },
+    hideMessage() {
+      this.$refs.confirmHideModal.show();
+    },
+    async submitHide() {
+      if (!this.messageOwnedBycurrentAccount()) {
+        return true;
+      }
+
+      const uploadWizard = this.$refs.hideUploadWizard;
+      uploadWizard.show();
+
+      try {
+        const message = await $.ajax({
+          url: `/messages/${this.messageData.id}`,
+          dataType: 'json',
+          method: 'delete'
+        });
+
+        uploadWizard.ipfsUploadSuccess(message);
+      } catch (error) {
+        console.log(error);
+        this.alertError('Sorry, an error occurred while trying to hide this message.');
+        uploadWizard.hide();
+      }
+    },
+    hideSuccess(message) {
+      this.messageData = message;
+    }
+  }
+}
+</script>
+
+<style lang="sass" scoped>
+.message-actions-dropdown
+  display: none
+  z-index: 100;
+
+.card:hover
+  .message-actions-dropdown
+    display: block;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+</style>

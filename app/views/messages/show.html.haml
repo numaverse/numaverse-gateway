@@ -1,0 +1,75 @@
+= javascript_pack_tag "message_page"
+= stylesheet_pack_tag "message_page"
+#js-message{ data: render(partial: 'show.json.jbuilder', locals: { message: @message, replies: @message.replies.order('created_at desc'), tips: @message.tips }) }
+
+.row.mt-3
+  .col-3
+
+  .col-6
+    .space3
+    %hr
+    .space3
+
+    %h4 Network Data:
+    %dl.row.small
+      - confirmations = @message.confirmations
+      %dt.col-5 Confirmations
+      %dd.col-7= number_with_delimiter confirmations
+
+      %dt.col-5 ID on the smart contract
+      %dd.col-7= @message.foreign_id || content_tag(:e, 'n/a')
+
+      %dt.col-5 IPFS File
+      %dd.col-7.text-truncate
+        -# - url = "https://datbase.org/#{@message.dat_folder_id}/contents/#{@message.uid}.json"
+        - url = "http://ipfs.numachain.com/ipfs/#{@message.ipfs_hash}"
+        = link_to url, url, target: :_blank
+
+      %dt.col-5 Raw IPFS Link
+      %dd.col-7.text-truncate
+        -# - url = "https://datbase.org/#{@message.dat_folder_id}/contents/#{@message.uid}.json"
+        - url = "ipfs://#{@message.ipfs_hash}"
+        = link_to url, url, target: :_blank
+      
+      .col-12
+        %h5.mt-2 Transaction Data:
+      
+      - if @message.tx
+        %dt.col-5 Transaction
+        %dd.col-7.text-truncate
+          = link_to @message.tx.hash_address, @message.tx
+
+        %dt.col-5 Block
+        %dd.col-7.text-truncate
+          - block = @message.tx.block
+          - if block.present?
+            = link_to @message.tx.block.number, @message.tx.block
+          - else
+            Not confirmed yet
+
+      
+      
+      - if @message.tx_data
+        - @message.tx_data.each do |key, val|
+          %dt.col-5= key.humanize
+          %dd.col-7.text-truncate{title: val}
+            - if val.is_a?(String) && val.starts_with?('0x') && val.size < 20
+              = val.to_i(16)
+            - else
+              = val  
+
+    - if can? :refresh, @message
+      %p
+        %a.btn.btn-secondary{href: refresh_message_path(@message), data: { method: :post } } Refresh
+
+    -# - if @message.user && current_user == @message.user
+    -#   .space3
+    -#   %hr
+    -#   %p
+    -#     %small
+    -#       Because you wrote this message, you can hide it from public timelines.
+
+    -#   %p
+    -#     -# %a.btn.btn-primary{href: edit_message_path(@message)} Update
+      
+    -#     %a.btn-danger.btn{href: message_path, data: { method: :delete, confirm: "Are you sure you want to hide this post?"}} Hide

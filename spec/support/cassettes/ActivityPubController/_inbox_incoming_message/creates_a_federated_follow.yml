@@ -1,0 +1,53 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://localhost:3000/users/admin
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Content-Type:
+      - application/activity+json
+      Accept:
+      - application/activity+json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Link:
+      - <http://localhost:3000/.well-known/webfinger?resource=acct%3Aadmin%40localhost%3A3000>;
+        rel="lrdd"; type="application/xrd+xml", <http://localhost:3000/users/admin.atom>;
+        rel="alternate"; type="application/atom+xml", <http://localhost:3000/users/admin>;
+        rel="alternate"; type="application/activity+json"
+      Vary:
+      - Accept,Accept-Encoding
+      Content-Type:
+      - application/activity+json; charset=utf-8
+      Date:
+      - Tue, 27 Mar 2018 02:21:18 GMT
+      Cache-Control:
+      - max-age=180, public
+      Etag:
+      - W/"28ca7b8aac2cc3fcdd7cb4cb5004aadf"
+      X-Request-Id:
+      - 60809d0d-4315-4fbe-b5ba-fd80c2aec268
+      X-Runtime:
+      - '1.456589'
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"@context":["https://www.w3.org/ns/activitystreams","https://w3id.org/security/v1",{"manuallyApprovesFollowers":"as:manuallyApprovesFollowers","sensitive":"as:sensitive","movedTo":"as:movedTo","Hashtag":"as:Hashtag","ostatus":"http://ostatus.org#","atomUri":"ostatus:atomUri","inReplyToAtomUri":"ostatus:inReplyToAtomUri","conversation":"ostatus:conversation","toot":"http://joinmastodon.org/ns#","Emoji":"toot:Emoji","focalPoint":{"@container":"@list","@id":"toot:focalPoint"},"featured":"toot:featured"}],"id":"http://localhost:3000/users/admin","type":"Person","following":"http://localhost:3000/users/admin/following","followers":"http://localhost:3000/users/admin/followers","inbox":"http://localhost:3000/users/admin/inbox","outbox":"http://localhost:3000/users/admin/outbox","featured":"http://localhost:3000/users/admin/collections/featured","preferredUsername":"admin","name":"","summary":"\u003cp\u003e\u003c/p\u003e","url":"http://localhost:3000/@admin","manuallyApprovesFollowers":false,"publicKey":{"id":"http://localhost:3000/users/admin#main-key","owner":"http://localhost:3000/users/admin","publicKeyPem":"-----BEGIN
+        PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1+hHE26Ce/IfFL05YAMS\nYVCnfI+y6T+HaNyPnMNp9UzqUt3cNF7hLjolef1t6sfaZZqEDxMJem4aNAUDKqJB\niwmwW40mV5LZWOm3/bXAMrHq6o7PHR/m54AkuiTdRfZjZeSYxQLkWiX2h4UHx+HM\n+jyT3vUpReWtQ3o3iiKMREky6JjtLTgDAbGbmS4rO1hLslVKJiRfTG/cjSiuLoJw\nv93atQjazuoz8jvha6ESIXu1ysp/QXmuhkgUMbusTd9ChInjwb6UPMnq2t+8AgcM\nfpvx2xLXM96Dmhlz42kiOO+JXaW4rXJec+zSJRs+bIQkoMO2FKeZZSuhiUwMeBQq\nIQIDAQAB\n-----END
+        PUBLIC KEY-----\n"},"endpoints":{"sharedInbox":"http://localhost:3000/inbox"}}'
+    http_version: 
+  recorded_at: Tue, 27 Mar 2018 02:21:18 GMT
+recorded_with: VCR 4.0.0

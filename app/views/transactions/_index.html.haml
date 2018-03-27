@@ -1,0 +1,31 @@
+%table.table.table-hover
+  %thead.thead-light
+    %tr.row
+      %th.col-2 Hash
+      %th.col Block
+      %th.col Message
+      %th.col-3 To
+      %th.col-3 From
+      -# %th.col.text-right Gas
+      -# %th.col.text-right Gas Price
+      %th.col-2.text-right Value
+  %tbody
+    - transactions.each do |transaction|
+      %tr.row
+        %td.col-2.text-truncate
+          %small= link_to short_address(transaction.hash_address, length: 15), transaction
+        %td.col
+          %small= link_to transaction.block.number, transaction.block
+        %td.col
+          - if transaction.message
+            %small= link_to transaction.message.id, transaction.message
+        %td.col-3.text-truncate
+          %small= link_to_account transaction.to_account
+        %td.col-3.text-truncate
+          %small= link_to_account transaction.from_account
+        -# %td.col.text-right
+        -#   %small= transaction.gas
+        -# %td.col.text-truncate.text-right{title: transaction.gas_price}
+        -#   %small= transaction.gas_price
+        %td.col-2.text-truncate.text-right{title: transaction.value}
+          %small= humanized_money_with_symbol transaction.value

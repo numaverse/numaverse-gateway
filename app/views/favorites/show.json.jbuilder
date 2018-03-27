@@ -1,0 +1,1 @@
+json.extract! @favorite, *@favorite.attributes.keys

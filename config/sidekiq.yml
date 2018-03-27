@@ -1,0 +1,7 @@
+---
+:concurrency: <%= ENV['WORKER_CONCURRENCY'] || 4 %>
+:queues:
+  - default
+  - active_jobs
+  - mailers
+  - mailer

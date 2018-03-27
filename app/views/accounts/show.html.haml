@@ -1,0 +1,4 @@
+- content_for(:title, "@#{@account.username}")
+= javascript_pack_tag "user_page"
+= stylesheet_pack_tag "user_page"
+#js-user{ data: render(partial: 'account_page.json.jbuilder', locals: { messages: @messages, account: @account }) }

@@ -1,0 +1,23 @@
+[Eth]
+NetworkId = 1337
+
+[Eth.Ethash]
+
+[Eth.TxPool]
+
+[Eth.GPO]
+
+[Shh]
+
+[Node]
+IPCPath = "geth.ipc"
+HTTPPort = 8545
+# HTTPVirtualHosts = ["0.0.0.0"]
+# HTTPModules = ["net", "web3", "eth", "shh"]
+WSPort = 8546
+# WSModules = ["net", "web3", "eth", "shh"]
+
+[Dashboard]
+Host = "localhost"
+Port = 8080
+Refresh = 5000000000

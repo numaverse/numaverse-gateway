@@ -1,0 +1,1 @@
+geth account import --password ./password.txt --keystore ./geth-keys account.txt --datadir ./geth-data

@@ -1,0 +1,6 @@
+= javascript_pack_tag "new-message"
+= stylesheet_pack_tag "new-message"
+- if @message.article?
+  #js-new-message{ data: render(template: 'messages/create.json.jbuilder') }
+- if @message.micro?
+  #js-edit-message{ data: render(template: 'messages/create.json.jbuilder') }

@@ -1,0 +1,25 @@
+.row
+  .col-12
+    %h1.mb-3
+      Block ##{@block.number}
+      
+    %dl.row
+      %dt.col-3 Hash
+      %dd.col-9= @block.hash_address
+
+      %dt.col-3 Miner
+      %dd.col-9= @block.miner
+      %dt.col-3 Nonce
+      %dd.col-9= @block.nonce
+      %dt.col-3 Timestamp
+      %dd.col-9= @block.timestamp
+      %dt.col-3 Number
+      %dd.col-9= @block.number
+      %dt.col-3 Difficulty
+      %dd.col-9= @block.difficulty
+      %dt.col-3 Size
+      %dd.col-9= number_to_human_size @block.size
+      %dt.col-3 Gas Limit
+      %dd.col-9= @block.gas_limit
+      %dt.col-3 Gas Used
+      %dd.col-9= @block.gas_used

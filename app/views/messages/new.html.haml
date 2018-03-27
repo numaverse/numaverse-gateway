@@ -1,0 +1,4 @@
+= javascript_pack_tag "new-message"
+= stylesheet_pack_tag "new-message"
+#js-new-message
+  - #{ data: render(partial: 'home', locals: { :messages => @messages }) }

@@ -1,0 +1,57 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://mastodon.social/users/hstove
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/activity+json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.3
+      Date:
+      - Mon, 26 Mar 2018 02:58:23 GMT
+      Content-Type:
+      - application/activity+json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - 1; mode=block
+      Link:
+      - <https://mastodon.social/.well-known/webfinger?resource=acct%3Ahstove%40mastodon.social>;
+        rel="lrdd"; type="application/xrd+xml", <https://mastodon.social/users/hstove.atom>;
+        rel="alternate"; type="application/atom+xml", <https://mastodon.social/users/hstove>;
+        rel="alternate"; type="application/activity+json"
+      Vary:
+      - Accept,Accept-Encoding
+      Cache-Control:
+      - max-age=180, public
+      Etag:
+      - W/"509ab054179517674e62ad06037060bc"
+      X-Request-Id:
+      - 40c2dec5-a7f0-4594-aecc-63b77859ef15
+      X-Runtime:
+      - '0.510759'
+      Strict-Transport-Security:
+      - max-age=31536000
+    body:
+      encoding: UTF-8
+      string: '{"@context":["https://www.w3.org/ns/activitystreams","https://w3id.org/security/v1",{"manuallyApprovesFollowers":"as:manuallyApprovesFollowers","sensitive":"as:sensitive","movedTo":"as:movedTo","Hashtag":"as:Hashtag","ostatus":"http://ostatus.org#","atomUri":"ostatus:atomUri","inReplyToAtomUri":"ostatus:inReplyToAtomUri","conversation":"ostatus:conversation","toot":"http://joinmastodon.org/ns#","Emoji":"toot:Emoji","focalPoint":{"@container":"@list","@id":"toot:focalPoint"},"featured":"toot:featured"}],"id":"https://mastodon.social/users/hstove","type":"Person","following":"https://mastodon.social/users/hstove/following","followers":"https://mastodon.social/users/hstove/followers","inbox":"https://mastodon.social/users/hstove/inbox","outbox":"https://mastodon.social/users/hstove/outbox","featured":"https://mastodon.social/users/hstove/collections/featured","preferredUsername":"hstove","name":"Hank","summary":"\u003cp\u003e\u003c/p\u003e","url":"https://mastodon.social/@hstove","manuallyApprovesFollowers":false,"publicKey":{"id":"https://mastodon.social/users/hstove#main-key","owner":"https://mastodon.social/users/hstove","publicKeyPem":"-----BEGIN
+        PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtxRTVA7Su8N2H+C10irt\nh8bP5aXd4HAyM1c4LIHh2M/fd10j2578Kups4+V4ufwwF18ICzGrljZgyvh4jxtc\ntRmtI8hVWpA1YI648Zl5ldvKoW/sNPbWG4rnOlWNrjWaBeTX6Xh5et0319GhyLRk\nRA8UB04E1PljSRz+9QA5V03LYQi5YDFSemPIBhXsgiz4xfYFRoT37zRqp6bmAfsk\nfjW+60HF6eNSDGRhBoVyJwhYhyr+VPbhu0j7FXWAwQBgcquZZvq8zf2ehzDjFf0y\nZeHUjC0rQH68Bb5mO0gd8T8Wtfy8taovIdPAOSsG57TpLhjwAPePy8JNgZykw3M7\n2wIDAQAB\n-----END
+        PUBLIC KEY-----\n"},"endpoints":{"sharedInbox":"https://mastodon.social/inbox"},"icon":{"type":"Image","mediaType":"image/jpeg","url":"https://files.mastodon.social/accounts/avatars/000/292/391/original/b7345e5d5ef91433.jpg"},"image":{"type":"Image","mediaType":"image/jpeg","url":"https://files.mastodon.social/accounts/headers/000/292/391/original/bd5658effbabebe8.jpg"}}'
+    http_version: 
+  recorded_at: Mon, 26 Mar 2018 02:58:23 GMT
+recorded_with: VCR 4.0.0

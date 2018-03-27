@@ -1,0 +1,45 @@
+- content_for(:title, "@#{@user.username}")
+= javascript_pack_tag "user_page"
+= stylesheet_pack_tag "user_page"
+#js-user{ data: render(partial: 'user_page.json.jbuilder', locals: { messages: @messages, user: @user }) }
+
+-# .row
+-#   .col-3
+-#     -# = gravatar_image_tag(@user.email, size: 256, class: 'img-responsive', gravatar: { secure: true, size: 256 })
+-#     = image_tag(@user.avatar(:large), class: 'img-fluid')
+-#     %h1= @user.username
+-#     %p
+-#       %strong Address:
+-#       %small
+-#         %code= '0x'+@account.address
+    
+-#     %p
+-#       %strong Balance:
+-#       %small= humanized_money_with_symbol @account.balance
+    
+-#     - if @user.bio.present?
+-#       %p
+-#         %strong Bio:
+-#         %small= @user.bio
+    
+-#     - if @user.location.present?
+-#       %p
+-#         %strong Location:
+-#         %small= @user.location
+-#   .col-9
+-#     %ul.nav.nav-tabs
+-#       %li.nav-item
+-#         %a.nav-link.active{href: '#posts', data: { toggle: :tab }, role: :tab }
+-#           Posts
+-#       %li.nav-item
+-#         %a.nav-link{href: '#transactions', data: { toggle: :tab }, role: :tab }
+-#           Transactions
+    
+-#     .tab-content.mt-3
+-#       #posts.tab-pane.show.active{role: :tabpanel}
+-#         %h3.mt-3 Recent posts:
+-#         = render 'messages/index', messages: @user.messages.order('created_at desc')
+-#       #transactions.tab-pane{role: :tabpanel}
+-#         = render 'transactions/index', transactions: @transactions
+    
+    

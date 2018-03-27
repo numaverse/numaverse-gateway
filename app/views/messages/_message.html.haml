@@ -1,0 +1,15 @@
+.card
+  .card-header
+    .row
+      .col-2
+        %img.img-fluid.img-thumbnail{src: message.user.avatar.url(:medium), alt: 'message.sender'}
+      .col
+        %h5.mt-1.mb-0.text-truncate.username 
+          %a.text-dark{href: user_path(message.user.username)} @#{ message.user.username }
+        %small 
+          %a.text-dark{href: message_path(message)}
+            = time_ago_in_words message.created_at
+            ago
+  .card-body
+    .message-body
+      = message.body

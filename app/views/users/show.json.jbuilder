@@ -1,0 +1,1 @@
+json.partial! 'user_page', locals: { messages: @messages, user: @user }

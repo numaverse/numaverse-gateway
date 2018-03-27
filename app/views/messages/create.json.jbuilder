@@ -1,0 +1,1 @@
+json.partial! 'messages/show', message: @message

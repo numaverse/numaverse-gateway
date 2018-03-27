@@ -1,0 +1,11 @@
+- if _notice = flash[:notice]
+  .alert.alert-success
+    %button.close{"aria-label" => "Close", "data-dismiss" => "alert", :type => "button"}
+      %span{"aria-hidden" => "true"} ×
+    = _notice
+
+- if _alert = flash[:alert]
+  .alert.alert-danger
+    %button.close{"aria-label" => "Close", "data-dismiss" => "alert", :type => "button"}
+      %span{"aria-hidden" => "true"} ×
+    = _alert

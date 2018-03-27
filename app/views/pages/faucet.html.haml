@@ -1,0 +1,22 @@
+.row
+  .col-12.text-center
+    .space6
+    %h1.display-4 Welcome to the $NUMA faucet.
+    .space3
+    %h2 Simply click the button, and get free $NUMA!
+    .space3
+    %h4 We randomly award you between #{faucet_min / 1e18} and #{faucet_max / 1e18} $NUMA every time.
+    .space6
+    = form_tag faucet_captcha_path, method: :post, id: 'js-captcha-form' do
+      - if can_skip_captcha?
+        :javascript
+          window.recaptchaChecked = true;
+      - else
+        .row
+          .col-4
+          .col-4
+            = recaptcha_tags callback: 'recaptchaCallback'
+          .space3
+    
+    #js-faucet-component
+= javascript_pack_tag 'faucet-pack'

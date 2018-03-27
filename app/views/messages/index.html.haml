@@ -1,0 +1,12 @@
+.row
+  .col-12
+    %h1.mt-2.mb-3 Recent Posts:
+
+    - if params[:tag].present?
+      %p 
+        Filtered for posts with the tag
+        = succeed "." do
+          %code= params[:tag]
+        %a{href: messages_path} Reset
+
+    = render 'messages/index', messages: @messages

@@ -1,0 +1,9 @@
+{
+  "Version": "HTTP/1.1",
+  "Agent": "http.rb/3.0.0 (Mastodon/2.3.2; +http://localhost:3000/)",
+  "Host": "localhost",
+  "Date": "Mon, 26 Mar 2018 04:38:25 GMT",
+  "Digest": "SHA-256=VJOeHCb9XWr29I/LHj275NEoj0piY9S9eUVWkwAhLfg=",
+  "Signature": "keyId=\"http://localhost:3000/users/admin#main-key\",algorithm=\"rsa-sha256\",headers=\"(request-target) user-agent host date digest content-type\",signature=\"VobLCKYjl6Rnk7K7tqUeuPRrGvKeT+z704h6mvf4EI7+xc6M7K10+I4vmx2FoNLHfkN8Ravj/JgTYVJmWKZIyM7sCypam6Q/CZZJkkS2OTYSLfTd1RFNtV/aPUblUsw0WC4AhHX4Qvqgp1Vf6bHxJ9hTQQcBN2DBOibaVpSJHXp2yUx89htF59Bm7Lt3Vx2eceqbTShTY9Xww6YsapsZ3Rc6LuBbcRd+ryJcNx6mcLhhygiYF5ySnhAPIhOICbJ8wMtjvY8qzRkNaNs0880p0X1tzaNZ2Yuumj687YS1fnA4mRfEeFofOYVQDvCzEg03f+s0Iju0dbK9sbDBeNh6Ow==\"",
+  "Connection": "close"
+}

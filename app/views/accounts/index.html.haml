@@ -1,0 +1,24 @@
+.row
+  .col-12
+    %h1 Your Accounts
+    %table.table
+      %thead
+        %tr
+          %th Username
+          %th Address
+          %th Actions
+      %tbody
+        - @accounts.each do |account|
+          %tr
+            %td= account.username
+            %td
+              %code= account.address
+            %td
+              %a{href: edit_account_path(account.address)} Edit
+        - if @accounts.empty?
+          %tr
+            %td.text-center{colspan: 3}
+              %p
+                It looks like you haven't linked up any accounts yet.
+              
+              %a.mt-3.btn.btn-secondary{ href: new_account_path } Add an account

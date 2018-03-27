@@ -1,0 +1,53 @@
+version: '2'
+services:
+  dev-chain:
+    image: numachain/dev-chain
+    ports:
+      - 8500:8545
+    command: '--dev --config config.toml --rpc --rpccorsdomain "*" --keystore /geth-keys'
+
+  ipfs:
+    image: jbenet/go-ipfs
+    ports:
+      - 8082:8080
+      - 4001:4001
+      - 4002:4002/udp
+      - 8081:8081
+      - 5001:5001
+
+  # app:
+  #   build: .
+  #   entrypoint: /bin/bash
+  #   # command: "bundle exec rake db:create && bundle exec rake db:schema:load && bundle exec guard -c -P rspec"
+  #   command: ./bin/test-setup
+  #   environment:
+  #     - RAILS_ENV=test
+  #   volumes:
+  #     - .:/numa
+  #   links:
+  #     - postgres
+  #     - redis
+  #   volumes_from:
+  #     - box
+  #   depends_on:
+  #     - postgres
+  #     - redis
+  #     - ipfs
+  #     - dev-chain
+
+  # box:
+  #   image: busybox
+  #   volumes:
+  #     - /box
+
+  # postgres:
+  #   image: postgres:9.6
+  #   ports:
+  #     - "5432"
+
+  # redis:
+  #   image: redis:3.0.5
+  #   ports:
+  #     - '6379:6379'
+  #   volumes:
+  #     - ~/.numa-redis:/var/lib/redis/data

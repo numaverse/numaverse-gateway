@@ -1,0 +1,101 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://localhost:3000/users/admin
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Content-Type:
+      - application/activity+json
+      Accept:
+      - application/activity+json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Link:
+      - <http://localhost:3000/.well-known/webfinger?resource=acct%3Aadmin%40localhost%3A3000>;
+        rel="lrdd"; type="application/xrd+xml", <http://localhost:3000/users/admin.atom>;
+        rel="alternate"; type="application/atom+xml", <http://localhost:3000/users/admin>;
+        rel="alternate"; type="application/activity+json"
+      Vary:
+      - Accept,Accept-Encoding
+      Content-Type:
+      - application/activity+json; charset=utf-8
+      Date:
+      - Tue, 27 Mar 2018 02:32:09 GMT
+      Cache-Control:
+      - max-age=180, public
+      Etag:
+      - W/"28ca7b8aac2cc3fcdd7cb4cb5004aadf"
+      X-Request-Id:
+      - 09875391-2c28-4a5c-925d-34f74d809787
+      X-Runtime:
+      - '0.099750'
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"@context":["https://www.w3.org/ns/activitystreams","https://w3id.org/security/v1",{"manuallyApprovesFollowers":"as:manuallyApprovesFollowers","sensitive":"as:sensitive","movedTo":"as:movedTo","Hashtag":"as:Hashtag","ostatus":"http://ostatus.org#","atomUri":"ostatus:atomUri","inReplyToAtomUri":"ostatus:inReplyToAtomUri","conversation":"ostatus:conversation","toot":"http://joinmastodon.org/ns#","Emoji":"toot:Emoji","focalPoint":{"@container":"@list","@id":"toot:focalPoint"},"featured":"toot:featured"}],"id":"http://localhost:3000/users/admin","type":"Person","following":"http://localhost:3000/users/admin/following","followers":"http://localhost:3000/users/admin/followers","inbox":"http://localhost:3000/users/admin/inbox","outbox":"http://localhost:3000/users/admin/outbox","featured":"http://localhost:3000/users/admin/collections/featured","preferredUsername":"admin","name":"","summary":"\u003cp\u003e\u003c/p\u003e","url":"http://localhost:3000/@admin","manuallyApprovesFollowers":false,"publicKey":{"id":"http://localhost:3000/users/admin#main-key","owner":"http://localhost:3000/users/admin","publicKeyPem":"-----BEGIN
+        PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1+hHE26Ce/IfFL05YAMS\nYVCnfI+y6T+HaNyPnMNp9UzqUt3cNF7hLjolef1t6sfaZZqEDxMJem4aNAUDKqJB\niwmwW40mV5LZWOm3/bXAMrHq6o7PHR/m54AkuiTdRfZjZeSYxQLkWiX2h4UHx+HM\n+jyT3vUpReWtQ3o3iiKMREky6JjtLTgDAbGbmS4rO1hLslVKJiRfTG/cjSiuLoJw\nv93atQjazuoz8jvha6ESIXu1ysp/QXmuhkgUMbusTd9ChInjwb6UPMnq2t+8AgcM\nfpvx2xLXM96Dmhlz42kiOO+JXaW4rXJec+zSJRs+bIQkoMO2FKeZZSuhiUwMeBQq\nIQIDAQAB\n-----END
+        PUBLIC KEY-----\n"},"endpoints":{"sharedInbox":"http://localhost:3000/inbox"}}'
+    http_version: 
+  recorded_at: Tue, 27 Mar 2018 02:32:09 GMT
+- request:
+    method: post
+    uri: http://localhost:3000/users/admin/inbox
+    body:
+      encoding: UTF-8
+      string: '{"a": 1}'
+    headers:
+      Content-Type:
+      - application/activity+json
+      Accept:
+      - application/activity+json
+      Host:
+      - localhost
+      Date:
+      - Tue, 27 Mar 2018 02:32:10 GMT
+      Digest:
+      - SHA-256=+dhgKMbg1k4iUYb5astpM4ssWXZN95FiEH9cS7NNExA=
+      Signature:
+      - keyId="https://numa.localtunnel.me/activity_pub/0x69259eef222c232a3cb3599a3556cc371f014121/account#main-key",algorithm="rsa-sha256",headers="(request-target)
+        host date content-type accept digest",signature="hn9DWJhIsxdxGIaxXCJ+HTHOHYXEuFRaUKybPDtB/KJtr/RIdc8kZi06QeJwFiO3YQzAkBtXBfnlMb9PVCaTyWzAGeyB4X8eLtFL9Dv31OPTHOOq3U6Ng3hGEuUlr30/CELmxnKBIulcgpRU5J748mNsuvHp3Rub8ym2dH2igGKcsxoN5ujD/Wkh7KPUhMPxQR3Oe2XBfU7pPyn8SQAvtUSVgBdxS+mC3d4QblYX85ecAQfJOH1tCkd395lwt6Htama+4ntAyX7HkcM5ThM3BNP1ZKirSeC6kZmVNDorxRJFZzmDoKdmceNlxAHuLCnKWAgSEGxX6uMnYNOgnpe4eg=="
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept-Encoding
+      Cache-Control:
+      - no-cache
+      X-Request-Id:
+      - 6e9e135f-6879-41a9-8764-7af566e3666b
+      X-Runtime:
+      - '1.469368'
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Tue, 27 Mar 2018 02:32:12 GMT
+recorded_with: VCR 4.0.0

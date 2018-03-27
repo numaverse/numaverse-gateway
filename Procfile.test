@@ -1,0 +1,3 @@
+chain: geth --dev --config dev-chain/test-chain-config.toml --rpc --rpcport 8555 --rpccorsdomain "*" --keystore ./dev-chain/geth-test-keys --datadir ./dev-chain/geth-test-data --gasprice 0 --unlock 0 --password dev-chain/password.txt
+# chain: testrpc-py -p 8555
+ipfs: ipfs daemon

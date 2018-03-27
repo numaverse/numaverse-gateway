@@ -1,0 +1,136 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require font-awesome
+ *= require vendor/simplemde
+ *= require_self
+ */
+
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono:100,100i,300,300i,400,400i,500,500i,700,700i&amp;subset=greek');
+
+
+
+$lightPurple: #778beb;
+$lightPeach: #f3a683;
+$darkPurple: #574b90;
+
+// Custom bootstrap variables must be set or imported *before* bootstrap.
+$font-family-base: 'Roboto Mono', SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+@import "bootstrap";
+@import "./cards";
+
+// @import "./typography";
+@import "./helpers";
+
+.pre-wrap {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  word-wrap: break-word;
+}
+
+.custom-file {
+  cursor: pointer;
+  .custom-file-label {
+    cursor: pointer;
+  }
+  .custom-file-field {
+    position: relative;
+    top: 2px;
+  }
+}
+
+.space {
+  display: block;
+  margin-top: 12px;
+}
+.space2 {
+  display: block;
+  margin-top: 24px;
+}
+.space3 {
+  display: block;
+  margin-top: 36px;
+}
+.space6 {
+  display: block;
+  margin-top: 72px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.hero {
+  // background-image: image-url("hero-snow.jpg");
+  // background-size: cover;
+  background: rgba(143,143,143,1);
+  background: -moz-linear-gradient(-45deg, rgba(143,143,143,1) 0%, rgba(194,194,194,1) 100%);
+  background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(143,143,143,1)), color-stop(100%, rgba(194,194,194,1)));
+  background: -webkit-linear-gradient(-45deg, rgba(143,143,143,1) 0%, rgba(194,194,194,1) 100%);
+  background: -o-linear-gradient(-45deg, rgba(143,143,143,1) 0%, rgba(194,194,194,1) 100%);
+  background: -ms-linear-gradient(-45deg, rgba(143,143,143,1) 0%, rgba(194,194,194,1) 100%);
+  background: linear-gradient(135deg, rgba(143,143,143,1) 0%, rgba(194,194,194,1) 100%);
+
+  // background: linear-gradient(139deg, #7e7e7e, #353535);
+  // background-size: 400% 400%;
+
+  -webkit-animation: HeroGradient 5s linear infinite;
+  -moz-animation: HeroGradient 5s linear infinite;
+  animation: HeroGradient 5s linear infinite;
+
+  @-webkit-keyframes HeroGradient {
+      0%{background-position:13% 0%}
+      50%{background-position:88% 100%}
+      100%{background-position:13% 0%}
+  }
+  @-moz-keyframes HeroGradient {
+      0%{background-position:13% 0%}
+      50%{background-position:88% 100%}
+      100%{background-position:13% 0%}
+  }
+  @keyframes HeroGradient { 
+      0%{background-position:13% 0%}
+      50%{background-position:88% 100%}
+      100%{background-position:13% 0%}
+  }
+
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8f8f8f', endColorstr='#c2c2c2', GradientType=1 );
+  min-height: 600px;
+  overflow: hidden;
+  margin: 0;
+  width: 100%;
+
+  .display-1, .display-4 {
+    font-weight: 800;
+  }
+
+  .display-4 {
+    color: $darkPurple;
+    mix-blend-mode: hard-light;
+    background-color: $lightPeach;
+    padding: 10px;
+  }
+
+  .hero-giveaway {
+    background-color: $lightPeach;
+    mix-blend-mode: hard-light;
+    padding: 10px;
+  }
+}
+
+.display-1, .display-2, .display-3, .display-4 {
+  font-weight: 500;
+}
+
+.tiny {
+  font-size: 10px;
+}

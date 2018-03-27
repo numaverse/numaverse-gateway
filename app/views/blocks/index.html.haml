@@ -1,0 +1,29 @@
+.row
+  .col-12
+    %h1.mb-3 Recent blocks on the Numa blockchain:
+
+    %table.table.table-hover
+      %thead.thead-light
+        %tr.row
+          %th.col Number
+          %th.col-2 Hash
+          %th.col-2 Miner
+          %th.col-1 Age
+          %th.col.text-right Gas Limit
+          %th.col.text-right Gas Used
+          %th.col.text-right Difficulty
+      %tbody
+        - @blocks.each do |block|
+          %tr.row
+            %td.col.small= link_to block.number, block
+            %td.text-truncate.col-2{title: block.hash_address}
+              %small= short_address(block.hash_address, length: 15)
+            %td.text-truncate.col-2{title: block.miner}
+              %small= link_to_account(Account.make_by_address(block.miner))
+            %td.col-1{title: block.timestamp}
+              %small= time_ago_in_words(block.timestamp).gsub(/about/i, '')
+            %td.col.text-right.small= block.gas_limit
+            %td.col.text-right.small= block.gas_used
+            %td.col.text-right.small= block.difficulty
+
+    = paginate @blocks

@@ -1,0 +1,25 @@
+%p
+  Hello
+  == @#{@user.username},
+
+%p
+  - if @message.user
+    = link_to "@#{@message.user.username}", user_url(@message.user.username)
+  - else
+    Someone
+  mentioned you in a message on 
+  = succeed "!" do
+    = link_to "Numa", root_url
+
+%p
+  Here's the message:
+
+%p= @message.body
+
+%p
+  = link_to "Click here", message_url(@message)
+  to join the conversation.
+
+%p
+  Numa is a distrubuted social network, built on blockchain technology. You're receiving this email because you signed up
+  for Numa, and someone mentioned you.

@@ -1,0 +1,18 @@
+- messages.in_groups_of(3, false) do |group|
+  -# .mt-3.mb-3
+  .row.mt-3.mb-3
+    - group.each do |message|
+      .col-4
+        .card.message-card.mt-3.mb-3
+          .card-body
+            %h3.card-title
+              %a.text-dark{href: message_path(message)}= message.title
+            - if message.tldr.present?
+              %p.font-weight-light= message.tldr
+            .card-bottom
+              %p.mb-0
+                by
+                = link_to message.user.username, user_path(message.user.username)
+                %small.text-muted.ml-1
+                  = time_ago_in_words(message.created_at).gsub('about ','')
+                  ago

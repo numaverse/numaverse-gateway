@@ -1,0 +1,53 @@
+class ActivityPubController < ApplicationController
+  skip_before_action :verify_authenticity_token
+  before_action :set_content_type
+  before_action :set_account, only: [:outbox, :account, :inbox, :inbox_incoming_message]
+
+  def outbox
+    @versions = @account.federated_message_versions.most_recent.page(params[:page])
+    # ap @versions.first
+    
+    render template: 'activity_pub/outbox.json.jbuilder'
+  end
+
+  def webfinger
+    username = params[:resource].split('@').first.split(':').last
+    @account = Account.find_by!(username: username)
+    render template: 'activity_pub/webfinger.json.jbuilder', content_type: 'application/jrd+json'
+  end
+
+  def account
+    render template: 'activity_pub/account.json.jbuilder'
+  end
+
+  def message
+    @message = Federated::Message.find(params[:message_id])
+    render template: 'activity_pub/message.json.jbuilder'
+  end
+
+  def activity
+    @version = Federated::Version.find(params[:version_id])
+    @account = Account.find(@version.federated_message.local_account_id)
+    render template: 'activity_pub/version.json.jbuilder'
+  end
+
+  def inbox_incoming_message
+    if @signed_account = ActivityPub::Signature.verify_request(request)
+      ActivityPub::InboxFactoryJob.perform_later(@signed_account, @account.federated_account, request.raw_post)
+      head 200
+    else
+      render plain: "Invalid signature", status: 401
+    end
+  end
+
+  private
+
+  def set_content_type
+    self.content_type = 'application/activity+json'
+  end
+
+  def set_account
+    @account ||= Account.by_address(params[:account_id])
+    raise ActiveRecord::RecordNotFound unless @account.present?
+  end
+end

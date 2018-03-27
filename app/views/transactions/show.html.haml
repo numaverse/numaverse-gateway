@@ -1,0 +1,83 @@
+.row
+  .col-12
+    %h3.pre-wrap.mb-3.mt-0{title: @transaction.hash_address}
+      = @transaction.hash_address
+    
+    %h5.mb-3
+      Transaction created
+      = time_ago_in_words @transaction.block.try(:timestamp) || @transaction.created_at
+      ago
+
+    .mt-3.mb-3
+
+    - confirmations = @transaction.confirmations
+    - if confirmations == -1
+      .alert.alert-danger
+        %h5
+          This transaction is still pending.
+    
+          
+
+    %dl.row
+      - if confirmations >= 0
+        %dt.col-3 Confirmations
+        %dd.col-9= number_with_delimiter confirmations
+
+      - if txable = @transaction.transactable
+        - if txable.is_a?(Account)
+          %dt.col-3 Account
+          - id = txable.username || txable.hash_address
+          %dd.col-9= link_to id, account_path(id)
+
+        - if txable.is_a?(Message)
+          %dt.col-3 Message
+          %dd.col-9= link_to "View Message", message_path(txable.id)
+
+      - if @transaction.message
+        %dt.col-3 Message
+        %dd.col-9.text-truncate= link_to "View Message", @transaction.message
+      
+      - if @transaction.message.try(:user)
+        %dt.col-3 User
+        %dd.col-9= link_to "@#{@transaction.message.user.username}", user_path(@transaction.message.user.username)
+
+      %dt.col-3 Value
+      %dd.col-9= humanized_money_with_symbol @transaction.value
+    
+      %dt.col-3 Gas
+      %dd.col-9= @transaction.gas
+
+      %dt.col-3 Gas Price
+      %dd.col-9= @transaction.gas_price
+
+      %dt.col-3 From
+      %dd.col-9
+        = link_to_account(@transaction.from_account) if @transaction.from_account
+
+      %dt.col-3 To
+      %dd.col-9
+        = link_to_account(@transaction.to_account) if @transaction.to_account
+
+      %dt.col-3 Nonce
+      %dd.col-9
+        %code= @transaction.nonce
+
+      %dt.col-3 Input
+      %dd.col-9
+        %code= @transaction.input
+
+    %hr.mt-3.mb-3
+    
+    %h4 Block Details:
+
+    %dl.row
+      
+      %dt.col-3 Block Number
+      %dd.col-9= link_to (@transaction.block_number || "n/a"), @transaction.block
+
+      %dt.col-3 Block Timestamp
+      %dd.col-9= @transaction.block.try(:timestamp)
+
+      %dt.col-3 Block Hash
+      %dd.col-9
+        %code= @transaction.block_hash || "n/a"

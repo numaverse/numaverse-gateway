@@ -1,0 +1,40 @@
+image: "ruby:2.3"
+
+services:
+  - postgres:latest
+
+variables:
+  POSTGRES_DB: test_db
+  POSTGRES_USER: runner
+  POSTGRES_PASSWORD: ""
+
+cache:
+  key: ${CI_COMMIT_REF_NAME}
+  untracked: true
+  paths:
+    - vendor/
+    - node_modules/
+    - vendor/bundle
+
+
+before_script:
+  - apt-get update -qq && apt-get install -y -qq postgresql postgresql-contrib libpq-dev cmake nodejs
+  - ruby -v
+  - which ruby
+  - gem install bundler --no-ri --no-rdoc
+  - RAILS_ENV=test bundle install --jobs $(nproc) --path vendor "${FLAGS[@]}"
+  - cp config/database.yml.gitlab config/database.yml
+  - RAILS_ENV=test bundle exec rake db:create db:schema:load
+
+test:
+  script:
+    - RAILS_ENV=test bundle exec rspec
+
+# production:
+#   type: deploy
+#   script:
+#   - gem install dpl
+#   - dpl --provider=heroku --app=screenchecker --api-key=$HEROKU_PRODUCTION_API_KEY
+#   - "curl -n -X POST https://api.heroku.com/apps/screenchecker/ps -H \"Accept: application/json\" -H \"Authorization: Bearer ${HEROKU_PRODUCTION_API_KEY}\" -d \"command=bundle exec rails db:migrate\""
+#   only:
+#   - master

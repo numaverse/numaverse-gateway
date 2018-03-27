@@ -1,0 +1,181 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://raw.githubusercontent.com/NumaChain/schemas/master/schemas/message-1-0.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Security-Policy:
+      - default-src 'none'; style-src 'unsafe-inline'; sandbox
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Xss-Protection:
+      - 1; mode=block
+      Etag:
+      - '"526dd39d8943b357deaa8bd324d4bbc7fcd2c110"'
+      Content-Type:
+      - text/plain; charset=utf-8
+      Cache-Control:
+      - max-age=300
+      X-Geo-Block-List:
+      - ''
+      X-Github-Request-Id:
+      - 1AD6:4A27:2903B37:2AB5C44:5A9CA704
+      Content-Length:
+      - '946'
+      Accept-Ranges:
+      - bytes
+      Date:
+      - Mon, 05 Mar 2018 02:10:13 GMT
+      Via:
+      - 1.1 varnish
+      Connection:
+      - keep-alive
+      X-Served-By:
+      - cache-sea1031-SEA
+      X-Cache:
+      - MISS
+      X-Cache-Hits:
+      - '0'
+      X-Timer:
+      - S1520215814.805010,VS0,VE115
+      Vary:
+      - Authorization,Accept-Encoding
+      Access-Control-Allow-Origin:
+      - "*"
+      X-Fastly-Request-Id:
+      - 7519604af553b0b3187eba683759d65de05f1567
+      Expires:
+      - Mon, 05 Mar 2018 02:15:13 GMT
+      Source-Age:
+      - '0'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "$id": "message-1-0.json",
+          "type": "object",
+          "$schema": "http://json-schema.org/draft-04/schema#",
+          "definitions": {
+            "tip": {
+              "type": "object",
+              "required": [
+                "to",
+                "tx_hash",
+                "value"
+              ],
+              "properties": {
+                "to": {
+                  "type": "string",
+                  "title": "To",
+                  "description": "The address this tip is sent to"
+                },
+                "tx_hash": {
+                  "type": "string"
+                },
+                "message_id": {
+                  "type": "number"
+                },
+                "value": {
+                  "type": "number",
+                  "title": "Value",
+                  "minimum": 1,
+                  "description": "The amount of NUMA sent in this tip, denominated in nuwei. 1 NUMA = 18,000,000 nuwei.",
+                  "examples": [
+                    1000,
+                    1,
+                    1.356e10
+                  ]
+                }
+              }
+            },
+            "meta": {
+              "type": "object",
+              "required": [
+                "schema",
+                "version"
+              ],
+              "properties": {
+                "schema": {
+                  "$id": "/properties/schema",
+                  "type": "string",
+                  "title": "Schema",
+                  "description": "The schema that you're using to describe the message.",
+                  "examples": [
+                    "article",
+                    "micro"
+                  ]
+                },
+                "version": {
+                  "$id": "/properties/version",
+                  "type": "string",
+                  "title": "Version",
+                  "description": "The version of this schema you're using.",
+                  "default": "1.0",
+                  "readOnly": true
+                },
+                "signature": {
+                  "$id": "/properties/signature",
+                  "type": "string",
+                  "title": "Signature",
+                  "description": "A signature can be used to validate the sender of this message. If included, this signature is created using the sender's private key and the data in the message's `data` property."
+                },
+                "hidden_at": {
+                  "type": "string",
+                  "title": "Hidden At",
+                  "description": "The date-time the author of this message marked it as hidden.",
+                  "examples": [
+                    "2018-02-03T18:24:31.713Z"
+                  ]
+                },
+                "sender": {
+                  "$id": "/properties/sender",
+                  "type": "object",
+                  "description": "Information about who sent this message. This should be the same, regardless of schema.",
+                  "properties": {
+                    "address": {
+                      "$id": "/properties/data/properties/address",
+                      "type": "string",
+                      "title": "Address",
+                      "description": "The hexadecimal address this message was posted from. If \"signature\" is included, this field is required.",
+                      "examples": [
+                        "f17f52151ebef6c7334f...",
+                        "0xf17f52151ebef6c7334fa.."
+                      ]
+                    },
+                    "username": {
+                      "$id": "/properties/data/properties/username",
+                      "type": "string",
+                      "title": "Username",
+                      "description": "The author's desired username. It's up to the client to determine whether to display this or not.",
+                      "pattern": "^[a-z0-9][a-z0-9_]*$",
+                      "examples": [
+                        "hank"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+    http_version: 
+  recorded_at: Mon, 05 Mar 2018 02:10:14 GMT
+recorded_with: VCR 4.0.0

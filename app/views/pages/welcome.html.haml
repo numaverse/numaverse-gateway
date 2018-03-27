@@ -1,0 +1,230 @@
+= content_for :hero do
+  .row.hero
+    .container
+      .row
+        .col-12.text-left
+          .space3
+          .space3
+          %h1.display-1.mt-1 Numa
+          .space3
+          %h2.display-4 A distributed social network
+          .space3
+        .col-md-4.col-sm-12
+          %p.h4.hero-giveaway
+            We're giving away over a third of the 
+            total supply of $NUMA 
+            to early adopters. 
+            %br
+            %br
+            %a{href: new_user_registration_path} Come join us.
+      
+.row
+  .col-12
+    -# .text-center
+    -#   %i.display-4.fa.fa-chevron-down
+    .space3
+    -# .space6
+    %h2.display-4 Write something on a blockchain.
+    .space6
+    .space6
+  
+    %h3
+      It's like Twitter, but with cutting edge distrubuted technologies, so no central entity owns your data.
+    
+    .space6
+    .row
+      .col-3
+      .col-2.text-center
+        %a.text-dark{href: "https://ipfs.io", target: :_blank}
+          = image_tag "logos/ipfs-logo-1024-black.png", class: 'img-fluid'
+          .space3
+          %h3 
+            IPFS
+      .col-1
+      .col-3
+        %a{href: 'https://ethereum.org', target: :_blank}
+          = image_tag "logos/ethereum.png", class: 'img-fluid'
+
+    .space6
+    %h3
+      Specifically, we use smart contracts on an 
+      = succeed "-based" do
+        = link_to "Ethereum", "https://ethereum.org", target: :_blank
+      blockchain to keep track of your posts. The actual contents
+      of your posts are stored on 
+      = succeed "," do
+        = link_to "IPFS", "https://ipfs.io", target: :_blank
+      a distributed file sharing protocol.
+
+    .space6
+    .space6
+    %hr
+    .space6
+    .space6
+  
+    .text-center
+      %h2.display-4 Why build this on a blockchain?
+      %h4 One word: Transparency.
+
+.space6
+.space6
+.row.mt-2
+  .col-md-4.col-sm-12.mt-2
+    .card
+      .card-header
+        You own your data
+      .card-body
+        %p
+          One of the most common complaints about today's social networks is that they control
+          the algorithms that decide what content you get to see. They do this because they need to optimize
+          for advertising, but it's not always in the user's best interest.
+
+        %p
+          Unfortunately, you can't just take your data and use it in a different app. Your data is owned by a central
+          entity, and it's not in their best interest to share it.
+
+        %p
+          On Numa, all your data is stored in a public, distributed way, so that it's impossible for any entity to revoke
+          your access to your data.
+    
+  .col-md-4.col-sm-12.mt-2
+    .card
+      .card-header
+        No Lock-In
+      .card-body
+        %p
+          You spend all this time creating content and building a network, but what if you want to switch to a different
+          platform? On today's social networks, the data is restricted, so switching platforms means starting from scratch.
+
+        %p
+          On Numa, since we can't restrict your data, you can take it wherever you want.
+
+  .col-md-4.col-sm-12.mt-2
+    .card
+      .card-header
+        No Censorship
+      .card-body
+        %p
+          Anyone can spin up their own node, connect to the Numa blockchain, and create a new message on the network.
+          That means that no one can stop you from posting content.
+
+        %p
+          If you post illegal content, we reserve the right to take it down from this website, but the data will always
+          exist on the underlying blockchain. 
+        %p
+          If people think that we're too aggressive with our censorship, anyone else can create
+          a client that gives access to the rest of the data.
+
+.row
+  .col-12
+    .space6
+    .space6
+    %hr
+    .space6
+    .space6
+
+    %h2.display-4 How does it work?
+
+    .space6
+
+    %h4.font-weight-normal
+      For 99% of users, using Numa is just like how you use any other website.
+      Simply
+      = succeed "," do
+        %a{href: new_user_registration_path} sign up
+      and you can following people and posting messages right away.
+
+      %br
+      %br
+
+      Underneath the hood, we create an address and private key for you, which is used whenever you post content
+      onto the blockchain. We also send you some free NUMA when you sign up, which is used to create transactions
+      on the Numa blockchain.
+
+    .space6
+    .space6
+
+    %h2.display-4 Is there a cryptocurrency?
+    
+    .space6
+
+    %h4.font-weight-normal
+      Yes, and the currency is also called NUMA.
+
+      %br
+      %br
+
+      Similar to Ethereum, you need to spend NUMA to interact with the blockchain and post messages. This acts as a
+      kind of "gas" that powers the network, and prevents others from spamming. 
+      
+      %br
+      %br
+
+      Because Numa is a new project, we're giving away millions of free NUMA to users that sign up. Invite your friends,
+      post content, and follow people to get rewarded with even more free NUMA!
+
+    .space6
+    .space6
+
+    %h2.display-4 So this uses Ethereum?
+    
+    .space6
+
+    %h4.font-weight-normal
+      Yes! At least, it uses Ethereum technology. However, the Numa network is a seperate blockchain from
+      what is called Ethereum's "mainnet".
+
+      %br
+      %br
+
+      There are a few reasons Numa uses a seperate blockchain. We call the concept of a blockchain specifically for a
+      distributed application a "dapp chain". See the white paper for a longer explanation of this reasoning.
+
+    .space6
+    .space6
+
+    -# %h2.display-4 Who made this?
+    
+    -# .space6
+
+    -# %h4.font-weight-normal
+    -#   I'm
+    -#   = succeed "," do
+    -#     %a{href: "/u/hank"} @hank
+    -#   nice to meet you! Here are some facts I'm proud of:
+
+    -#   .space3
+
+    -#   %ul.mt-2
+    -#     %li
+    -#       I currently work for
+    -#       = succeed ',' do
+    -#         %a{href: "https://kadenze.com", target: :_blank} Kadenze
+    -#       which is a MOOC platform in the fields of art and
+    -#       creative technology.
+    -#     %li 
+    -#       I've also worked for
+    -#       %a{href: "https://www.dailycred.com/", target: :_blank} DailyCred
+    -#       and
+    -#       = succeed "." do
+    -#         %a{href: "https://www.startupweekend.org/", target: :_blank} Startup Weekend
+    -#     %li
+    -#       I open sourced a
+    -#       %a{href: "https://github.com/hstove/rbtc_arbitrage"} cross-exchange Bitcoin arbitrage bot
+    -#       in 2013.
+    -#     %li
+    -#       I made
+    -#       = succeed ',' do
+    -#         %a{href: "http://issuestats.com/", target: :_blank} Issue Stats
+    -#       which won the
+    -#       = succeed '.' do
+    -#         %a{href: "https://github.com/blog/1892-third-annual-data-challenge-winners", target: :_blank}
+    -#           2014 Github data challenge
+    -#     %li
+    -#       I ran in a
+    -#       %a{href: "https://www.strava.com/activities/1096935376", target: :_blank} few
+    -#       %a{href: "https://www.strava.com/activities/1019756321", target: :_blank} awesome
+    -#       %a{href: "https://www.strava.com/activities/984912934", target: :_blank} trail
+    -#       %a{href: "https://www.strava.com/activities/887702362", target: :_blank} races
+    -#       last year.
+      

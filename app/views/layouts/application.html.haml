@@ -1,0 +1,84 @@
+!!!
+%html
+
+  %head
+    %title
+      - if content_for? :title
+        = yield(:title)
+        = " - "
+      Numa - a distributed social network
+    %meta{"http-equiv"=>"Content-Type", :content=>"text/html; charset=utf-8"}
+    %meta{name: "viewport", content: "width=device-width, initial-scale=1.0"}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+    = stylesheet_link_tag "application"
+    = javascript_include_tag "application"
+    -# = javascript_pack_tag "global"
+    -# = stylesheet_pack_tag "global"
+    = csrf_meta_tag
+    -# = favicon_link_tag
+
+    %meta{ property: 'og:image', content: asset_url("open_graph/og@2x.png")}
+    %meta{ property: 'og:title', content: 'Numa: a distributed social network' }
+    %meta{ property: 'og:description', content: "It's a social network that is run entirely on a blockchain, so no central entity owns your data. We use Ethereum smart contracts and IPFS to store data in a distributed way."}
+    %meta{ property: 'description', content: "It's a social network that is run entirely on a blockchain, so no central entity owns your data. We use Ethereum smart contracts and IPFS to store data in a distributed way."}
+    = yield(:head)
+    = analytics_init if Rails.env.production?
+
+  %body.pb-3
+    - if current_user
+      :javascript
+        window.userUuid = "#{current_user.uuid}";
+        window.currentUser = #{raw render partial: 'users/show.json.jbuilder', locals: { user: current_user }};
+    - if current_account
+      :javascript
+        window.currentAccountAddress = "#{current_account.hash_address}";
+        window.currentAccount = #{raw render partial: 'accounts/show.json.jbuilder', locals: { account: current_account }};
+    :javascript
+      window.usersContractAddress = "#{Contract.users.try(:hash_address)}";
+      window.messagesContractAddress = "#{Contract.messages.try(:hash_address)}";
+    %nav.navbar.navbar-expand-lg.navbar-light.bg-light
+      .container
+        %a.navbar-brand.h1.mb-0{:href => "/"} Numa
+        %button.navbar-toggler{"aria-controls" => "navbarSupportedContent", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarSupportedContent", "data-toggle" => "collapse", :type => "button"}
+          %span.navbar-toggler-icon
+        #navbarSupportedContent.collapse.navbar-collapse
+          %ul.navbar-nav.mr-auto
+            - if current_account
+              %li.nav-item
+                %a.nav-link{href: all_path} All
+            %li.nav-item
+              %a.nav-link{:href => welcome_path} About
+            -# %li.nav-item.dropdown
+            -#   %a.nav-link.dropdown-toggle{href: 'javascript:;', id: 'nav-blockchain-dropdown', role: :button, data: { toggle: 'dropdown' }, aria: { haspopup: "true", expanded: "false" }}
+            -#     Blockchain
+            -#   .dropdown-menu{aria: { labelledby: 'nav-blockchain-dropdown' }}
+            -#     %a.dropdown-item{href: blocks_path} Blocks
+            -#     %a.dropdown-item{href: transactions_path} Transactions
+            -#     %a.dropdown-item{href: faucet_path} Faucet
+          %form.form-inline.my-2.my-lg-0{action: all_path, method: :get}
+            %input.form-control.mr-sm-2{"aria-label" => "Search", :placeholder => "Search", :type => "search", name: :query}
+            %button.btn.btn-outline-success.my-2.my-sm-0{:type => "submit"} Search
+          %ul.navbar-nav
+            - if current_account
+              %li.nav-item.dropdown
+                %a.nav-link.dropdown-toggle{href: 'javascript:;', id: 'nav-user-dropdown', role: :button, data: { toggle: 'dropdown' }, aria: { haspopup: "true", expanded: "false" }}
+                  = image_tag current_account_avatar(size: :thumb), size: '30x30', class: 'rounded img-fluid border border-light'
+                  - if current_account.username.present?
+                    = current_account.username
+                  - else
+                    = short_address(current_account.hash_address)
+                .dropdown-menu.dropdown-menu-right{aria: { labelledby: 'nav-user-dropdown' }}
+                  %a.dropdown-item{href: new_message_path} Write an Article
+                  %a.dropdown-item{href: edit_account_path(current_account.username || current_account.hash_address)} Edit Profile
+                  %a.dropdown-item{href: account_path(current_account.username || current_account.hash_address)} View Your Profile
+                  %a.dropdown-item{href: edit_user_registration_path} Settings
+                  %a.dropdown-item{href: logout_path, data: { method: :delete }} Log Out
+            - else
+              %li.nav-item
+                %a.nav-link{href: login_path} Get Started
+
+    = content_for :hero
+    .container.mt-3
+      = render 'layouts/messages'
+      = yield
