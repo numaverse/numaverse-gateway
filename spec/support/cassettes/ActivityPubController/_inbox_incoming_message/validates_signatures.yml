@@ -4,8 +4,8 @@ http_interactions:
     method: get
     uri: http://localhost:3000/users/admin
     body:
-      encoding: US-ASCII
-      string: ''
+      encoding: UTF-8
+      string: 'null'
     headers:
       Content-Type:
       - application/activity+json
@@ -32,15 +32,15 @@ http_interactions:
       Content-Type:
       - application/activity+json; charset=utf-8
       Date:
-      - Tue, 27 Mar 2018 02:21:20 GMT
+      - Tue, 27 Mar 2018 18:53:24 GMT
       Cache-Control:
       - max-age=180, public
       Etag:
       - W/"28ca7b8aac2cc3fcdd7cb4cb5004aadf"
       X-Request-Id:
-      - 237efb18-d332-4572-998b-e3541efbe59c
+      - 67b69ef8-8fc2-49da-a46a-28c4e695b3ca
       X-Runtime:
-      - '1.184205'
+      - '0.120159'
       Transfer-Encoding:
       - chunked
     body:
@@ -49,5 +49,5 @@ http_interactions:
         PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1+hHE26Ce/IfFL05YAMS\nYVCnfI+y6T+HaNyPnMNp9UzqUt3cNF7hLjolef1t6sfaZZqEDxMJem4aNAUDKqJB\niwmwW40mV5LZWOm3/bXAMrHq6o7PHR/m54AkuiTdRfZjZeSYxQLkWiX2h4UHx+HM\n+jyT3vUpReWtQ3o3iiKMREky6JjtLTgDAbGbmS4rO1hLslVKJiRfTG/cjSiuLoJw\nv93atQjazuoz8jvha6ESIXu1ysp/QXmuhkgUMbusTd9ChInjwb6UPMnq2t+8AgcM\nfpvx2xLXM96Dmhlz42kiOO+JXaW4rXJec+zSJRs+bIQkoMO2FKeZZSuhiUwMeBQq\nIQIDAQAB\n-----END
         PUBLIC KEY-----\n"},"endpoints":{"sharedInbox":"http://localhost:3000/inbox"}}'
     http_version: 
-  recorded_at: Tue, 27 Mar 2018 02:21:20 GMT
+  recorded_at: Tue, 27 Mar 2018 18:53:24 GMT
 recorded_with: VCR 4.0.0

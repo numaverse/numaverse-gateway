@@ -8,5 +8,6 @@ json.object do
   json.merge! version.object_changes.except('actor')
   json.id Rails.application.routes.url_helpers.ap_message_url(version.federated_message_id)
   json.url Rails.application.routes.url_helpers.message_url(version.local_message_id)
+  json.to ["https://www.w3.org/ns/activitystreams#Public"]
 end
 

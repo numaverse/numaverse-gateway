@@ -8,7 +8,7 @@ module ActivityPub
       @url = Addressable::URI.parse(url)
       @from_account = from_account
       @verb = verb
-      @body = body
+      @body = body.is_a?(String) ? body : body.to_json
       # ap signing_headers
       @options = @body ? { body: @body } : {}
       if @from_account

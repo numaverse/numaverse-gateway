@@ -86,14 +86,14 @@ RSpec.describe ActivityPubController, type: :controller do
       expect(json.type).to eql("Person")
       expect(json.icon).to hash_eql(account.activity_stream.data[:icon])
       expect(json.outbox).to eql(ap_outbox_url(account.hash_address))
+      expect(json.inbox).to eql(ap_inbox_url(account.hash_address))
+      expect(json.followers).to eql(ap_followers_url(account.hash_address))
       pubkey = json.publicKey
       expect(pubkey.id).to eql(ap_account_url(account.hash_address, anchor: 'main-key'))
       expect(pubkey.owner).to eql(ap_account_url(account.hash_address))
       expect(pubkey.publicKeyPem).not_to be_blank
       expect(pubkey.publicKeyPem).to eql(federated_account.public_key)
     end
-
-    pending 'sets followers, following, inbox urls'
     
   end
 
@@ -150,6 +150,25 @@ RSpec.describe ActivityPubController, type: :controller do
         make_follow_request('undo')
       end
       expect { follow.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
+  describe 'followers', :vcr do
+    let(:account) { create(:confirmed_account) }
+    let(:federated_account) { account.reload.federated_account }
+    let(:from_local_account) { create(:confirmed_account) }
+    let(:from_account) { from_local_account.update_federated_model }
+    let!(:federated_follow) { create(:federated_follow, from_account: from_account, to_account: federated_account) }
+    let!(:remote_follow) { create(:federated_follow, from_account: Federated::Account.from_remote_id("http://localhost:3000/users/admin"), to_account: federated_account) }
+    before do
+      get :followers, params: { account_id: account.hash_address }
+    end
+    
+    it 'shows followers' do
+      expect(json.id).to eql(ap_followers_url(account.hash_address))
+      expect(json.totalItems).to eql(2)
+      expect(json.orderedItems.first).to eql(ap_account_url(from_local_account.hash_address))
+      expect(json.orderedItems[1]).to eql("http://localhost:3000/users/admin")
     end
   end
 end

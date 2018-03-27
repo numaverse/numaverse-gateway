@@ -4,8 +4,8 @@ http_interactions:
     method: get
     uri: http://localhost:3000/users/admin
     body:
-      encoding: US-ASCII
-      string: ''
+      encoding: UTF-8
+      string: 'null'
     headers:
       Content-Type:
       - application/activity+json
@@ -32,15 +32,15 @@ http_interactions:
       Content-Type:
       - application/activity+json; charset=utf-8
       Date:
-      - Tue, 27 Mar 2018 02:21:20 GMT
+      - Tue, 27 Mar 2018 18:53:23 GMT
       Cache-Control:
       - max-age=180, public
       Etag:
       - W/"28ca7b8aac2cc3fcdd7cb4cb5004aadf"
       X-Request-Id:
-      - 6b177cb6-508c-40e1-ba17-852689d6e749
+      - 41cbe1ff-b7d4-48ea-91c0-5058be809e09
       X-Runtime:
-      - '0.070026'
+      - '0.449393'
       Transfer-Encoding:
       - chunked
     body:
@@ -49,5 +49,53 @@ http_interactions:
         PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1+hHE26Ce/IfFL05YAMS\nYVCnfI+y6T+HaNyPnMNp9UzqUt3cNF7hLjolef1t6sfaZZqEDxMJem4aNAUDKqJB\niwmwW40mV5LZWOm3/bXAMrHq6o7PHR/m54AkuiTdRfZjZeSYxQLkWiX2h4UHx+HM\n+jyT3vUpReWtQ3o3iiKMREky6JjtLTgDAbGbmS4rO1hLslVKJiRfTG/cjSiuLoJw\nv93atQjazuoz8jvha6ESIXu1ysp/QXmuhkgUMbusTd9ChInjwb6UPMnq2t+8AgcM\nfpvx2xLXM96Dmhlz42kiOO+JXaW4rXJec+zSJRs+bIQkoMO2FKeZZSuhiUwMeBQq\nIQIDAQAB\n-----END
         PUBLIC KEY-----\n"},"endpoints":{"sharedInbox":"http://localhost:3000/inbox"}}'
     http_version: 
-  recorded_at: Tue, 27 Mar 2018 02:21:20 GMT
+  recorded_at: Tue, 27 Mar 2018 18:53:23 GMT
+- request:
+    method: post
+    uri: http://localhost:3000/users/admin/inbox
+    body:
+      encoding: UTF-8
+      string: '{"@context":["https://www.w3.org/ns/activitystreams",{"numa":"https://numachain.com/ns","address":"numa:address","location":"numa:location","Tip":"as:Tip","valueNuwei":"numa:valueNuwei","message":"numa:message","toMessage":"numa:toMessage","transactionHash":"numa:transactionHash","manuallyApprovesFollowers":"as:manuallyApprovesFollowers"}],"type":"Accept","object":{"type":"Follow","id":"http://localhost:3000/users/admin#follows/22","actor":"http://localhost:3000/users/admin","object":"https://numa.localtunnel.me/activity_pub/0x8d3e4e4b76e60b5371e23103539f24ae5d43b359/account"}}'
+    headers:
+      Content-Type:
+      - application/activity+json
+      Accept:
+      - application/activity+json
+      Host:
+      - localhost
+      Date:
+      - Tue, 27 Mar 2018 18:53:23 GMT
+      Digest:
+      - SHA-256=15V+9qxGzBb5dj4qdO2Ql67fX6avPVLpjqVW+R8KKJ8=
+      Signature:
+      - keyId="https://numa.localtunnel.me/activity_pub/0x8d3e4e4b76e60b5371e23103539f24ae5d43b359/account#main-key",algorithm="rsa-sha256",headers="(request-target)
+        host date content-type accept digest",signature="hs98RFuyMdgxUUhm7BrzjJYeZTns+AguzvovqeA8vSt11lASw1+K0v4tkEkC0es/7m6U7ODl6wN3oruKX6uX3qReyWfyna5UAYYl86z4jVFUGRUx6NjeCZL/I0L5D/rr5mIdx9O4vV+SV7cqZUd6oE25UL3eiv/fhwwJUqH8o4qhISn7+bpMtvPqEDIJ46IvkgGJcIZmb7ZM7YM7sQ0abAtLb70DCCmvS9EtM1h6Ws+WPRecq8kBj1gRs3UzcrLXJAP8Ktw/ljZfIO0NDYRVtPLdsFZyFi8+QKrDtkesJT73QQs0au1jgQBYlaXRK2dOyO7AaBVlI4B50LJAm98LEw=="
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Content-Type:
+      - text/plain; charset=utf-8
+      Vary:
+      - Accept-Encoding
+      Cache-Control:
+      - no-cache
+      X-Request-Id:
+      - 3ff5536e-6f47-45e1-b677-5fdb01b55fff
+      X-Runtime:
+      - '0.588412'
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Tue, 27 Mar 2018 18:53:23 GMT
 recorded_with: VCR 4.0.0

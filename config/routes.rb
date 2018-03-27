@@ -47,6 +47,8 @@ Rails.application.routes.draw do
   get '/activity_pub/:account_id/outbox' => 'activity_pub#outbox', as: :ap_outbox
   get '/activity_pub/:account_id/account' => 'activity_pub#account', as: :ap_account
   get '/activity_pub/:account_id/inbox' => 'activity_pub#inbox', as: :ap_inbox
+  get '/activity_pub/:account_id/followers' => 'activity_pub#followers', as: :ap_followers
+  get '/activity_pub/:account_id/following' => 'activity_pub#following', as: :ap_following
   post '/activity_pub/:account_id/inbox' => 'activity_pub#inbox_incoming_message'
   get '/activity_pub/:message_id/message' => 'activity_pub#message', as: :ap_message
   get '/activity_pub/:version_id/activity' => 'activity_pub#activity', as: :ap_activity

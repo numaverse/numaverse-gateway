@@ -1,7 +1,7 @@
 class ActivityPubController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_content_type
-  before_action :set_account, only: [:outbox, :account, :inbox, :inbox_incoming_message]
+  before_action :set_account, only: [:outbox, :account, :inbox, :inbox_incoming_message, :followers]
 
   def outbox
     @versions = @account.federated_message_versions.most_recent.page(params[:page])
@@ -38,6 +38,11 @@ class ActivityPubController < ApplicationController
     else
       render plain: "Invalid signature", status: 401
     end
+  end
+
+  def followers
+    @follows = Federated::Follow.where(to_account: @account.federated_account).page(params[:page])
+    render template: 'activity_pub/followers.json.jbuilder'
   end
 
   private

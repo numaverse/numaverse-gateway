@@ -84,5 +84,6 @@ class Account < ApplicationRecord
       display_name: display_name,
       local_account: self,
     )
+    fed_account
   end
 end

@@ -5,6 +5,8 @@ class Federated::Account < ApplicationRecord
 
   before_create :generate_keypair, if: :local?
 
+  scope :remote, -> { where.not(federated_id: nil) }
+
   class << self
     def from_remote_id(id)
       account = Federated::Account.find_or_initialize_by(federated_id: id)
@@ -40,12 +42,22 @@ class Federated::Account < ApplicationRecord
     )
   end
 
-  # hack because sometimes class names clash :(
-  # def local_account
-  #   if super == self
-  #     Account.find_by(id: local_account_id)
-  #   end
-  # end
+  def inbox
+    object_data['inbox']
+  end
+
+  # hack because sometimes class names clash :( i suck i know
+  def local_account
+    "Account".constantize.find(local_account_id)
+  end
+
+  def url_id
+    if remote?
+      federated_id
+    else
+      Rails.application.routes.url_helpers.ap_account_url(local_account.hash_address)
+    end
+  end
 
   private
 

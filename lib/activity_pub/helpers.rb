@@ -22,6 +22,7 @@ module ActivityPub
           "message": "numa:message",
           "toMessage": "numa:toMessage",
           "transactionHash": "numa:transactionHash",
+          "manuallyApprovesFollowers": "as:manuallyApprovesFollowers"
         }
       ]
     end

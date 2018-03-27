@@ -7,6 +7,7 @@ class ActivityPub::InboxFactoryJob < ApplicationJob
     if json.type == "Follow"
       follow = from_account.from_follows.find_or_initialize_by(to_account: to_account)
       follow.update!(federated_id: json.id)
+      follow.accept!
     elsif json.type == 'Undo'
       object = json.object
       if object.type == 'Follow'
