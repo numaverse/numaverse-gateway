@@ -1,7 +1,7 @@
 class ActivityPubController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_content_type
-  before_action :set_account, only: [:outbox, :account, :inbox, :inbox_incoming_message, :followers]
+  before_action :set_account, only: [:outbox, :account, :inbox, :inbox_incoming_message, :followers, :following]
 
   def outbox
     @versions = @account.federated_message_versions.most_recent.page(params[:page])
@@ -43,6 +43,11 @@ class ActivityPubController < ApplicationController
   def followers
     @follows = Federated::Follow.where(to_account: @account.federated_account).page(params[:page])
     render template: 'activity_pub/followers.json.jbuilder'
+  end
+
+  def following
+    @follows = Federated::Follow.where(from_account: @account.federated_account).page(params[:page])
+    render template: 'activity_pub/following.json.jbuilder'
   end
 
   private

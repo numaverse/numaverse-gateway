@@ -109,7 +109,11 @@ RSpec.describe ActivityPubController, type: :controller do
       get :activity, params: { version_id: @version.id }
     end
 
-    pending 'sets version data'
+    it 'sets version data' do
+      expect(json.object.to).to eql(['https://www.w3.org/ns/activitystreams#Public'])
+      expect(json.object.content).to eql(@version.object_changes['content'])
+      expect(json.type).to eql('Update')
+    end
   end
 
   describe '#inbox_incoming_message', :vcr do
@@ -169,6 +173,26 @@ RSpec.describe ActivityPubController, type: :controller do
       expect(json.id).to eql(ap_followers_url(account.hash_address))
       expect(json.totalItems).to eql(2)
       expect(json.orderedItems.first).to eql(ap_account_url(from_local_account.hash_address))
+      expect(json.orderedItems[1]).to eql("http://localhost:3000/users/admin")
+    end
+  end
+
+  describe 'following', :vcr do
+    let(:account) { create(:confirmed_account) }
+    let(:federated_account) { account.reload.federated_account }
+    let(:to_local_account) { create(:confirmed_account) }
+    let(:to_account) { to_local_account.update_federated_model }
+    let(:to_remote_account) { create(:remote_account) }
+    let!(:federated_follow) { create(:federated_follow, from_account: federated_account, to_account: to_account) }
+    let!(:remote_follow) { create(:federated_follow, from_account: federated_account, to_account: to_remote_account) }
+    before do
+      get :following, params: { account_id: account.hash_address }
+    end
+    
+    it 'shows following' do
+      expect(json.id).to eql(ap_following_url(account.hash_address))
+      expect(json.totalItems).to eql(2)
+      expect(json.orderedItems.first).to eql(ap_account_url(to_local_account.hash_address))
       expect(json.orderedItems[1]).to eql("http://localhost:3000/users/admin")
     end
   end
