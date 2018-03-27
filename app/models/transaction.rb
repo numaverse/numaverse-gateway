@@ -21,19 +21,20 @@ class Transaction < ApplicationRecord
 
   class << self
     def make_by_address(address)
-      # puts address
-      tx = by_address(address)
-      if tx.blank?
-        tx = Transaction.new(address: address)
-        tx.strip_0x
-        # puts tx.address
-        data = tx.get_blockchain_info
-        tx.from_data(data)
-        tx.save!
-        tx.update_block_info(info: data)
-        tx.save
+      Transaction.transaction do
+        tx = by_address(address)
+        if tx.blank?
+          tx = Transaction.new(address: address)
+          tx.strip_0x
+          # puts tx.address
+          data = tx.get_blockchain_info
+          tx.from_data(data)
+          tx.save!
+          tx.update_block_info(info: data)
+          tx.save
+        end
+        tx
       end
-      tx
     end
   end
 

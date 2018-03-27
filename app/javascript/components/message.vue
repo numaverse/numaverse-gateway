@@ -68,8 +68,8 @@
             {{ messageData.repost_count }}
 
           //- i.ml-3.mr-1.fa.fa-refresh(title="Tip", v-bind:class="{pointer: (currentAccount && !messageData.is_tipped)}", v-on:click="repost(message)", :id="'repost-message-'+messageData.id")
-          a.text-muted.ml-3.mr-1(title="Tip", v-bind:class="{pointer: (currentAccount && !messageData.is_tipped)}", v-on:click="tip", :id="'tip-message-'+messageData.id")
-            {{ messageData.tips }}
+          //- a.text-muted.ml-3.mr-1(title="Tip", v-bind:class="{pointer: (currentAccount && !messageData.is_tipped)}", v-on:click="tip", :id="'tip-message-'+messageData.id")
+          //-   {{ messageData.tips }}
         
         b-tooltip(:target="'reply-message-'+messageData.id", title="Reply")
         b-tooltip(:target="'favorite-message-'+messageData.id", title="Favorite")

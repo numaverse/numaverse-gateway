@@ -126,6 +126,7 @@ group :test, :development do
   gem 'rubocop'
   gem 'pronto'
   gem 'pronto-rubocop', require: false
+  gem 'rails-controller-testing'
 end
 
 group :test do

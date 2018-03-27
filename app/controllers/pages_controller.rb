@@ -4,6 +4,11 @@ class PagesController < ApplicationController
   helper_method :can_skip_captcha?, :faucet_min, :faucet_max
 
   def home
+    query = params[:query]
+    if query && /\A@[a-z0-9][a-z0-9_]*@[a-z0-9]*\.\w*\z/.match?(query)
+      redirect_to search_federated_accounts_path(handle: query)
+      return
+    end
     @messages = Message.order('created_at desc')
       .visible
       .page(params[:page])

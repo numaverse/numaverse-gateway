@@ -1,0 +1,2 @@
+module Federated::AccountsHelper
+end

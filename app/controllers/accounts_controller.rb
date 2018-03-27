@@ -1,7 +1,7 @@
 class AccountsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:update, :attach_transaction]
   before_action :authenticate_user!, except: [:show]
-  before_action :load_account
+  before_action :load_account, except: [:federated_account]
 
   def show
     @messages = @account.messages.visible.order('created_at desc').page(params[:page])
@@ -28,17 +28,6 @@ class AccountsController < ApplicationController
 
   def edit
     authorize! :manage, @account
-  end
-
-  def transfer
-    account = current_account
-    if params[:message_id]
-      @message = Message.find(params[:message_id])
-      @tip = account.tip(@account, params[:amount].to_i, @message)
-      @transaction = @tip.tx
-    else
-      @transaction = account.transfer(@account, params[:amount].to_i)
-    end
   end
 
   private

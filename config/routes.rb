@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   get 'auth/login' => 'authentication#login', as: :login
   get 'auth/sign' => 'authentication#sign', as: :auth_sign
   delete 'auth/logout' => 'authentication#logout', as: :logout
@@ -53,6 +54,14 @@ Rails.application.routes.draw do
   get '/activity_pub/:message_id/message' => 'activity_pub#message', as: :ap_message
   get '/activity_pub/:version_id/activity' => 'activity_pub#activity', as: :ap_activity
   get '/.well-known/webfinger' => 'activity_pub#webfinger', as: :webfinger
+
+  namespace :federated do
+    resources :accounts, only: [:show] do
+      collection do
+        get :search
+      end
+    end
+  end
 
   mount Sidekiq::Web => '/sidekiq'
 end
