@@ -28,7 +28,8 @@ RSpec.describe ActivityPubController, type: :controller do
       versions = account.federated_message_versions.most_recent
       versions.each_with_index do |version, index|
         item = json.orderedItems[index]
-        expect(item.object.except('url', 'id')).to hash_eql(version.object_changes.except('actor', 'id'))
+        expect(item.object.except('url', 'id','to')).to hash_eql(version.object_changes.except('actor', 'id'))
+        expect(item.to).to include("https://www.w3.org/ns/activitystreams#Public")
         expect(item.id).to eql(ap_activity_url(version.id))
         expect(item.object.url).to eql(message_url(version.federated_message.local_message_id))
         expect(item.object.id).to eql(ap_message_url(version.federated_message_id))

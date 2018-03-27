@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180327024124) do
+ActiveRecord::Schema.define(version: 20180327192452) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,6 +87,11 @@ ActiveRecord::Schema.define(version: 20180327024124) do
     t.string "display_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "shared_inbox_url"
+    t.string "inbox_url"
+    t.string "outbox_url"
+    t.string "followers_url"
+    t.string "following_url"
   end
 
   create_table "federated_follows", force: :cascade do |t|

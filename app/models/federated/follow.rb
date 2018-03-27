@@ -6,7 +6,7 @@ class Federated::Follow < ApplicationRecord
     return true unless from_account.remote? && to_account.local?
 
     json = ActivityPub::Accept.new(self).data
-    ap json
+    # ap json
 
     request = ActivityPub::Request.new(from_account.inbox, 
       verb: :post,

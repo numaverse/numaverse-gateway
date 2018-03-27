@@ -100,4 +100,54 @@ http_interactions:
       string: ''
     http_version: 
   recorded_at: Tue, 27 Mar 2018 14:28:56 GMT
+- request:
+    method: post
+    uri: http://localhost:3000/inbox
+    body:
+      encoding: UTF-8
+      string: '{"@context":["https://www.w3.org/ns/activitystreams",{"numa":"https://numachain.com/ns","address":"numa:address","location":"numa:location","Tip":"as:Tip","valueNuwei":"numa:valueNuwei","message":"numa:message","toMessage":"numa:toMessage","transactionHash":"numa:transactionHash","manuallyApprovesFollowers":"as:manuallyApprovesFollowers"}],"id":"https://numa.localtunnel.me/activity_pub/1/activity","type":"Create","published":"2018-03-27T20:01:03.400Z","to":["https://www.w3.org/ns/activitystreams#Public"],"actor":"https://numa.localtunnel.me/activity_pub/0x69259eef222c232a3cb3599a3556cc371f014121/account","object":{"type":"Note","content":"Pariatur
+        optio omnis voluptatem ipsa saepe.","id":"https://numa.localtunnel.me/activity_pub/1/message","ipfs_hash":null,"foreign_id":null,"plainTextContent":"Pariatur
+        optio omnis voluptatem ipsa saepe.","uuid":"40b566bb-18b1-4198-b424-6200f5e0d585","hiddenAt":null,"url":"https://numa.localtunnel.me/messages/1","to":["https://www.w3.org/ns/activitystreams#Public"]}}'
+    headers:
+      Content-Type:
+      - application/activity+json
+      Accept:
+      - application/activity+json
+      Host:
+      - localhost
+      Date:
+      - Tue, 27 Mar 2018 20:01:03 GMT
+      Digest:
+      - SHA-256=ELkxhASewmffCvP4/TncNrw//bklC8Ok4woeb45ihCs=
+      Signature:
+      - keyId="https://numa.localtunnel.me/activity_pub/0x69259eef222c232a3cb3599a3556cc371f014121/account#main-key",algorithm="rsa-sha256",headers="(request-target)
+        host date content-type accept digest",signature="gVzWca1w1bEW049O4nYxmqYnZ07n99WDNHaDtQBc2dMdzjgupEpbnuMjEa5D1AJlQqTVmbMl0w8TsKNW9jkiQoGBRXsoegcswDcdFwNjK+0hb289oqCMsuhflYh9CgW+mTon04Pk4jYbuUv1dQunJ4+R5iu2fzcHKD0LUOkEknxGDgvCEywoUc5PYhH14ol0TKxvy9F5Ydoy4POJaMr8Q1kRynacXj5Yr6ZpV4gaE7KHyI1BPsLUhxU9VjSsFTW+KSxQhYhbsLVQ01JpbnCSm68hH8GEXIhyXNgbKOPpI/dCTzvi4d9qLK7Y+4FF8CXuncKXShpapoKdX/kadWVsMg=="
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept-Encoding
+      Cache-Control:
+      - no-cache
+      X-Request-Id:
+      - 1104e609-d027-47eb-bc1c-bf452583f49c
+      X-Runtime:
+      - '1.586347'
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Tue, 27 Mar 2018 20:01:05 GMT
 recorded_with: VCR 4.0.0

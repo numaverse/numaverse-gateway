@@ -15,6 +15,10 @@ class Federated::Account < ApplicationRecord
       end
       account
     end
+
+    def shared_inboxes
+      Federated::Account.remote.where.not(shared_inbox_url: nil).select('distinct(shared_inbox_url)').pluck('shared_inbox_url')
+    end
   end
 
   def local?
@@ -34,12 +38,26 @@ class Federated::Account < ApplicationRecord
     json = ActivityPub::Request.new(federated_id).perform_json
     data = json.except('@context')
     update(
-      public_key: json['publicKey'].try(:[], 'publicKeyPem'),
+      public_key: json['publicKey']&.fetch('publicKeyPem'),
       object_data: data,
       username: json['preferredUsername'],
       display_name: json['name'],
-      avatar_url: json['icon'].try(:[], 'url')
+      avatar_url: json['icon']&.fetch('url'),
+      inbox_url: json['inbox'],
+      outbox_url: json['outbox'],
+      followers_url: json['followers'],
+      following_url: json['following'],
+      shared_inbox_url: json['endpoints']&.fetch('sharedInbox'),
     )
+  end
+
+  def follower_ids
+    @follower_ids ||= to_follows.select('distinct(from_account_id)').uniq.pluck('from_account_id')
+  end
+
+  def follower_inboxes
+    without_shared_inbox = Federated::Account.remote.where(shared_inbox_url: nil, id: follower_ids).select('distinct(inbox_url)').pluck('inbox_url')
+    without_shared_inbox + self.class.shared_inboxes
   end
 
   def inbox

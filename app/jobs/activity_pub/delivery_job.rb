@@ -3,20 +3,22 @@ class ActivityPub::DeliveryJob < ApplicationJob
 
   def perform(version)
     account = version.federated_message.federated_account
-    account.to_follows.each do |follow|
-      deliver_to_account = follow.from_account
-      deliver_from_account = follow.to_account
-      next unless deliver_to_account.remote? && deliver_from_account.local?
-      inbox = deliver_to_account.object_data['inbox']
+    
+    return true unless account.local?
+
+    renderer = ApplicationController.new
+    json = renderer.render_to_string('activity_pub/version.json.jbuilder', locals: { 
+      version: version, 
+      account: account.local_account,
+    })
+
+    inboxes = account.follower_inboxes
+
+    inboxes.each do |inbox|
       Rails.logger.debug "Delivering to inbox: #{inbox}"
-      renderer = ApplicationController.new
-      account = Account.find(deliver_from_account.local_account_id)
-      json = renderer.render_to_string('activity_pub/version.json.jbuilder', locals: { 
-        version: version, 
-        account: account,
-      })
+      
       request = ActivityPub::Request.new(inbox, 
-        from_account: deliver_from_account, 
+        from_account: account, 
         verb: :post, 
         body: json,
       )
