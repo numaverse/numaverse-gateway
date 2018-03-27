@@ -26,10 +26,6 @@
     = analytics_init if Rails.env.production?
 
   %body.pb-3
-    - if current_user
-      :javascript
-        window.userUuid = "#{current_user.uuid}";
-        window.currentUser = #{raw render partial: 'users/show.json.jbuilder', locals: { user: current_user }};
     - if current_account
       :javascript
         window.currentAccountAddress = "#{current_account.hash_address}";
@@ -72,7 +68,7 @@
                   %a.dropdown-item{href: new_message_path} Write an Article
                   %a.dropdown-item{href: edit_account_path(current_account.username || current_account.hash_address)} Edit Profile
                   %a.dropdown-item{href: account_path(current_account.username || current_account.hash_address)} View Your Profile
-                  %a.dropdown-item{href: edit_user_registration_path} Settings
+                  -# %a.dropdown-item{href: edit_user_registration_path} Settings
                   %a.dropdown-item{href: logout_path, data: { method: :delete }} Log Out
             - else
               %li.nav-item

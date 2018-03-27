@@ -20,24 +20,6 @@ class PagesController < ApplicationController
     @message = Message.new
   end
 
-  def faucet
-  end
-
-  def faucet_captcha
-    if can_skip_captcha? || verify_recaptcha
-      min = faucet_min
-      max = faucet_max
-      puts [min, max].join(', ')
-      @amount = rand(max+min) - min
-
-      Account.user_pool.try(:transfer, current_user.managed_account, @amount)
-
-      redirect_to faucet_path, notice: "Nice! You got #{@amount / 1e18} $NUMA."
-    else
-      redirect_to faucet_path, alert: "Sorry, we couldn't verify that captcha."
-    end
-  end
-
   def upload_avatar
     if params[:file].size > 2.megabytes
       size = helpers.number_to_human_size(params[:file].size)

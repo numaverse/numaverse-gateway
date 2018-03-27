@@ -19,14 +19,13 @@
             strong Address:
             .mt-0
             span.tiny {{ shortAddress }}
-        
-        p.mt-2
-          small
-            strong Balance:
-            .mt-0 
-            {{ balance }}
 
-          send-numa-button(:account="account", @response="response => { this.updatedBalance = response.to_user.balance; }")
+        p.mt-2(v-if="isCurrentAccount")
+          small
+            strong Fediverse Handle:
+            .mt-0
+            span.tiny {{ fediverseHandle }}
+
 </template>
 
 <script>
@@ -47,6 +46,12 @@ export default {
       const len = this.account.address.length;
       const addr = this.account.address;
       return addr.slice(0,15) + '..' + addr.slice(len-15);
+    },
+    isCurrentAccount() {
+      return currentAccount && this.account.id == currentAccount.id;
+    },
+    fediverseHandle() {
+      return `@${currentAccount.username}@${document.location.host}`;
     }
   }
 }
