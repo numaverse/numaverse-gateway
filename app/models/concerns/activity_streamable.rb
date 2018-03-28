@@ -16,11 +16,11 @@ module ActivityStreamable
         transitions from: [:draft, :uploaded, :pending, :confirmed], to: :uploaded
       end
 
-      event :transact do
-        transitions from: :uploaded, to: :pending
+      event :transact, after: :update_federated_model do
+        transitions from: [:draft, :uploaded, :pending, :confirmed], to: :pending
       end
 
-      event :confirm, after: :update_federated_model do
+      event :confirm do
         transitions from: [:draft, :uploaded, :pending, :confirmed], to: :confirmed
       end
     end

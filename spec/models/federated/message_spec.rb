@@ -32,13 +32,13 @@ RSpec.describe Federated::Message, type: :model do
 
     it 'works end-to-end with local message changes' do
       message = create(:message)
-      message.confirm
+      message.transact
 
       fed_message = message.reload.federated_message
       expect(fed_message.versions.first.created?).to eql(true)
 
       message.update(body: 'wasup')
-      message.confirm
+      message.transact
       expect(fed_message.versions.reload.last.object_changes).to hash_eql({content: 'wasup', plainTextContent: 'wasup'})
     end
   end

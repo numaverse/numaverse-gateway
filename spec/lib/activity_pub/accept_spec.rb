@@ -2,9 +2,9 @@ require 'rails_helper'
 
 describe ActivityPub::Accept do
   context 'follows' do
-    let(:account) { create(:confirmed_account) }
+    let(:account) { create(:transacted_account) }
     let(:federated_account) { account.reload.federated_account }
-    let(:from_local_account) { create(:confirmed_account) }
+    let(:from_local_account) { create(:transacted_account) }
     let(:from_account) { from_local_account.update_federated_model }
     let(:remote_account) { create(:remote_account) }
     let!(:federated_follow) { create(:federated_follow, from_account: from_account, to_account: federated_account) }

@@ -37,17 +37,17 @@ RSpec.describe Message, type: :model do
   end
 
   describe 'federated_message' do
-    it 'creates a federated message when confirmed' do
+    it 'creates a federated message when transacted' do
       message = create(:message)
       expect(message.federated_message).to be_blank
-      message.confirm
+      message.transact
       fed_message = message.reload.federated_message
       expect(fed_message).to be_present
       expect(fed_message.object_data).to hash_eql(message.activity_stream.object_data)
       expect(fed_message.local_account_id).to eql(message.account_id)
 
       message.update(aasm_state: 'uploaded', body: 'another')
-      message.confirm
+      message.transact
 
       fed_message = message.reload.federated_message
       expect(fed_message.object_data).to hash_eql(message.activity_stream.object_data)

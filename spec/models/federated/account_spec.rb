@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Federated::Account, type: :model do
-  let(:account) { create(:confirmed_account) }
+  let(:account) { create(:transacted_account) }
   let(:federated_account) { account.reload.federated_account }
 
   describe '#keys' do

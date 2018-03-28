@@ -49,9 +49,9 @@ RSpec.describe Account, type: :model do
   describe '#federated_account' do
     let(:account) { create(:account_with_data) }
 
-    it 'creates a federated account when confirmed' do
+    it 'creates a federated account when transacted' do
       expect(account.federated_account).to be_blank
-      account.confirm
+      account.transact
       fed_account = account.reload.federated_account
       expect(fed_account).to be_present
       expect(fed_account.username).to eql(account.username)
@@ -59,7 +59,7 @@ RSpec.describe Account, type: :model do
       username = Faker::Internet.user_name.gsub(".","_")
       display_name = Faker::Name.name
       account.update(username: username, display_name: display_name)
-      account.confirm
+      account.transact
       fed_account.reload
       expect(fed_account.username).to eql(username)
       expect(fed_account.display_name).to eql(display_name)

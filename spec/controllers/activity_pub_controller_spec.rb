@@ -71,7 +71,7 @@ RSpec.describe ActivityPubController, type: :controller do
   end
 
   describe '#account' do
-    let(:account) { create(:confirmed_account) }
+    let(:account) { create(:transacted_account) }
     let(:federated_account) { account.reload.federated_account }
     before do
       get :account, params: { account_id: account.hash_address }
@@ -117,7 +117,7 @@ RSpec.describe ActivityPubController, type: :controller do
   end
 
   describe '#inbox_incoming_message', :vcr do
-    let(:account) { create(:confirmed_account, address: '0x8d3e4e4b76e60b5371e23103539f24ae5d43b359') }
+    let(:account) { create(:transacted_account, address: '0x8d3e4e4b76e60b5371e23103539f24ae5d43b359') }
     let(:federated_account) { account.reload.federated_account }
 
     def make_follow_request(type)
@@ -159,9 +159,9 @@ RSpec.describe ActivityPubController, type: :controller do
   end
 
   describe 'followers', :vcr do
-    let(:account) { create(:confirmed_account) }
+    let(:account) { create(:transacted_account) }
     let(:federated_account) { account.reload.federated_account }
-    let(:from_local_account) { create(:confirmed_account) }
+    let(:from_local_account) { create(:transacted_account) }
     let(:from_account) { from_local_account.update_federated_model }
     let!(:federated_follow) { create(:federated_follow, from_account: from_account, to_account: federated_account) }
     let!(:remote_follow) { create(:federated_follow, from_account: Federated::Account.from_remote_id("http://localhost:3000/users/admin"), to_account: federated_account) }
@@ -178,9 +178,9 @@ RSpec.describe ActivityPubController, type: :controller do
   end
 
   describe 'following', :vcr do
-    let(:account) { create(:confirmed_account) }
+    let(:account) { create(:transacted_account) }
     let(:federated_account) { account.reload.federated_account }
-    let(:to_local_account) { create(:confirmed_account) }
+    let(:to_local_account) { create(:transacted_account) }
     let(:to_account) { to_local_account.update_federated_model }
     let(:to_remote_account) { create(:remote_account) }
     let!(:federated_follow) { create(:federated_follow, from_account: federated_account, to_account: to_account) }

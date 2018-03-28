@@ -1,9 +1,9 @@
 <template lang="jade">
 .row
   check-network
-  .col-3
+  .col-md-3.d-none.d-md-block
     user-card(:account="account")
-  .col-6
+  .col-md-6.col-xs-12
     messages-list(:messages="messages")
 </template>
 
