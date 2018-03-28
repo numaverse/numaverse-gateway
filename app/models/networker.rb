@@ -17,6 +17,7 @@ class Networker
         bytecode = json['bytecode']
         client = get_client
         contract = Ethereum::Contract.create(client: get_client, abi: abi, code: bytecode, name: name)
+        contract.sender = '0x0000000000000000000000000000000000000000'
         contract
       end
     end
