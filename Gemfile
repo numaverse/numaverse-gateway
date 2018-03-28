@@ -80,6 +80,7 @@ gem "attr_encrypted", "~> 3.0.0"
 gem 'faker'
 gem 'redcarpet', '~> 3.4.0'
 gem 'sanitize', '~> 4.6.3'
+gem 'loofah', '~> 2.2.1'
 gem 'gutentag', '~> 2.0.0'
 gem 'money-rails', '~>1'
 gem 'gravatar_image_tag'
