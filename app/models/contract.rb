@@ -23,7 +23,7 @@ class Contract < ApplicationRecord
 
   def eth_contract
     @contract ||= begin
-      file = File.read("#{Rails.root}/build/contracts/#{name}.json")
+      file = File.read("#{Rails.root}/build/contracts/Numa.json")
       json = JSON.parse(file)
       abi = json['abi']
       bytecode = json['bytecode']

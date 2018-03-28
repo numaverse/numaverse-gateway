@@ -2,8 +2,8 @@ module WebText
   class << self
     def format(string)
       string = string.gsub(/@(\w+)/) { username_link Regexp.last_match[1] }
-      string = string.gsub(/([\$|#]\w+)/) { hashtag_link Regexp.last_match[1] }
-      string = string.gsub(URI.regexp) { url_link Regexp.last_match }
+      string = string.gsub(/([\$|#][a-zA-Z]+)/) { hashtag_link Regexp.last_match[1] }
+      string = string.gsub(URI::regexp(%w(http https ipfs))) { url_link Regexp.last_match }
       string
     end
 
