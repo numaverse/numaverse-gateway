@@ -75,7 +75,8 @@ export default {
   methods: {
     uploadSuccess(file, response) {
       console.log(file, response);
-      this.avatar_ipfs_hash = response.ipfs_hash;
+      json = JSON.parse(response)
+      this.avatar_ipfs_hash = json.ipfs_hash;
       const { dropzone } = this.$refs.dropzone;
       while (dropzone.files.length > 1) {
         dropzone.removeFile(dropzone.files[0]);
