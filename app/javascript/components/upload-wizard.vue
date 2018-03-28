@@ -75,7 +75,7 @@ export default {
           method: 'post',
           dataType: 'json',
           data: {
-            tx_hash: result.tx
+            tx_hash: result
           }
         });
         console.log(response);
@@ -97,11 +97,10 @@ export default {
       try {
         let result = null;
         if (this.modelData.foreign_id) {
-          result = await contract.updateMessage(this.modelData.foreign_id, this.ipfsBytes32, this.transactionOptions);
+          result = await contract.updateMessage.sendTransaction(this.modelData.foreign_id, this.ipfsBytes32, this.transactionOptions);
         } else {
-          result = await contract.createMessage(this.ipfsBytes32, this.transactionOptions);
+          result = await contract.createMessage.sendTransaction(this.ipfsBytes32, this.transactionOptions);
         }
-        console.log(result);
         this.alertSuccess(`Awesome! Your ${this.model} has been sent to the Ethereum blockchain.`);
         await this.attachTransaction(result);
         this.$emit(`${this.model}Success`, this.modelData);
@@ -113,16 +112,27 @@ export default {
     },
     async sendToUsersContract() {
       const contract = await metamask.contract();
-      contract.updateUser(this.ipfsBytes32, this.transactionOptions).then((result) => {
+      try {
+        const result = await contract.updateUser.sendTransaction(this.ipfsBytes32, this.transactionOptions)
         console.log(result);
         this.attachTransaction(result);
         this.alertSuccess("Awesome! Your profile has been updated on Ethereum.");
         this.hide();
         this.$emit("userSuccess");
-      }).catch((error) => {
+      } catch (error) {
         this.alertError("Sorry, there was an error when updating your profile on Ethereum.");
         console.log(error);
-      })
+      }
+      // contract.updateUser(this.ipfsBytes32, this.transactionOptions).then((result) => {
+      //   console.log(result);
+      //   this.attachTransaction(result);
+      //   this.alertSuccess("Awesome! Your profile has been updated on Ethereum.");
+      //   this.hide();
+      //   this.$emit("userSuccess");
+      // }).catch((error) => {
+      //   this.alertError("Sorry, there was an error when updating your profile on Ethereum.");
+      //   console.log(error);
+      // })
     },
     async postOnEthereum(event) {
       event.preventDefault();

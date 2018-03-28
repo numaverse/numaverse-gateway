@@ -31,10 +31,6 @@ class Account < ApplicationRecord
 
   end
 
-  def user
-    users.first
-  end
-
   def following_messages(relation: nil)
     (relation || Message).where(account_id: following_account_ids)
   end

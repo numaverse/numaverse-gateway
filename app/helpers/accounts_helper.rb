@@ -2,12 +2,10 @@ module AccountsHelper
   def link_to_account(account)
     if account.blank?
       nil
-    elsif account.hash_address.downcase == ENV['CONTRACT_ADDRESS'].downcase
-      "Messages Smart Contract"
-    elsif account.hash_address.downcase == Account.user_pool.try(:hash_address).try(:downcase)
-      "User Growth Pool"
-    elsif account.user
-      link_to "@#{account.user.username}", user_path(account.user.username)
+    elsif account.hash_address.downcase == Contract.numa.hash_address.downcase
+      "Numa Smart Contract"
+    elsif account.username.present?
+      link_to "@#{account.username}", account_path(account.username)
     else
       short_address(account.hash_address, length: 15)
     end
