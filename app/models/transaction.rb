@@ -1,7 +1,7 @@
 class Transaction < ApplicationRecord
   include HashAddressable
 
-  validates_presence_of :from, :gas, :gas_price, :input, :nonce, :address
+  validates_presence_of :address
 
   belongs_to :block, optional: true
   belongs_to :message, optional: true
@@ -28,9 +28,11 @@ class Transaction < ApplicationRecord
           tx.strip_0x
           # puts tx.address
           data = tx.get_blockchain_info
-          tx.from_data(data)
-          tx.save!
-          tx.update_block_info(info: data)
+          if data.present?
+            tx.from_data(data)
+            tx.save!
+            tx.update_block_info(info: data)
+          end
           tx.save
         end
         tx
@@ -52,7 +54,7 @@ class Transaction < ApplicationRecord
       nonce: tx.nonce,
       to_account: tx.to.present? ? Account.make_by_address(tx.to) : nil,
       from_account: tx.from.present? ? Account.make_by_address(tx.from) : nil,
-      value_nuwei: tx.value.from_hex
+      value_nuwei: tx.value.try(:from_hex),
     )
     self
   end
