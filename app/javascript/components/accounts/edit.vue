@@ -4,14 +4,14 @@ div
   notifications(group="account-error", :duration="10000")
   notifications(group="account-success", :duration="10000")
   .row(v-if="!account.ipfs_hash")
-    .col-3
-    .col-6
+    .col-3.d-none.d-md-block
+    .col-md-6.col-xs-12
       .alert.alert-danger.mt-3.mb-3
         | You haven't setup your account on the blockchain yet. Fill out your profile first!
 
   .row
-    .col-3
-    .col-6
+    .col-3.d-none.d-md-block
+    .col-md-6.col-xs-12
       .card
         h4.card-header Update your profile
         .card-body

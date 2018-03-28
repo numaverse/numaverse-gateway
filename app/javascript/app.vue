@@ -4,7 +4,7 @@
   notifications(group="app-message", :duration="10000")
   alerts(ref="alerts")
   .row.mt-2
-    .col-3
+    .col-md-3.d-md-block.d-none
       .home-user.home-user__welcome.card(v-if="!currentAccount")
         .card-body
           h5.mb-3 Welcome to Numa!
@@ -40,7 +40,7 @@
       .home-user(v-if="currentAccount")
         user-card(:account="currentAccount")
         
-    .col-6
+    .col-md-6.col-xs-12
       div(v-if="currentAccount")
         check-network
         upload-wizard(ref="uploadWizard", model="message", @messageSuccess="showNewMessage")
@@ -71,9 +71,6 @@
       p.small.text-muted(v-else) Public Feed:
       .mt-3
       messages-list(:messages="messages")
-              
-
-    .col-3
   
 </template>
 

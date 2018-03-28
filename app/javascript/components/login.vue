@@ -2,14 +2,14 @@
 .row
   notifications(group="login-error", :duration="10000")
   notifications(group="login-success", :duration="10000")
-  .col-2
-  .col-8
+  .col-2.d-none.d-md-block
+  .col-md-8.col-xs-12
     .card
       h4.card-header Login with MetaMask
       .card-body
         .row
-          .col-2
-          .col-8
+          .col-2.d-none.d-md-block
+          .col-md-8.col-xs-12
             div(v-if="enabled")
               div(v-if="address")
                 p.text-center
