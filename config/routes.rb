@@ -31,7 +31,6 @@ Rails.application.routes.draw do
 
   resources :messages, except: [:index] do
     member do
-      post :refresh
       post :repost
       post :reply
       post :attach_transaction

@@ -35,13 +35,6 @@ RSpec.describe MessagesController, type: :controller do
       end
     end
 
-    describe 'refresh' do
-      it 'should block' do
-        post :refresh, params: { id: message.id }
-        expect(response).to redirect_to('/auth/login')
-      end
-    end
-
     describe 'destroy' do
       it 'should block' do
         delete :destroy, params: { id: message.id }
@@ -88,13 +81,6 @@ RSpec.describe MessagesController, type: :controller do
       it 'can create' do
         post :create, params: { body: 'hello world', json_schema: :micro, format: :json }
         expect(response).to be_success
-      end
-    end
-
-    describe 'refresh' do
-      it 'can refresh' do
-        expect_any_instance_of(Message).to receive(:update_tx_data)
-        post :refresh, params: { id: message.id }
       end
     end
 
@@ -158,12 +144,5 @@ RSpec.describe MessagesController, type: :controller do
       end
     end
 
-    describe 'refresh' do
-      it 'cant refresh' do
-        expect {
-          post :refresh, params: { id: other.id }
-        }.to raise_error(CanCan::AccessDenied)
-      end
-    end
   end
 end
