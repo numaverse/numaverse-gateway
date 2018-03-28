@@ -95,6 +95,8 @@ gem 'json', '~> 1.8'
 gem "recaptcha", require: "recaptcha/rails"
 gem 'aasm'
 gem 'goldfinger', '~> 2.1'
+gem 'httparty', '~> 0.13.7'
+gem "sentry-raven"
 group :test, :development do
   gem 'rspec-rails'
   gem 'factory_bot_rails'
@@ -106,7 +108,6 @@ group :test, :development do
   gem 'ruby_gntp'
   gem 'rb-fsevent'
   gem 'mocha', require: false
-  gem 'httparty', '~> 0.13.7'
   gem 'thor', '~> 0.19.0'
   gem 'rails-erd'
   gem 'lorem-ipsum'

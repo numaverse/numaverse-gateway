@@ -447,6 +447,8 @@ GEM
       faraday (~> 0.8, < 1.0)
     scrypt (3.0.5)
       ffi-compiler (>= 1.0, < 2.0)
+    sentry-raven (2.6.3)
+      faraday (>= 0.7.6, < 1.0)
     sexp_processor (4.10.0)
     shellany (0.0.1)
     sidekiq (5.0.5)
@@ -595,6 +597,7 @@ DEPENDENCIES
   ruby_gntp
   sanitize
   sass-rails (~> 5.0)
+  sentry-raven
   sidekiq
   simplecov
   split

@@ -1,7 +1,6 @@
 class PagesController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:upload_avatar]
-  before_action :authenticate_user!, only: [:new_message, :faucet_captcha]
-  helper_method :can_skip_captcha?, :faucet_min, :faucet_max
+  before_action :authenticate_user!, only: [:new_message]
 
   def home
     query = params[:query]
@@ -38,19 +37,5 @@ class PagesController < ApplicationController
   end
   
   def welcome
-  end
-
-  private
-
-  def can_skip_captcha?
-    Rails.env.development? && params['dev_recaptcha'].blank?
-  end
-
-  def faucet_min
-    1e18.to_i / 10
-  end
-
-  def faucet_max
-    1e18.to_i
   end
 end

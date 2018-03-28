@@ -8,8 +8,6 @@ Rails.application.routes.draw do
 
   get '/all' => 'pages#home', as: :all
   get '/welcome' => 'pages#welcome', as: :welcome
-  get '/faucet' => 'pages#faucet', as: :faucet
-  post '/faucet_captcha' => 'pages#faucet_captcha', as: :faucet_captcha
 
   resources :accounts, path: 'u', only: [:show, :edit, :update] do
     member do
