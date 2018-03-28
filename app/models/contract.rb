@@ -22,6 +22,15 @@ class Contract < ApplicationRecord
   end
 
   def eth_contract
-    Networker.get_contract(name.to_s.capitalize, address: hash_address)
+    @contract ||= begin
+      file = File.read("#{Rails.root}/build/contracts/#{name}.json")
+      json = JSON.parse(file)
+      abi = json['abi']
+      bytecode = json['bytecode']
+      client = Networker.get_client
+      contract = Ethereum::Contract.create(client: client, abi: abi, code: bytecode, name: name, address: hash_address)
+      contract.sender = '0x0000000000000000000000000000000000000000'
+      contract
+    end
   end
 end

@@ -57,7 +57,7 @@ class IpfsServer
     end
 
     def hash_data(hash)
-      unless /[a-zA-Z0-9]{46}/.match?(hash)
+      unless /^[a-zA-Z0-9]{46}$/.match?(hash)
         raise 'Tried to decode an invalid IPFS hash'
       end
 
@@ -70,6 +70,10 @@ class IpfsServer
     end
 
     def data_to_hash(hash_function, hash_size, hex)
+      unless /^[a-zA-Z0-9]{64}$/.match(hex)
+        raise 'Tried to encode invalid IPFS hex'
+      end
+
       args = [
         'encode',
         hash_function.to_s(16),

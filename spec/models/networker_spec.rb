@@ -69,14 +69,6 @@ describe Networker do
 
     end
 
-    describe '.get_contract' do
-      it 'initializes the right contract' do
-        contract = Contract.numa.eth_contract
-        expect(contract.address).to eql(Contract.numa.hash_address)
-        expect(contract.call).to respond_to(:users)
-      end
-    end
-
     describe '.events' do
       it 'only fetches events that havent been logged before' do
         account = make_eth_account

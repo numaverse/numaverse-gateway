@@ -6,7 +6,6 @@ module NumaChain
         client = Networker.get_client
         contract = Ethereum::Contract.create(file: "#{Rails.root}/contracts/Numa.sol", client: client)
         contract = Contract.update_address :numa, contract.deploy_and_wait
-        # ap contract
       rescue => e
         retry unless (tries -= 1).zero?
         raise e
