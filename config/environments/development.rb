@@ -18,17 +18,6 @@ Rails.application.configure do
   config.action_controller.default_url_options = config.action_mailer.default_url_options
   Rails.application.routes.default_url_options = config.action_mailer.default_url_options
 
-  # config.paperclip_defaults = {
-  #   :storage => :s3,
-  #   preserve_files: true,
-  #   s3_region: 'us-east-1',
-  #   :s3_credentials => {
-  #     :bucket => 'numachain-dev',
-  #     :access_key_id => ENV['AWS_ACCESS_KEY_ID'],
-  #     :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']
-  #   }
-  # }
-
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on

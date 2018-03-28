@@ -79,12 +79,11 @@ gem 'eth'
 gem "attr_encrypted", "~> 3.0.0"
 gem 'faker'
 gem 'redcarpet', '~> 3.4.0'
-gem 'sanitize'
+gem 'sanitize', '~> 4.6.3'
 gem 'gutentag', '~> 2.0.0'
 gem 'money-rails', '~>1'
 gem 'gravatar_image_tag'
 gem 'aws-sdk', '~> 2.3.0'
-gem "paperclip", "~> 5.0.0"
 gem 'textacular', '~> 5.0'
 gem 'kaminari'
 gem 'ipfs', require: 'ipfs/client', github: 'numaverse/ipfs-ruby', branch: 'numa'
@@ -98,6 +97,7 @@ gem 'goldfinger', '~> 2.1'
 gem 'httparty', '~> 0.13.7'
 gem "sentry-raven"
 gem 'redis-namespace'
+gem 'sinatra', '~> 2.0.1'
 group :test, :development do
   gem 'rspec-rails'
   gem 'factory_bot_rails'
