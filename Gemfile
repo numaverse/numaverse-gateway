@@ -97,6 +97,7 @@ gem 'aasm'
 gem 'goldfinger', '~> 2.1'
 gem 'httparty', '~> 0.13.7'
 gem "sentry-raven"
+gem 'redis-namespace'
 group :test, :development do
   gem 'rspec-rails'
   gem 'factory_bot_rails'

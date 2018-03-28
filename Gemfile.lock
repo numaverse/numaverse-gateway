@@ -388,6 +388,8 @@ GEM
       json
     redcarpet (3.4.0)
     redis (4.0.1)
+    redis-namespace (1.6.0)
+      redis (>= 3.0.4)
     request_store (1.4.0)
       rack (>= 1.4)
     rlp (0.7.3)
@@ -591,6 +593,7 @@ DEPENDENCIES
   rb-fsevent
   recaptcha
   redcarpet (~> 3.4.0)
+  redis-namespace
   rspec-rails
   rubocop
   ruby-progressbar
