@@ -4,7 +4,8 @@ Rails.application.routes.draw do
   get 'auth/sign' => 'authentication#sign', as: :auth_sign
   delete 'auth/logout' => 'authentication#logout', as: :logout
 
-  root to: 'pages#home'
+  root to: 'pages#home', constraints: lambda { |request| request.session['account_id'].present? }
+  root to: 'pages#welcome'
 
   get '/all' => 'pages#home', as: :all
   get '/welcome' => 'pages#welcome', as: :welcome
