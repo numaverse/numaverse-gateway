@@ -1,5 +1,6 @@
 <template lang="jade">
 div
+  check-network
   div(v-if="message.json_schema === 'article'")
     .row
       .col-2

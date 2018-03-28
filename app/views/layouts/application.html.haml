@@ -26,13 +26,16 @@
     = analytics_init if Rails.env.production?
 
   %body.pb-3
+    :javascript
+      window.contractAddress = "#{Contract.numa.try(:hash_address)}";
+      window.ipfsGatewayAddress = "#{IpfsServer.gateway_address}";
+      window.currentAccount = null;
+      window.currentAccountAddress = null;
+      window.chainID = parseInt("#{ENV['CHAIN_ID'] || 1337}");
     - if current_account
       :javascript
         window.currentAccountAddress = "#{current_account.hash_address}";
         window.currentAccount = #{raw render partial: 'accounts/show.json.jbuilder', locals: { account: current_account }};
-    :javascript
-      window.contractAddress = "#{Contract.numa.try(:hash_address)}";
-      window.ipfsGatewayAddress = "#{IpfsServer.gateway_address}";
     %nav.navbar.navbar-expand-lg.navbar-light.bg-light
       .container
         %a.navbar-brand.h1.mb-0{:href => "/"} Numa

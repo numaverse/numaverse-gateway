@@ -1,5 +1,6 @@
 <template lang="jade">
 .row
+  check-network
   .col-3
     user-card(:account="account")
   .col-6

@@ -3,26 +3,36 @@ import EventEmitter from 'wolfy87-eventemitter';
 import NumaContract from '../../../build/contracts/Numa.json'
 import contract from 'truffle-contract';
 
+const enabled = typeof web3 !== 'undefined';
 let web3js = null;
-if (typeof web3 !== 'undefined') {
+let coinbase = null;
+let chainName = 'Development'
+let emitter = null;
+if (enabled) {
   web3js = new Web3(web3.currentProvider);
+  window.metamask = web3js;
+  console.log('in web3js', web3js);
+  emitter = new EventEmitter();
+
+  coinbase = web3js.eth.accounts[0];
+
+  const coinbaseTimer = setInterval(() => {
+    const account = web3js.eth.accounts[0];
+    if (coinbase != account) {
+      coinbase = account;
+      emitter.emitEvent('accountChanged', [account]);
+    }
+  }, 1000);
+
+  if (chainID == 1) {
+    chainName = "Ethereum Main";
+  } else if (chainID == 3) {
+    chainName = "Ropsten Test";
+  }
 }
 
-window.metamask = web3js;
-console.log('in web3js', web3js);
-const emitter = new EventEmitter();
-
-let coinbase = web3js.eth.accounts[0];
-
-const coinbaseTimer = setInterval(() => {
-  const account = web3js.eth.accounts[0];
-  if (coinbase != account) {
-    coinbase = account;
-    emitter.emitEvent('accountChanged', [account]);
-  }
-}, 1000);
-
 export default {
+  enabled: enabled,
   getAccount(callback) {
     if (coinbase) {
       callback(coinbase);
@@ -33,6 +43,7 @@ export default {
   sign(message, callback) {
     web3js.personal.sign(web3js.toHex(message), coinbase, callback);
   },
+  chainName: chainName,
   coinbase: coinbase,
   async contract() {
     if (!contractAddress) {

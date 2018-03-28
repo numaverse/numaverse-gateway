@@ -22,7 +22,7 @@ class IpfsServer
     end
 
     def uri
-      uri = Addressable::URI.parse(ENV['IPFS_ADDRESS'])
+      uri = Addressable::URI.parse(ipfs_address)
       port = ipfs_port
       uri.port = port unless [80, 443].include?(port)
       uri

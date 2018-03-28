@@ -34,6 +34,9 @@ Vue.component('upload-wizard', UploadWizard);
 import Alerts from './components/alerts.vue';
 Vue.component('alerts', Alerts);
 
+import CheckNetwork from './components/check-network.vue';
+Vue.component('check-network', CheckNetwork);
+
 import AlertsMixin from './components/mixins/alert-mixins';
 Vue.mixin(AlertsMixin);
 

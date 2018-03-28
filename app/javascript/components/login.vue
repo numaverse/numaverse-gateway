@@ -7,16 +7,36 @@
     .card
       h4.card-header Login with MetaMask
       .card-body
-        p.text-center
-          | To login, first select an account in MetaMask. 
-        p.text-center.mt-1
-          |When you click 'sign in', we'll ask you to sign
-          | a message, which allows us to verify that you own this address.
-        .form-group
-          label(for="address") Address
-          input.disabled.form-control(type="text", v-model="address", disabled="disabled")
-        //- a(href="javascript")
-        b-button(variant="success", v-on:click="sign", :block="true") Sign In
+        .row
+          .col-2
+          .col-8
+            div(v-if="enabled")
+              div(v-if="address")
+                p.text-center
+                  | To login, first select an account in MetaMask. 
+                p.text-center.mt-1
+                  |When you click 'sign in', we'll ask you to sign
+                  | a message, which allows us to verify that you own this address.
+                .form-group
+                  label(for="address") Address
+                  input.disabled.form-control(type="text", v-model="address", disabled="disabled")
+                b-button(variant="success", v-on:click="sign", :block="true") Sign In
+              div(v-else)
+                p.text-center.mt-1
+                  | It looks like MetaMask is locked. Enter your password in MetaMask to log in.
+
+            div(v-else)
+              p.text-center
+                | To interact with the Ethereum blockchain securely, you need to install
+                a(href="https://metamask.io", target="_blank")  Metamask
+                |.
+
+              p.text-center.mt-1
+                | Once you've installed Metamask, just refresh this page to sign in.
+              
+              .mt-3
+              p.mt-3.text-center
+                a.btn.btn-primary.btn-lg.btn-block(href="https://metamask.io", target="_blank")  Install Metamask
 </template>
 
 <script>
@@ -27,10 +47,14 @@ export default {
     return {
       address: null,
       account: null,
+      enabled: metamask.enabled,
+      locked: false,
     };
   },
   mounted() {
-    metamask.getAccount(this.accountCallback);
+    if (this.enabled) {
+      metamask.getAccount(this.accountCallback);
+    }
   },
   methods: {
     accountCallback(address) {

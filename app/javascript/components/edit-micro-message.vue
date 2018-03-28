@@ -1,5 +1,6 @@
 <template lang="jade">
 .row
+  check-network
   alerts(ref="alerts")
   .col-3
   .col-6

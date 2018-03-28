@@ -76,34 +76,35 @@
         b-tooltip(:target="'repost-message-'+messageData.id", title="Repost")
         //- b-tooltip(:target="'tip-message-'+messageData.id", :title="messageData.is_tipped ? 'Tips' : 'Send a Tip'")
 
-        upload-wizard(ref="replyUploadWizard", model="message", @messageSuccess="replySuccess")
-        upload-wizard(ref="repostUploadWizard", model="message", @messageSuccess="repostSuccess")
-        upload-wizard(ref="hideUploadWizard", model="message", @messageSuccess="hideSuccess")
-        upload-wizard(ref="favoriteUploadWizard", model="favorite", @favoriteSuccess="favoriteSuccess")
-        b-modal(:ref="'reply-modal-'+messageData.id", title="Reply", @ok="submitReply", ok-title="Reply")
-          p
-            small
-              strong Original Message:
-            br
-            {{ messageData.body }}
-          .mt-2
-          textarea.form-control(placeholder="Type your response", v-model="replyBody")
-          p.small
-            span.text-muted  Max 280 characters.
-            span(v-if="replyBody.length > 0", v-bind:class="{ 'text-muted': (replyBody.length <= 280), 'text-danger': (replyBody.length > 280) }")
-              |  Currently {{ replyBody.length }} {{ replyBody.length === 0 ? 'character' : 'characters' }}.
+        div(v-if="currentAccount")
+          upload-wizard(ref="replyUploadWizard", model="message", @messageSuccess="replySuccess")
+          upload-wizard(ref="repostUploadWizard", model="message", @messageSuccess="repostSuccess")
+          upload-wizard(ref="hideUploadWizard", model="message", @messageSuccess="hideSuccess")
+          upload-wizard(ref="favoriteUploadWizard", model="favorite", @favoriteSuccess="favoriteSuccess")
+          b-modal(:ref="'reply-modal-'+messageData.id", title="Reply", @ok="submitReply", ok-title="Reply")
+            p
+              small
+                strong Original Message:
+              br
+              {{ messageData.body }}
+            .mt-2
+            textarea.form-control(placeholder="Type your response", v-model="replyBody")
+            p.small
+              span.text-muted  Max 280 characters.
+              span(v-if="replyBody.length > 0", v-bind:class="{ 'text-muted': (replyBody.length <= 280), 'text-danger': (replyBody.length > 280) }")
+                |  Currently {{ replyBody.length }} {{ replyBody.length === 0 ? 'character' : 'characters' }}.
 
-        b-modal(ref="confirmHideModal", title="Are you sure?", @ok="submitHide", ok-title="Hide")
-          p
-            | Because Numa is built on top of a public blockchain, no one can ever permanently 'delete' a record.
-            |  However, you can mark your message as hidden, which will prevent it from being displayed publicly.
+          b-modal(ref="confirmHideModal", title="Are you sure?", @ok="submitHide", ok-title="Hide")
+            p
+              | Because Numa is built on top of a public blockchain, no one can ever permanently 'delete' a record.
+              |  However, you can mark your message as hidden, which will prevent it from being displayed publicly.
 
-          p To confirm that you want to hide this message, click "Hide".
+            p To confirm that you want to hide this message, click "Hide".
         
-        send-numa-modal(ref="modal",
-                        :account="messageData.account",
-                        :message="messageData"
-                        @sent="handleTipResponse")
+        //- send-numa-modal(ref="modal",
+        //-                 :account="messageData.account",
+        //-                 :message="messageData"
+        //-                 @sent="handleTipResponse")
 </template>
 
 <script>

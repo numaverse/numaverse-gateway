@@ -12,21 +12,29 @@
             p
               | Numa is a distributed social network.
             p
-              | It's built on top of an Ethereum-based blockchain,
-              | so all the core data is open to anyone.
+              | It's built on top of
+              a(href="https://ethereum.org/", target="_blank")  Ethereum
+              |  and 
+              a(href="https://ipfs.io/", target="_blank")  IPFS
+              |, which means that no central authority owns your data.
 
             p
-              | To encourage users to joins, we're currently giving away millions of NUMA,
-              | the cryptocurrency that lets you post messages
-              | onto the blockchain.
+              | All the code is
+              a(href="https://github.com/numaverse/numaverse-gateway")  open source
+              |, so you can even run your own Numa server and use the same
+              | exact account you use on this site!
 
             p
-              | To get started, just
-              a(href="/users/sign_up")  sign up for a free account
-              |  and you'll get 5 NUMA right away.
+              | By default your messages are shared through the blockchain,
+              | but Numa follows federated standards, so it's also compatible
+              | with other federated social networks like
+              a(href="https://joinmastodon.org", target="_blank")  Mastodon
+              |.
 
             p
-              | By following people, posting messages, 
+              | To get started,
+              a(href="/auth/login")  sign in with Ethereum
+              |.
 
 
       .home-user(v-if="currentAccount")
@@ -34,6 +42,7 @@
         
     .col-6
       div(v-if="currentAccount")
+        check-network
         upload-wizard(ref="uploadWizard", model="message", @messageSuccess="showNewMessage")
         textarea.form-control(placeholder="Write something on the Ethereum blockchain", v-model="newMessage")
         a.btn.btn-primary.mt-1(v-on:click="postMessage()", href="javascript:;", 

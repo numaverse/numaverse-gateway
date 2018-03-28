@@ -1,5 +1,6 @@
 <template lang="jade">
 div
+  check-network
   notifications(group="account-error", :duration="10000")
   notifications(group="account-success", :duration="10000")
   .row(v-if="!account.ipfs_hash")
