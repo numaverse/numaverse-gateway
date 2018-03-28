@@ -1,7 +1,7 @@
 class MessagesController < ApplicationController
   before_action :authenticate_user!, except: [:show]
   skip_before_action :verify_authenticity_token, only: [:create, :update, :repost, :reply, :destroy, :attach_transaction]
-  before_action :set_message, only: [:show, :edit, :update, :destroy, :refresh, :repost, :reply, :attach_transaction]
+  before_action :set_message, only: [:show, :edit, :update, :destroy, :repost, :reply, :attach_transaction]
 
   def new
   end
@@ -33,12 +33,6 @@ class MessagesController < ApplicationController
     @message.save!
 
     render 'create'
-  end
-
-  def refresh
-    authorize! :refresh, @message
-    @message.update_tx_data
-    redirect_to @message
   end
 
   def destroy

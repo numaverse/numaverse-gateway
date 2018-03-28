@@ -55,19 +55,3 @@
               = val.to_i(16)
             - else
               = val  
-
-    - if can? :refresh, @message
-      %p
-        %a.btn.btn-secondary{href: refresh_message_path(@message), data: { method: :post } } Refresh
-
-    -# - if @message.user && current_user == @message.user
-    -#   .space3
-    -#   %hr
-    -#   %p
-    -#     %small
-    -#       Because you wrote this message, you can hide it from public timelines.
-
-    -#   %p
-    -#     -# %a.btn.btn-primary{href: edit_message_path(@message)} Update
-      
-    -#     %a.btn-danger.btn{href: message_path, data: { method: :delete, confirm: "Are you sure you want to hide this post?"}} Hide
