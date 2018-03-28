@@ -10,9 +10,15 @@ class Networker
     end
 
     def get_contract(name, address: )
-      client = get_client
-      contract = Ethereum::Contract.create(file: "contracts/#{name}.sol", address: address, client: client)
-      contract
+      @contract ||= begin
+        file = File.read("#{Rails.root}/build/contracts/#{name}.json")
+        json = JSON.parse(file)
+        abi = json['abi']
+        bytecode = json['bytecode']
+        client = get_client
+        contract = Ethereum::Contract.create(client: get_client, abi: abi, code: bytecode, name: name)
+        contract
+      end
     end
 
     def get_message(id, contract)
