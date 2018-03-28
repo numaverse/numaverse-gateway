@@ -1,5 +1,5 @@
 GIT
-  remote: https://github.com/hstove/ethereum.rb.git
+  remote: https://github.com/numaverse/ethereum.rb.git
   revision: c7bdfc265fc846c523cad96621f3ea12724b55b6
   branch: numa
   specs:
@@ -8,18 +8,20 @@ GIT
       digest-sha3 (~> 1.1)
 
 GIT
-  remote: https://github.com/numachain/money-tree.git
+  remote: https://github.com/numaverse/ipfs-ruby.git
+  revision: 6d36ca781d4840797e2690e9d1e8a2193dd19381
+  branch: numa
+  specs:
+    ipfs (0.2.1)
+      http (~> 3.0)
+
+GIT
+  remote: https://github.com/numaverse/money-tree.git
   revision: d98b642a5af65360517cc30b940d42f740317f15
   branch: numa
   specs:
     money-tree (0.9.0)
       ffi
-
-PATH
-  remote: ../ipfs-ruby
-  specs:
-    ipfs (0.2.1)
-      http
 
 GEM
   remote: https://rubygems.org/

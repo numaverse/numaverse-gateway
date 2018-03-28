@@ -28,14 +28,14 @@ module BlockchainTestHelpers
   end
 
   def post_message_on_chain(message)
-    contract = Contract.messages
+    contract = Contract.numa
     return false unless contract
 
     message.post_on_ipfs
     if message.foreign_id
-      encoded = js_sign('Messages', 'updateMessage', [message.foreign_id] + message.smart_contract_args)
+      encoded = js_sign('updateMessage', [message.foreign_id] + message.smart_contract_args)
     else
-      encoded = js_sign('Messages', 'createMessage', message.smart_contract_args)
+      encoded = js_sign('createMessage', message.smart_contract_args)
     end
 
     tx_hash = Networker.get_client.eth_send_transaction({
@@ -53,8 +53,8 @@ module BlockchainTestHelpers
     tx
   end
 
-  def js_sign(contract_name, func, args)
-    signed_hex = `node app/javascript/signer.js #{contract_name} #{func} #{args.join(' ')}`.strip;
+  def js_sign(func, args)
+    signed_hex = `node app/javascript/signer.js #{func} #{args.join(' ')}`.strip;
 
     signed_hex.split("\n").last
   end
@@ -98,11 +98,11 @@ module BlockchainTestHelpers
   end
 
   def post_account_on_chain(account)
-    contract = Contract.users
+    contract = Contract.numa
     return false unless contract
 
     account.post_on_ipfs
-    encoded = js_sign('Users', 'update', account.smart_contract_args)
+    encoded = js_sign('updateUser', account.smart_contract_args)
 
     tx_hash = Networker.get_client.eth_send_transaction({
       from: account.hash_address,

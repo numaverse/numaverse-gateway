@@ -93,8 +93,7 @@ export default {
       }
     },
     async sendToMessagesContract() {
-      const contract = await metamask.messagesContract();
-      console.log(contract);
+      const contract = await metamask.contract();
       try {
         let result = null;
         if (this.modelData.foreign_id) {
@@ -103,7 +102,7 @@ export default {
           result = await contract.createMessage(this.ipfsBytes32, this.transactionOptions);
         }
         console.log(result);
-        this.alertSuccess("Awesome! Your message has been sent to the Ethereum blockchain.");
+        this.alertSuccess(`Awesome! Your ${this.model} has been sent to the Ethereum blockchain.`);
         await this.attachTransaction(result);
         this.$emit(`${this.model}Success`, this.modelData);
         this.hide();
@@ -113,10 +112,9 @@ export default {
       }
     },
     async sendToUsersContract() {
-      const contract = await metamask.usersContract();
-      console.log(contract.update);
+      const contract = await metamask.contract();
       try {
-        const result = await contract.update(this.ipfsBytes32, this.transactionOptions);
+        const result = await contract.updateUser(this.ipfsBytes32, this.transactionOptions);
         console.log(result);
         this.attachTransaction(result);
         this.alertSuccess("Awesome! Your profile has been updated on Ethereum.");

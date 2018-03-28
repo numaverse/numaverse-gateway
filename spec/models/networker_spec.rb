@@ -6,7 +6,7 @@ describe Networker do
   context 'end-to-end', :end_to_end do
 
     it 'can interact with a newly deployed messages contract' do
-      messages_contract = Contract.messages.eth_contract
+      messages_contract = Contract.numa.eth_contract
       expect(messages_contract.call.messages_length).to eql(0)
       account = make_eth_account
       message = create(:message, account: account)
@@ -27,7 +27,7 @@ describe Networker do
 
     it 'can interact with a users contract', :vcr do
       account = make_eth_account
-      users_contract = Contract.users.eth_contract
+      users_contract = Contract.numa.eth_contract
       expect(users_contract.call.users(account.hash_address)).to be_blank
       tx = post_account_on_chain(account)
       ipfs_hash = account.smart_contract_args.first
@@ -71,8 +71,8 @@ describe Networker do
 
     describe '.get_contract' do
       it 'initializes the right contract' do
-        contract = Contract.users.eth_contract
-        expect(contract.address).to eql(Contract.users.hash_address)
+        contract = Contract.numa.eth_contract
+        expect(contract.address).to eql(Contract.numa.hash_address)
         expect(contract.call).to respond_to(:users)
       end
     end
@@ -80,13 +80,13 @@ describe Networker do
     describe '.events' do
       it 'only fetches events that havent been logged before' do
         account = make_eth_account
-        users_contract = Contract.users.eth_contract
+        users_contract = Contract.numa.eth_contract
         expect(users_contract.call.users(account.hash_address)).to be_blank
         tx = post_account_on_chain(account)
         expect(Networker.users_events.size).to eql(1)
         NumaChain::Sync.users
 
-        expect(Contract.users.contract_events.size).to eql(1)
+        expect(Contract.numa.contract_events.size).to eql(1)
 
         expect(Networker.users_events.size).to eql(0)
 

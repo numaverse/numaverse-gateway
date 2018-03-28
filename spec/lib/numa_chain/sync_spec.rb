@@ -44,7 +44,7 @@ describe NumaChain::Sync, :end_to_end do
       end
 
       it 'works with updates' do
-        messages_contract = Contract.messages.eth_contract
+        messages_contract = Contract.numa.eth_contract
         account = make_eth_account
         message = create(:message, account: account)
         post_message_on_chain(message)
@@ -71,7 +71,7 @@ describe NumaChain::Sync, :end_to_end do
 
     context 'articles' do
       it 'works for articles' do
-        messages_contract = Contract.messages.eth_contract
+        messages_contract = Contract.numa.eth_contract
         account = make_eth_account
         message = create(:article, account: account)
 
@@ -90,7 +90,7 @@ describe NumaChain::Sync, :end_to_end do
       end
 
       it 'works with updates' do
-        messages_contract = Contract.messages.eth_contract
+        messages_contract = Contract.numa.eth_contract
         account = make_eth_account
         message = create(:article, account: account)
         post_message_on_chain(message)

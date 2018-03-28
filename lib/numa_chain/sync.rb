@@ -18,7 +18,7 @@ module NumaChain
       def users
         Rails.logger.debug "Syncing Users"
         events = Networker.users_events
-        contract = Contract.users
+        contract = Contract.numa
         eth_contract = contract.eth_contract
 
         events.each do |event|
@@ -64,7 +64,7 @@ module NumaChain
       end
 
       def process_message_events(events, name: )
-        contract = Contract.messages
+        contract = Contract.numa
         eth_contract = contract.eth_contract
 
         events.each do |event|

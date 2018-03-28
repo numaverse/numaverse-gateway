@@ -31,8 +31,7 @@
         window.currentAccountAddress = "#{current_account.hash_address}";
         window.currentAccount = #{raw render partial: 'accounts/show.json.jbuilder', locals: { account: current_account }};
     :javascript
-      window.usersContractAddress = "#{Contract.users.try(:hash_address)}";
-      window.messagesContractAddress = "#{Contract.messages.try(:hash_address)}";
+      window.contractAddress = "#{Contract.numa.try(:hash_address)}";
     %nav.navbar.navbar-expand-lg.navbar-light.bg-light
       .container
         %a.navbar-brand.h1.mb-0{:href => "/"} Numa
@@ -45,13 +44,6 @@
                 %a.nav-link{href: all_path} All
             %li.nav-item
               %a.nav-link{:href => welcome_path} About
-            -# %li.nav-item.dropdown
-            -#   %a.nav-link.dropdown-toggle{href: 'javascript:;', id: 'nav-blockchain-dropdown', role: :button, data: { toggle: 'dropdown' }, aria: { haspopup: "true", expanded: "false" }}
-            -#     Blockchain
-            -#   .dropdown-menu{aria: { labelledby: 'nav-blockchain-dropdown' }}
-            -#     %a.dropdown-item{href: blocks_path} Blocks
-            -#     %a.dropdown-item{href: transactions_path} Transactions
-            -#     %a.dropdown-item{href: faucet_path} Faucet
           %form.form-inline.my-2.my-lg-0{action: all_path, method: :get}
             %input.form-control.mr-sm-2{"aria-label" => "Search", :placeholder => "Search", :type => "search", name: :query}
             %button.btn.btn-outline-success.my-2.my-sm-0{:type => "submit"} Search

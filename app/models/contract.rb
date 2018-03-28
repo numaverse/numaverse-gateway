@@ -6,8 +6,7 @@ class Contract < ApplicationRecord
   validates_uniqueness_of :name
 
   enum name: {
-    messages: 0,
-    users: 1
+    numa: 2,
   }
 
   class << self
@@ -17,12 +16,8 @@ class Contract < ApplicationRecord
       contract
     end
 
-    def messages
-      find_by name: :messages
-    end
-
-    def users
-      find_by name: :users
+    def numa
+      find_by name: :numa
     end
   end
 

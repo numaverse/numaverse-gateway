@@ -74,7 +74,7 @@
         b-tooltip(:target="'reply-message-'+messageData.id", title="Reply")
         b-tooltip(:target="'favorite-message-'+messageData.id", title="Favorite")
         b-tooltip(:target="'repost-message-'+messageData.id", title="Repost")
-        b-tooltip(:target="'tip-message-'+messageData.id", :title="messageData.is_tipped ? 'Tips' : 'Send a Tip'")
+        //- b-tooltip(:target="'tip-message-'+messageData.id", :title="messageData.is_tipped ? 'Tips' : 'Send a Tip'")
 
         upload-wizard(ref="replyUploadWizard", model="message", @messageSuccess="replySuccess")
         upload-wizard(ref="repostUploadWizard", model="message", @messageSuccess="repostSuccess")

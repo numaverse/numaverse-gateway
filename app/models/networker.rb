@@ -15,13 +15,6 @@ class Networker
       contract
     end
 
-    def contract_addresses
-      {
-        "Messages" => ENV['CONTRACT_ADDRESS'],
-        "Users" => ENV['USERS_CONTRACT_ADDRESS']
-      }
-    end
-
     def get_message(id, contract)
       sender, hex = contract.call.messages(id)
       hex = hex.unpack('H*').first
@@ -64,12 +57,12 @@ class Networker
     end
 
     def messages_events(name:)
-      contract = Contract.messages
+      contract = Contract.numa
       events = events(contract, name)
     end
 
     def users_events
-      contract = Contract.users
+      contract = Contract.numa
       events = events(contract, 'UserUpdated')
     end
 

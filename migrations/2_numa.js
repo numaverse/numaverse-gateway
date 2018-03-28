@@ -1,7 +1,5 @@
-var Messages = artifacts.require("Messages");
-var Users = artifacts.require("Users");
+var Numa = artifacts.require("Numa");
 
 module.exports = function (deployer, network, accounts) {
-  deployer.deploy(Messages);
-  deployer.deploy(Users);
+  deployer.deploy(Numa);
 };
