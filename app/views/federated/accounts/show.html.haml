@@ -1,0 +1,24 @@
+.row
+  .col-2
+  .col-8
+    .row
+      .col-2
+        - avatar = @account.avatar_url || default_avatar
+        -# = image_tag(avatar, class: '')
+        %img.rounded-circle{src: avatar, title: @account.username}
+      .col-10
+        .display-4= @account.display_name
+        %h4= '@' + @account.username
+        %p= link_to @account.federated_id, @account.federated_id, target: :_blank
+          
+    %p
+      = '@' + @account.username
+      is part of the fediverse! Simply hit the 'follow' button, and their
+      posts will show up in your timeline.
+
+    %p.mt-3
+      Once you start following them, there posts will show up here, as well as
+      on the federated timeline on your homepage.
+
+    -# = debug @account.object_data
+    -# = debug @account

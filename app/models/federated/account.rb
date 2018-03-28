@@ -38,16 +38,16 @@ class Federated::Account < ApplicationRecord
     json = ActivityPub::Request.new(federated_id).perform_json
     data = json.except('@context')
     update(
-      public_key: json['publicKey']&.fetch('publicKeyPem'),
+      public_key: json['publicKey'].try(:[], 'publicKeyPem'),
       object_data: data,
       username: json['preferredUsername'],
       display_name: json['name'],
-      avatar_url: json['icon']&.fetch('url'),
+      avatar_url: json['icon'].try(:[], 'url'),
       inbox_url: json['inbox'],
       outbox_url: json['outbox'],
       followers_url: json['followers'],
       following_url: json['following'],
-      shared_inbox_url: json['endpoints']&.fetch('sharedInbox'),
+      shared_inbox_url: json['endpoints'].try(:[], 'sharedInbox'),
     )
   end
 

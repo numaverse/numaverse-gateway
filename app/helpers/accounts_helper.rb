@@ -29,12 +29,16 @@ module AccountsHelper
     if account.avatar_ipfs_hash.present?
       ipfs_image_url(account.avatar_ipfs_hash, size: size)
     else
-      "/avatar/Avatar@#{size}.png"
+      default_avatar(size: size)
     end
   end
 
   def ipfs_image_url(ipfs_hash, size: :medium)
     "http://ipfs.numachain.com/image/#{ipfs_hash}?size=#{avatar_sizes[size]}"
+  end
+
+  def default_avatar(size: :medium)
+    "/avatar/Avatar@#{size}.png"
   end
 
   def avatar_sizes
