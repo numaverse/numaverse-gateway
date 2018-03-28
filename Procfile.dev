@@ -1,6 +1,6 @@
 web: bin/rails s -p 9000
 webpack: bin/webpack-dev-server
 sidekiq: bundle exec sidekiq
-guard: bundle exec guard -c -P livereload
+guard: bundle exec guard -P livereload
 chain: geth --dev --config dev-chain/config.toml --rpc --rpcport 8545 --rpccorsdomain "*" --keystore ./dev-chain/geth-keys --datadir ./dev-chain/geth-data --gasprice 0
 ipfs: ipfs daemon

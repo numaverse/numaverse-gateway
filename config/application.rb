@@ -9,6 +9,7 @@ Bundler.require(*Rails.groups)
 module Numa
   class Application < Rails::Application
     config.autoload_paths << "#{config.root}/lib"
+    config.eager_load_paths << "#{config.root}/lib"
     # config.autoload_paths += %W(#{config.root}/../ethereum.rb/lib)
     # config.autoload_paths += Dir["#{config.root}/../ethereum.rb/lib/**/"]
     config.active_job.queue_adapter = :sidekiq
