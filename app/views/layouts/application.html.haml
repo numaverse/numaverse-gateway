@@ -43,9 +43,8 @@
           %span.navbar-toggler-icon
         #navbarSupportedContent.collapse.navbar-collapse
           %ul.navbar-nav.mr-auto
-            - if current_account
-              %li.nav-item
-                %a.nav-link{href: all_path} All
+            %li.nav-item
+              %a.nav-link{href: all_path} All
             %li.nav-item
               %a.nav-link{:href => welcome_path} About
           %form.form-inline.my-2.my-lg-0{action: all_path, method: :get}
