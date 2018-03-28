@@ -10,7 +10,7 @@ describe ActivityPub::Person do
     context = data['@context']
     expect(context).to include("https://www.w3.org/ns/activitystreams")
     custom = context.last
-    expect(custom.numa).to eql("https://numachain.com/ns")
+    expect(custom.numa).to eql("https://numaverse.com/ns")
     expect(custom.address).to eql("numa:address")
     expect(custom.location).to eql("numa:location")
   end
@@ -29,6 +29,6 @@ describe ActivityPub::Person do
   it 'sets the icon' do
     icon = data.icon
     expect(icon.type).to eql("Image")
-    expect(icon.url).to eql("http://ipfs.numachain.com/image/#{account.avatar_ipfs_hash}")
+    expect(icon.url).to eql("https://ipfs.numaverse.com/image/#{account.avatar_ipfs_hash}")
   end
 end

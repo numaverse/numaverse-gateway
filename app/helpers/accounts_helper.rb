@@ -34,7 +34,7 @@ module AccountsHelper
   end
 
   def ipfs_image_url(ipfs_hash, size: :medium)
-    "http://ipfs.numachain.com/image/#{ipfs_hash}?size=#{avatar_sizes[size]}"
+    IpfsServer.image_url(ipfs_hash, size: avatar_sizes[size])
   end
 
   def default_avatar(size: :medium)

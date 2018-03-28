@@ -144,7 +144,7 @@ export default {
       return `ipfs://${this.ipfsHash}`
     },
     ipfsGatewayLink() {
-      return `http://ipfs.numachain.com/ipfs/${this.ipfsHash}`
+      return `${ipfsGatewayAddress}/ipfs/${this.ipfsHash}`
     },
     ipfsBytes32() {
       return ipfs.bytes32(this.ipfsHash);

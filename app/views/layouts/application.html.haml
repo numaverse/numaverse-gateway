@@ -32,6 +32,7 @@
         window.currentAccount = #{raw render partial: 'accounts/show.json.jbuilder', locals: { account: current_account }};
     :javascript
       window.contractAddress = "#{Contract.numa.try(:hash_address)}";
+      window.ipfsGatewayAddress = "#{IpfsServer.gateway_address}";
     %nav.navbar.navbar-expand-lg.navbar-light.bg-light
       .container
         %a.navbar-brand.h1.mb-0{:href => "/"} Numa

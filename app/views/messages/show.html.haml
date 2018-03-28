@@ -21,13 +21,11 @@
 
       %dt.col-5 IPFS File
       %dd.col-7.text-truncate
-        -# - url = "https://datbase.org/#{@message.dat_folder_id}/contents/#{@message.uid}.json"
-        - url = "http://ipfs.numachain.com/ipfs/#{@message.ipfs_hash}"
+        - url = IpfsServer.gateway_url(@message.ipfs_hash)
         = link_to url, url, target: :_blank
 
       %dt.col-5 Raw IPFS Link
       %dd.col-7.text-truncate
-        -# - url = "https://datbase.org/#{@message.dat_folder_id}/contents/#{@message.uid}.json"
         - url = "ipfs://#{@message.ipfs_hash}"
         = link_to url, url, target: :_blank
       

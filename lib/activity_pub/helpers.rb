@@ -14,7 +14,7 @@ module ActivityPub
       [
         "https://www.w3.org/ns/activitystreams",
         {
-          numa: "https://numachain.com/ns",
+          numa: "https://numaverse.com/ns",
           "address": "numa:address",
           "location": "numa:location",
           "Tip": "as:Tip",

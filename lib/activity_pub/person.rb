@@ -26,7 +26,7 @@ module ActivityPub
     def icon
       {
         type: "Image",
-        url: "http://ipfs.numachain.com/image/#{account.avatar_ipfs_hash}",
+        url: IpfsServer.image_url(account.avatar_ipfs_hash),
         ipfs_hash: account.avatar_ipfs_hash
       }
     end
