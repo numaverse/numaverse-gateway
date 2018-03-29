@@ -118,7 +118,7 @@ export default {
         this.attachTransaction(result);
         this.alertSuccess("Awesome! Your profile has been updated on Ethereum.");
         this.hide();
-        this.$emit("userSuccess");
+        this.$emit("accountSuccess");
       } catch (error) {
         this.alertError("Sorry, there was an error when updating your profile on Ethereum.");
         console.log(error);

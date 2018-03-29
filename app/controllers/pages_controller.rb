@@ -13,7 +13,7 @@ class PagesController < ApplicationController
       .visible
       .page(params[:page])
       .where('json_schema in (1,2)')
-    if current_account && request.path == "/"
+    if current_account && request.path == "/" && has_follows
       @messages = current_account.following_messages(relation: @messages)
     end
     if params[:query]
@@ -37,5 +37,11 @@ class PagesController < ApplicationController
   end
   
   def welcome
+  end
+
+  private
+
+  def has_follows
+    current_account&.following_account_ids != [current_account.id]
   end
 end

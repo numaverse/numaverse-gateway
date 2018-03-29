@@ -14,9 +14,7 @@
       .alert.alert-danger
         %h5
           This transaction is still pending.
-    
           
-
     %dl.row
       - if confirmations = @transaction.confirmations
         %dt.col-3 Confirmations
@@ -72,10 +70,7 @@
     %dl.row
       
       %dt.col-3 Block Number
-      %dd.col-9= link_to (@transaction.block_number || "n/a"), @transaction.block
-
-      %dt.col-3 Block Timestamp
-      %dd.col-9= @transaction.block.try(:timestamp)
+      %dd.col-9= @transaction.block_number
 
       %dt.col-3 Block Hash
       %dd.col-9

@@ -1,6 +1,7 @@
 <template lang="jade">
 div
   check-network
+  alerts(ref="alerts")
   notifications(group="account-error", :duration="10000")
   notifications(group="account-success", :duration="10000")
   .row(v-if="!account.ipfs_hash")
@@ -40,7 +41,7 @@ div
             input.form-control(type="text", v-model="location", name="location", placeholder="i.e. 'Mars'")
           
           b-button(:block="true", variant="primary", size="lg", @click="sendUpdate") Update
-  upload-wizard(ref="uploadWizard", model="account")
+  upload-wizard(ref="uploadWizard", model="account", @accountSuccess="transactionSent")
 </template>
 
 <script>
@@ -89,13 +90,12 @@ export default {
     },
     uploadError(file, data, xhr) {
       console.log(file, data, xhr);
-      const message = data.message ? data.message : "Sorry, there was an error when uploading a new avatar."; 
+      let message = "Sorry, there was an error when uploading a new avatar.";
+      try {
+        message = JSON.parse(data).message;
+      } catch (error) { }
       this.$refs.dropzone.removeAllFiles();
-      this.$notify({
-        group: 'account-error',
-        title: message,
-        type: 'error'
-      });
+      this.alertError(message);
     },
     sendUpdate() {
       console.log("sending data", this);
@@ -121,14 +121,12 @@ export default {
       })
     },
     ipfsUploadFailed(xhr, message, data) {
-      // console.log(xhr, message, data);
       this.$refs.uploadWizard.hide();
       const error = xhr.responseJSON.errors[0];
-      this.$notify({
-        group: 'account-error',
-        title: "There was an error with your update: " + error,
-        type: 'error'
-      })
+      this.alertError("There was an error with your update: " + error);
+    },
+    transactionSent() {
+      document.location = "/";
     }
   }
 }
