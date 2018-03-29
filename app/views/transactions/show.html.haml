@@ -10,8 +10,7 @@
 
     .mt-3.mb-3
 
-    - confirmations = @transaction.confirmations
-    - if confirmations == -1
+    - if @transaction.block_number.blank?
       .alert.alert-danger
         %h5
           This transaction is still pending.
@@ -19,7 +18,7 @@
           
 
     %dl.row
-      - if confirmations >= 0
+      - if confirmations = @transaction.confirmations
         %dt.col-3 Confirmations
         %dd.col-9= number_with_delimiter confirmations
 

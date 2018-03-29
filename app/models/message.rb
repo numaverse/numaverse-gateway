@@ -108,7 +108,7 @@ class Message < ApplicationRecord
   end
 
   def confirmations
-    number = tx.try(:confirmations) || 0
+    number = tx.try(:confirmations) || nil
   end
 
   def make_markdown

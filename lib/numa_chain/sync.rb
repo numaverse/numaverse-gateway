@@ -2,18 +2,6 @@ require './app/models/transaction'
 module NumaChain
   class Sync
     class << self
-      def all_blocks(min: nil)
-        client = Networker.get_client
-        Rails.logger.debug "Fetching block count"
-        max = client.eth_block_number['result'].from_hex
-        Rails.logger.debug "Current max block: #{max}"
-        min = min || Block.order('number desc').first.try(:number) || -1
-        puts (min+1..max)
-        (min+1..max).each do |block_number|
-          puts "Fetching block ##{block_number}"
-          Block.sync_number(block_number)
-        end
-      end
 
       def sync!
         client = Networker.get_client

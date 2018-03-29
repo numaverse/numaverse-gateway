@@ -93,6 +93,7 @@ gem 'goldfinger', '~> 2.1'
 gem 'httparty', '~> 0.13.7'
 gem "sentry-raven"
 gem 'redis-namespace'
+gem 'redis-rails'
 gem 'sinatra', '~> 2.0.1'
 group :test, :development do
   gem 'rspec-rails'

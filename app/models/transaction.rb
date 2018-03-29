@@ -11,7 +11,6 @@ class Transaction < ApplicationRecord
 
   after_create :update_account_balances
   after_save :update_balances_if_new_block
-  after_save :update_block_info
 
   monetize :value_nuwei
 
@@ -69,19 +68,8 @@ class Transaction < ApplicationRecord
   end
 
   def confirmations
-    last_block = Block.last_block_number
-    number = block.try(:number)
-    return -1 if number.blank?
-    last_block - number
-  end
-
-  def update_block_info(info: nil)
-    if block.blank?
-      info ||= get_blockchain_info
-      if number = info.blockNumber.try(:from_hex)
-        Block.sync_number(number)
-      end
-    end
+    return nil if block_number.blank?
+    Block.eth_block_number - block_number
   end
 
   def get_blockchain_info

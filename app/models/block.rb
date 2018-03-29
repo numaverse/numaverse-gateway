@@ -35,5 +35,11 @@ class Block < ApplicationRecord
       puts e.backtrace
       Rails.logger.error(e)
     end
+
+    def eth_block_number
+      Rails.cache.fetch('eth_block_number', {expires_in: 1.minute, race_condition_ttl: 10.seconds}) do
+        Networker.get_client.eth_block_number['result'].from_hex
+      end
+    end
   end
 end

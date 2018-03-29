@@ -14,7 +14,11 @@
     %dl.row.small
       - confirmations = @message.confirmations
       %dt.col-5 Confirmations
-      %dd.col-7= number_with_delimiter confirmations
+      %dd.col-7
+        - if confirmations
+          = number_with_delimiter confirmations
+        - else
+          %span.font-italic Pending
 
       %dt.col-5 ID on the smart contract
       %dd.col-7= @message.foreign_id || content_tag(:e, 'n/a')
