@@ -5,6 +5,7 @@ module ActivityPub
         type: "Tip",
         actor: person(object.from_account),
         object: person(object.to_account),
+        uuid: object.uuid,
         valueNuwei: object.tx.value_nuwei,
         transactionHash: object.tx.hash_address,
       }

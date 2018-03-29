@@ -5,7 +5,7 @@ module NumaChain
 
       def sync!
         client = Networker.get_client
-        contract = Contract.numa
+        contract = Contract.stateless_numa
         contract_account = Account.make_by_address(contract.hash_address)
         min_block_num = contract_account.to_transactions.maximum('block_number')
         max_block_num = client.eth_block_number['result'].from_hex
@@ -16,24 +16,94 @@ module NumaChain
           block['transactions'].each do |transaction|
             next if transaction['to'].blank? || transaction['to'].casecmp(contract.hash_address) != 0
             tx = Transaction.make_by_address(transaction['hash'], data: transaction)
-            receipt = client.eth_get_transaction_receipt(tx.hash_address)['result']
-
-            logs = {logs: receipt['logs']}.to_json
-            File.open("#{Rails.root}/tmp/contract-logs.json", 'w') do |f|
-              f << logs
-            end
-            res = JSON.parse(`node app/javascript/commands/decode-transaction.js`)[0]
-
-            hash = res['events'].last['value'][2..-1]
+            res = JSON.parse(`node app/javascript/commands/decode-transaction #{tx.input}`)
+            hash = res['params'].first['value'][2..-1]
             ipfs_hash = IpfsServer.data_to_hash(18, 32, hash)
-
-            if res['name'] == 'UserUpdated'
-              process_user_update(tx, ipfs_hash)
-            else
-              process_event(tx, res['events'].first['value'].to_i, ipfs_hash)
-            end
+            process_batch(tx, ipfs_hash)
           end
         end
+      end
+
+      def process_batch(tx, ipfs_hash)
+        sender = tx.from_account
+        begin
+          json = IpfsServer.cat(ipfs_hash)
+          json.orderedItems.each do |item|
+            if item.type == "Person"
+              process_account(tx, item)
+            elsif ['Note','Article'].include?(item.type)
+              process_message(tx, item)
+            elsif item.type == "Follow"
+              process_follow(tx, item)
+            elsif item.type == "Like"
+              process_favorite(tx, item)
+            end
+          end
+          batch = sender.fetch_batch
+          tx.update(transactable: batch)
+          batch.batch_items.batched.each(&:confirm!)
+        rescue => e
+          Rails.logger.error(e.backtrace[0..5].join("\n"))
+          Rails.logger.error(e)
+        end
+      end
+
+      def process_account(tx, json)
+        account = tx.from_account
+        username = json.preferredUsername.downcase
+        if Account.where.not(id: account.id).where("lower(username) = ?", username).first.present?
+          username = "#{username}_#{SecureRandom.hex(5)}"
+        end
+        account.confirm
+        account.update!(
+          username: username,
+          bio: json.summary,
+          display_name: json.name,
+          avatar_ipfs_hash: json.try(:icon).try(:ipfs_hash),
+        )
+      end
+
+      def process_message(tx, json)
+        message = tx.from_account.messages.find_or_initialize_by(uuid: json.uuid)
+        if json.type == "Note"
+          message.update_attributes(
+            json_schema: :micro,
+            body: json.plainTextContent,
+            hidden_at: json.hiddenAt,
+          )
+        elsif json.type == "Article"
+          message.update_attributes(
+            json_schema: :article,
+            body: json.plainTextContent,
+            title: json.name,
+            tldr: json.summary,
+            hidden_at: json.hiddenAt,
+          )
+        end
+        message.confirm!
+        message
+      end
+
+      def process_follow(tx, json)
+        follow = tx.from_account.from_follows.find_or_initialize_by(uuid: json.uuid)
+        to_account = Account.make_by_address(json.object.address)
+        follow.update(
+          to_account: to_account,
+          hidden_at: json.hiddenAt,
+        )
+        follow.confirm!
+        follow
+      end
+
+      def process_favorite(tx, json)
+        favorite = tx.from_account.favorites.find_or_initialize_by(uuid: json.uuid)
+        message = Message.find_by(uuid: json.object.uuid)
+        favorite.update(
+          message: message,
+          hidden_at: json.hiddenAt,
+        )
+        favorite.confirm!
+        favorite
       end
 
       def process_user_update(tx, ipfs_hash)

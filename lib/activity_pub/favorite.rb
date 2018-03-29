@@ -5,6 +5,7 @@ module ActivityPub
         type: "Like",
         actor: person(object.account),
         object: ActivityPub::Message.new(object.message).object_data,
+        uuid: object.uuid,
         hiddenAt: object.hidden_at,
       }
     end

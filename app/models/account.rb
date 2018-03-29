@@ -12,6 +12,7 @@ class Account < ApplicationRecord
   has_many :from_transactions, class_name: "Transaction", foreign_key: :from_account_id
   has_many :to_transactions, class_name: "Transaction", foreign_key: :to_account_id
   has_many :favorites
+  has_one :batch_item, as: :batchable
   has_many :federated_messages, class_name: 'Federated::Message', foreign_key: 'local_account_id'
   has_many :federated_message_versions, through: :federated_messages, source: 'versions'
   has_one :federated_account, class_name: 'Federated::Account', foreign_key: 'local_account_id'
@@ -38,6 +39,10 @@ class Account < ApplicationRecord
 
   def following_account_ids
     [id] + from_follows.visible.uniq.pluck('to_account_id')
+  end
+
+  def fetch_batch
+    @fetched_batch ||= Batch.find_or_create_by(account_id: id)
   end
 
   def update_balance(save: true)
@@ -82,5 +87,9 @@ class Account < ApplicationRecord
       local_account: self,
     )
     fed_account
+  end
+
+  def sender_account
+    self
   end
 end

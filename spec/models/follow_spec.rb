@@ -17,19 +17,20 @@ RSpec.describe Follow, type: :model do
     end
   end
 
-  describe '#post_on_chain!', :end_to_end do
+  describe 'posting on chain', :end_to_end do
     let(:follow) { create(:follow, from_account: make_eth_account) }
     it 'should post and fetch from the blockchain' do
-      post_message_on_chain(follow)
-
-      expect(follow.tx).to be_present
-      expect(follow.ipfs_hash).not_to be_blank
-      expect(follow.from_account.from_transactions.size).to eql(1)
+      follow.batch
+      post_batch_on_chain(follow.sender_account.fetch_batch)
 
       NumaChain::Sync.sync!
 
       follow.reload
-      expect(follow.foreign_id).to eql(0)
+      expect(follow.confirmed?).to eql(true)
+      expect(follow.from_account.from_transactions.size).to eql(1)
+      expect(follow.batches.size).to eql(1)
+      expect(follow.batches.first.tx).to be_present
+      expect(follow.batch_items.first).to be_confirmed
     end
   end
 end

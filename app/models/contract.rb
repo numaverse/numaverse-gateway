@@ -8,6 +8,7 @@ class Contract < ApplicationRecord
 
   enum name: {
     numa: 2,
+    stateless_numa: 3,
   }
 
   class << self
@@ -19,6 +20,10 @@ class Contract < ApplicationRecord
 
     def numa
       find_by name: :numa
+    end
+
+    def stateless_numa
+      find_by name: :stateless_numa
     end
   end
 

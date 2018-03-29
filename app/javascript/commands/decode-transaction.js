@@ -1,7 +1,7 @@
 const decoder = require('abi-decoder');
 
-const NumaContract = require(`../../../build/contracts/Numa.json`);
-const Logs = require('../../../tmp/contract-logs.json');
+const NumaContract = require(`../../../build/contracts/StatelessNuma.json`);
+// const Logs = require('../../../tmp/contract-logs.json');
 
 decoder.addABI(NumaContract.abi);
 
@@ -15,6 +15,6 @@ decoder.addABI(NumaContract.abi);
 
 // console.log(json);
 
-const data = decoder.decodeLogs(Logs.logs);
+const data = decoder.decodeMethod(process.argv[2]);
 
 console.log(JSON.stringify(data));

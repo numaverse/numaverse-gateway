@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180329015705) do
+ActiveRecord::Schema.define(version: 20180329142031) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,25 @@ ActiveRecord::Schema.define(version: 20180329015705) do
     t.string "ipfs_hash"
     t.string "location"
     t.string "aasm_state"
+  end
+
+  create_table "batch_items", force: :cascade do |t|
+    t.integer "batch_id"
+    t.string "batchable_type"
+    t.integer "batchable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "batched_at"
+    t.string "aasm_state"
+  end
+
+  create_table "batches", force: :cascade do |t|
+    t.integer "account_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "aasm_state"
+    t.string "ipfs_hash"
+    t.string "uuid"
   end
 
   create_table "blocks", force: :cascade do |t|
@@ -75,6 +94,7 @@ ActiveRecord::Schema.define(version: 20180329015705) do
     t.datetime "hidden_at"
     t.integer "account_id"
     t.string "aasm_state"
+    t.string "uuid"
   end
 
   create_table "federated_accounts", force: :cascade do |t|
@@ -130,6 +150,7 @@ ActiveRecord::Schema.define(version: 20180329015705) do
     t.integer "foreign_id"
     t.datetime "hidden_at"
     t.string "aasm_state"
+    t.string "uuid"
   end
 
   create_table "gutentag_taggings", id: :serial, force: :cascade do |t|
@@ -197,6 +218,7 @@ ActiveRecord::Schema.define(version: 20180329015705) do
     t.string "ipfs_hash"
     t.integer "foreign_id"
     t.string "aasm_state"
+    t.string "uuid"
   end
 
   create_table "transactions", force: :cascade do |t|

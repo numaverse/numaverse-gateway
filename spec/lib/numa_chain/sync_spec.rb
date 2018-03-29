@@ -4,13 +4,18 @@ describe NumaChain::Sync, :end_to_end do
   describe 'users' do
     it 'adds random text to usernames that are already taken' do
       account = make_eth_account(username: 'hstove')
-      post_account_on_chain(account)
+      account.batch
+      post_batch_on_chain(account.fetch_batch)
       NumaChain::Sync.sync!
 
+      expect(account.fetch_batch.batch_items.batched.count).to eql(0)
+      expect(account.fetch_batch.batch_items.confirmed.count).to eql(1)
+
       account2 = make_eth_account
-      json = account2.ipfs_json
-      expect(account2).to receive(:ipfs_json).and_return(json.merge({preferredUsername: 'Hstove'}))
-      post_account_on_chain(account2)
+      json = account2.ipfs_object_data
+      expect_any_instance_of(Account).to receive(:ipfs_object_data).and_return(json.merge({preferredUsername: 'Hstove'}))
+      account2.batch
+      post_batch_on_chain(account2.fetch_batch)
       NumaChain::Sync.sync!
 
       account2.reload
@@ -23,36 +28,40 @@ describe NumaChain::Sync, :end_to_end do
       it 'fetches events from the blockchain' do
         account = make_eth_account
         message = create(:message, account: account)
-        post_message_on_chain(message)
+        message.batch
+        post_batch_on_chain(message.sender_account.fetch_batch)
 
-        ipfs_hash = message.ipfs_hash
+        uuid = message.uuid
         message.destroy
 
         NumaChain::Sync.sync!
 
-        message = Message.find_by(ipfs_hash: ipfs_hash)
+        message = Message.find_by(uuid: uuid)
         expect(message).to be_present
-        expect(message.foreign_id).to eql(0)
+        expect(message.confirmed?).to eql(true)
 
         message = create(:message, account: make_eth_account)
-        post_message_on_chain(message)
+        message.batch
+        post_batch_on_chain(message.sender_account.fetch_batch)
         NumaChain::Sync.sync!
-        expect(message.reload.foreign_id).to eql(1)
+        expect(message.reload.confirmed?).to eql(true)
       end
 
       it 'works with updates' do
         messages_contract = Contract.numa.eth_contract
         account = make_eth_account
         message = create(:message, account: account)
-        post_message_on_chain(message)
+        message.batch
+        post_batch_on_chain(message.sender_account.fetch_batch)
 
         NumaChain::Sync.sync!
 
         message.reload
-        expect(message.foreign_id).to eql(0)
+        expect(message.confirmed?).to eql(true)
 
         message.update(body: 'seconded', hidden_at: DateTime.now)
-        post_message_on_chain(message)
+        message.batch
+        post_batch_on_chain(message.sender_account.fetch_batch)
 
         message.update(body: 'this should get lost', hidden_at: nil)
         NumaChain::Sync.sync!
@@ -69,13 +78,14 @@ describe NumaChain::Sync, :end_to_end do
         account = make_eth_account
         message = create(:article, account: account)
 
-        post_message_on_chain(message)
+        message.batch
+        post_batch_on_chain(message.sender_account.fetch_batch)
         old_message = message
         message.destroy
 
         NumaChain::Sync.sync!
 
-        message = Message.find_by(ipfs_hash: old_message.ipfs_hash)
+        message = Message.find_by(uuid: old_message.uuid)
         expect(message).to be_present
         expect(message.json_schema).to eql('article')
         expect(message.body).to eql(old_message.body)
@@ -87,15 +97,17 @@ describe NumaChain::Sync, :end_to_end do
         messages_contract = Contract.numa.eth_contract
         account = make_eth_account
         message = create(:article, account: account)
-        post_message_on_chain(message)
+        message.batch
+        post_batch_on_chain(message.sender_account.fetch_batch)
 
         NumaChain::Sync.sync!
 
         message.reload
-        expect(message.foreign_id).to eql(0)
+        expect(message.confirmed?).to eql(true)
 
         message.update(body: 'seconded')
-        post_message_on_chain(message)
+        message.batch
+        post_batch_on_chain(message.sender_account.fetch_batch)
 
         message.update(body: 'this should get lost')
         NumaChain::Sync.sync!
@@ -108,21 +120,23 @@ describe NumaChain::Sync, :end_to_end do
     context 'follows' do
       let(:follow) { create(:follow, from_account: make_eth_account) }
       it 'creates and syncs follows' do
-        post_message_on_chain(follow)
+        follow.batch
+        post_batch_on_chain(follow.sender_account.fetch_batch)
 
         NumaChain::Sync.sync!
 
         follow.reload
-        expect(follow.foreign_id).to eql(0)
+        expect(follow.confirmed?).to eql(true)
 
         follow = create(:follow, from_account: make_eth_account)
-        post_message_on_chain(follow)
+        follow.batch
+        post_batch_on_chain(follow.sender_account.fetch_batch)
         old_follow = follow
         follow.destroy
 
         NumaChain::Sync.sync!
 
-        follow = Follow.find_by(ipfs_hash: old_follow.ipfs_hash)
+        follow = Follow.find_by(uuid: old_follow.uuid)
         expect(follow.from_account).to eql(old_follow.from_account)
         expect(follow.to_account).to eql(old_follow.to_account)
       end
@@ -133,26 +147,26 @@ describe NumaChain::Sync, :end_to_end do
       let(:favorite) { create(:favorite, message: message, account: make_eth_account) }
 
       it 'works with favorites' do
-        post_message_on_chain(favorite)
+        favorite.batch
+        post_batch_on_chain(favorite.sender_account.fetch_batch)
 
         NumaChain::Sync.sync!
 
         favorite.reload
         
-        expect(favorite.foreign_id).to eql(0)
-        expect(favorite.ipfs_hash).to be_present
+        expect(favorite.confirmed?).to eql(true)
       end
 
       it 'finds messages by uuid' do
-        message.update(foreign_id: nil)
-        post_message_on_chain(favorite)
+        favorite.batch
+        post_batch_on_chain(favorite.sender_account.fetch_batch)
 
         old_favorite = favorite
         favorite.destroy
 
         NumaChain::Sync.sync!
 
-        favorite = Favorite.find_by(ipfs_hash: old_favorite.ipfs_hash)
+        favorite = Favorite.find_by(uuid: old_favorite.uuid)
         expect(favorite.account).to eql(old_favorite.account)
         expect(favorite.message).to eql(message)
       end

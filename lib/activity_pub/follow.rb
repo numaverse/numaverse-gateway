@@ -6,6 +6,7 @@ module ActivityPub
         actor: person(object.from_account),
         object: person(object.to_account),
         id: url_helpers.follow_url(object),
+        uuid: object.uuid,
         hiddenAt: object.hidden_at,
       }
     end

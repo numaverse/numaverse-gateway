@@ -27,34 +27,8 @@ module BlockchainTestHelpers
     account
   end
 
-  def post_message_on_chain(message)
-    contract = Contract.numa
-    return false unless contract
-
-    message.post_on_ipfs
-    if message.foreign_id
-      encoded = js_sign('updateMessage', [message.foreign_id] + message.smart_contract_args)
-    else
-      encoded = js_sign('createMessage', message.smart_contract_args)
-    end
-
-    tx_hash = Networker.get_client.eth_send_transaction({
-      from: message.sender_account.hash_address,
-      to: contract.hash_address,
-      data: encoded,
-      gasPrice: 0.to_hex
-    })['result']
-
-    tx_data = Networker.get_client.eth_get_transaction_by_hash(tx_hash)['result']
-    tx = Transaction.new
-    tx.from_data(Hashie::Mash.new(tx_data))
-    tx.transactable = message
-    tx.save!
-    tx
-  end
-
-  def js_sign(func, args)
-    signed_hex = `node app/javascript/signer.js #{func} #{args.join(' ')}`.strip;
+  def js_sign(ipfs_hash)
+    signed_hex = `node app/javascript/signer.js #{ipfs_hash}`.strip;
 
     signed_hex.split("\n").last
   end
@@ -97,12 +71,14 @@ module BlockchainTestHelpers
     tip
   end
 
-  def post_account_on_chain(account)
-    contract = Contract.numa
+  def post_batch_on_chain(batch)
+    contract = Contract.stateless_numa
     return false unless contract
 
-    account.post_on_ipfs
-    encoded = js_sign('updateUser', account.smart_contract_args)
+    batch.post_on_ipfs
+    account = batch.account
+    
+    encoded = js_sign('0x'+IpfsServer.hash_data(batch.ipfs_hash).last)
 
     tx_hash = Networker.get_client.eth_send_transaction({
       from: account.hash_address,
@@ -114,7 +90,7 @@ module BlockchainTestHelpers
     tx_data = Networker.get_client.eth_get_transaction_by_hash(tx_hash)['result']
     tx = Transaction.new
     tx.from_data(Hashie::Mash.new(tx_data))
-    tx.transactable = account
+    tx.transactable = batch
     tx.save!
     tx
   end

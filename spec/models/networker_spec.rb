@@ -7,18 +7,19 @@ describe Networker do
 
     it 'can interact with a users contract', :vcr do
       account = make_eth_account
-      users_contract = Contract.numa.eth_contract
-      expect(users_contract.call.users(account.hash_address)).to be_blank
-      tx = post_account_on_chain(account)
-      ipfs_hash = account.smart_contract_args.first
+      batch_contract = Contract.numa.eth_contract
+      expect(batch_contract.call.users(account.hash_address)).to be_blank
+      account.add_to_batch
+      post_batch_on_chain(account.fetch_batch)
 
-      contract_hash = users_contract.call.users(account.hash_address).unpack('H*').first
-      expect('0x' + contract_hash).to eql(account.smart_contract_args.first)
-      ipfs_hash = IpfsServer.data_to_hash(18, 32, contract_hash)
-      expect(ipfs_hash).to eql(account.ipfs_hash)
+      NumaChain::Sync.sync!
+
+      account.reload
+      expect(account.confirmed?).to eql(true)
 
       account = make_eth_account
-      tx = post_account_on_chain(account)
+      account.add_to_batch
+      post_batch_on_chain(account.fetch_batch)
       address = account.hash_address
       json = account.ipfs_json
       account.destroy
@@ -35,31 +36,37 @@ describe Networker do
         username: "try_again",
         bio: "new bio"
       )
-      tx = post_account_on_chain(account)
-      expect(account.transactions.size).to eql(2)
+      account.add_to_batch
+      post_batch_on_chain(account.fetch_batch)
+      expect(account.from_transactions.size).to eql(2)
       json = account.ipfs_json
 
       NumaChain::Sync.sync!
       account.reload
       expect(account.ipfs_json).to eql(json)
+
     end
 
     describe '.events' do
       it 'only fetches events that havent been logged before' do
         account = make_eth_account
-        users_contract = Contract.numa.eth_contract
-        expect(users_contract.call.users(account.hash_address)).to be_blank
-        tx = post_account_on_chain(account)
-        expect(NumaChain::Sync).to receive(:process_user_update).once.and_call_original
+
+        account.batch
+        post_batch_on_chain(account.fetch_batch)
+        expect(NumaChain::Sync).to receive(:process_account).once.and_call_original
         NumaChain::Sync.sync!
 
-        expect(Contract.numa.contract_events.size).to eql(1)
-
+        account.reload
+        expect(account).to be_confirmed
         account.update(username: 'anoda')
-        post_account_on_chain(account)
 
-        expect(NumaChain::Sync).to receive(:process_user_update).once.and_call_original
+        account.batch
+        post_batch_on_chain(account.fetch_batch.reload)
+
+        expect(NumaChain::Sync).to receive(:process_account).once.and_call_original
         NumaChain::Sync.sync!
+
+        expect(account.batch_items.size).to eql(2)
       end
     end
   end
