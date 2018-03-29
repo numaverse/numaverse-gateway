@@ -10,6 +10,7 @@ class Account < ApplicationRecord
   has_many :messages
   has_many :transactions, as: :transactable
   has_many :from_transactions, class_name: "Transaction", foreign_key: :from_account_id
+  has_many :to_transactions, class_name: "Transaction", foreign_key: :to_account_id
   has_many :favorites
   has_many :federated_messages, class_name: 'Federated::Message', foreign_key: 'local_account_id'
   has_many :federated_message_versions, through: :federated_messages, source: 'versions'

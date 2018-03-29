@@ -5,13 +5,13 @@ describe NumaChain::Sync, :end_to_end do
     it 'adds random text to usernames that are already taken' do
       account = make_eth_account(username: 'hstove')
       post_account_on_chain(account)
-      NumaChain::Sync.users
+      NumaChain::Sync.sync!
 
       account2 = make_eth_account
       json = account2.ipfs_json
       expect(account2).to receive(:ipfs_json).and_return(json.merge({preferredUsername: 'Hstove'}))
       post_account_on_chain(account2)
-      NumaChain::Sync.users
+      NumaChain::Sync.sync!
 
       account2.reload
       expect(account2.username).to start_with("hstove_")
@@ -25,21 +25,18 @@ describe NumaChain::Sync, :end_to_end do
         message = create(:message, account: account)
         post_message_on_chain(message)
 
-        expect(Networker.message_created_events.size).to eql(1)
-
         ipfs_hash = message.ipfs_hash
         message.destroy
 
-        NumaChain::Sync.messages
+        NumaChain::Sync.sync!
 
-        expect(Networker.message_created_events.size).to eql(0)
         message = Message.find_by(ipfs_hash: ipfs_hash)
         expect(message).to be_present
         expect(message.foreign_id).to eql(0)
 
         message = create(:message, account: make_eth_account)
         post_message_on_chain(message)
-        NumaChain::Sync.messages
+        NumaChain::Sync.sync!
         expect(message.reload.foreign_id).to eql(1)
       end
 
@@ -49,7 +46,7 @@ describe NumaChain::Sync, :end_to_end do
         message = create(:message, account: account)
         post_message_on_chain(message)
 
-        NumaChain::Sync.messages
+        NumaChain::Sync.sync!
 
         message.reload
         expect(message.foreign_id).to eql(0)
@@ -57,12 +54,9 @@ describe NumaChain::Sync, :end_to_end do
         message.update(body: 'seconded', hidden_at: DateTime.now)
         post_message_on_chain(message)
 
-        expect(Networker.message_updated_events.size).to eql(1)
-
         message.update(body: 'this should get lost', hidden_at: nil)
-        NumaChain::Sync.messages
+        NumaChain::Sync.sync!
 
-        expect(Networker.message_updated_events.size).to eql(0)
         message.reload
         expect(message.body).to eql('seconded')
         expect(message.hidden_at).not_to be_nil
@@ -79,7 +73,7 @@ describe NumaChain::Sync, :end_to_end do
         old_message = message
         message.destroy
 
-        NumaChain::Sync.messages
+        NumaChain::Sync.sync!
 
         message = Message.find_by(ipfs_hash: old_message.ipfs_hash)
         expect(message).to be_present
@@ -95,7 +89,7 @@ describe NumaChain::Sync, :end_to_end do
         message = create(:article, account: account)
         post_message_on_chain(message)
 
-        NumaChain::Sync.messages
+        NumaChain::Sync.sync!
 
         message.reload
         expect(message.foreign_id).to eql(0)
@@ -103,12 +97,9 @@ describe NumaChain::Sync, :end_to_end do
         message.update(body: 'seconded')
         post_message_on_chain(message)
 
-        expect(Networker.message_updated_events.size).to eql(1)
-
         message.update(body: 'this should get lost')
-        NumaChain::Sync.messages
+        NumaChain::Sync.sync!
 
-        expect(Networker.message_updated_events.size).to eql(0)
         message.reload
         expect(message.body).to eql('seconded')
       end
@@ -119,10 +110,7 @@ describe NumaChain::Sync, :end_to_end do
       it 'creates and syncs follows' do
         post_message_on_chain(follow)
 
-        from_chain = Networker.message_created_events
-        expect(from_chain.first.topics[1]).to eql(follow.from_account.hash_address)
-
-        NumaChain::Sync.messages
+        NumaChain::Sync.sync!
 
         follow.reload
         expect(follow.foreign_id).to eql(0)
@@ -132,7 +120,7 @@ describe NumaChain::Sync, :end_to_end do
         old_follow = follow
         follow.destroy
 
-        NumaChain::Sync.messages
+        NumaChain::Sync.sync!
 
         follow = Follow.find_by(ipfs_hash: old_follow.ipfs_hash)
         expect(follow.from_account).to eql(old_follow.from_account)
@@ -147,10 +135,7 @@ describe NumaChain::Sync, :end_to_end do
       it 'works with favorites' do
         post_message_on_chain(favorite)
 
-        from_chain = Networker.message_created_events
-        expect(from_chain.first.topics[1]).to eql(favorite.account.hash_address)
-
-        NumaChain::Sync.messages
+        NumaChain::Sync.sync!
 
         favorite.reload
         
@@ -165,7 +150,7 @@ describe NumaChain::Sync, :end_to_end do
         old_favorite = favorite
         favorite.destroy
 
-        NumaChain::Sync.messages
+        NumaChain::Sync.sync!
 
         favorite = Favorite.find_by(ipfs_hash: old_favorite.ipfs_hash)
         expect(favorite.account).to eql(old_favorite.account)
@@ -183,10 +168,7 @@ describe NumaChain::Sync, :end_to_end do
 
         expect(tip.ipfs_hash).to be_present
 
-        from_chain = Networker.message_created_events
-        expect(from_chain.first.topics[1]).to eql(tip.from_account.hash_address)
-
-        NumaChain::Sync.messages
+        NumaChain::Sync.sync!
 
         tip.reload
         expect(tip.foreign_id).to eql(0)
@@ -199,7 +181,7 @@ describe NumaChain::Sync, :end_to_end do
         old_tip = tip
         tip.destroy
 
-        NumaChain::Sync.messages
+        NumaChain::Sync.sync!
 
         tip = Tip.find_by(ipfs_hash: old_tip.ipfs_hash)
         expect(tip).to be_present
@@ -219,7 +201,7 @@ describe NumaChain::Sync, :end_to_end do
         old_tip = tip
         tip.destroy
 
-        NumaChain::Sync.messages
+        NumaChain::Sync.sync!
 
         tip = Tip.find_by(ipfs_hash: old_tip.ipfs_hash)
         expect(tip).to be_present

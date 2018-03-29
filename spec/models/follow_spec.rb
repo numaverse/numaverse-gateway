@@ -26,10 +26,7 @@ RSpec.describe Follow, type: :model do
       expect(follow.ipfs_hash).not_to be_blank
       expect(follow.from_account.from_transactions.size).to eql(1)
 
-      from_chain = Networker.message_created_events
-      expect(from_chain.first.topics[1]).to eql(follow.from_account.hash_address)
-
-      NumaChain::Sync.messages
+      NumaChain::Sync.sync!
 
       follow.reload
       expect(follow.foreign_id).to eql(0)

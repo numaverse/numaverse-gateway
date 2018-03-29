@@ -15,91 +15,100 @@ module NumaChain
         end
       end
 
-      def users
-        Rails.logger.debug "Syncing Users"
-        events = Networker.users_events
+      def sync!
+        client = Networker.get_client
         contract = Contract.numa
-        eth_contract = contract.eth_contract
+        contract_account = Account.make_by_address(contract.hash_address)
+        min_block_num = contract_account.to_transactions.maximum('block_number')
+        max_block_num = client.eth_block_number['result'].from_hex
+        (min_block_num..max_block_num).each do |block_number|
+          Rails.logger.info("Syncing block ##{block_number}")
+          block = client.eth_get_block_by_number(block_number, true)['result']
 
-        events.each do |event|
-          address = event.topics.first
-          account = Account.by_address(address) || Account.new(address: address)
-          account = nil unless account.is_a?(Account)
+          block['transactions'].each do |transaction|
+            next if transaction['to'].casecmp(contract.hash_address) != 0
+            tx = Transaction.make_by_address(transaction['hash'], data: transaction)
+            receipt = client.eth_get_transaction_receipt(tx.hash_address)['result']
 
-          ipfs_hash = eth_contract.call.users(address).unpack('H*').first
-          ipfs_hash = IpfsServer.data_to_hash(18, 32, ipfs_hash)
-
-          begin
-            json = IpfsServer.cat(ipfs_hash)
-            username = json.preferredUsername.downcase
-            if Account.where.not(id: account.id).where("lower(username) = ?", username).first.present?
-              username = "#{username}_#{SecureRandom.hex(5)}"
+            logs = {logs: receipt['logs']}.to_json
+            File.open("#{Rails.root}/tmp/contract-logs.json", 'w') do |f|
+              f << logs
             end
-            account.confirm
-            account.update!(
-              username: username,
-              bio: json.summary,
-              display_name: json.name,
-              avatar_ipfs_hash: json.try(:icon).try(:ipfs_hash),
-              ipfs_hash: ipfs_hash
-            )
+            res = JSON.parse(`node app/javascript/commands/decode-transaction.js`)[0]
 
-            tx = Transaction.make_by_address(event.transactionHash)
-            tx.update(transactable: account)
+            hash = res['events'].last['value'][2..-1]
+            ipfs_hash = IpfsServer.data_to_hash(18, 32, hash)
 
-            contract.contract_events.create!(
-              tx: tx,
-              event_name: 'UserUpdated'
-            )
-          rescue => e
-            Rails.logger.error(e)
+            if res['name'] == 'UserUpdated'
+              process_user_update(tx, ipfs_hash)
+            else
+              process_event(tx, res['events'].first['value'].to_i, ipfs_hash)
+            end
           end
         end
       end
 
-      def messages
-        Rails.logger.debug "Syncing messages"
-        process_message_events(Networker.message_created_events, name: 'MessageCreated')
-        process_message_events(Networker.message_updated_events, name: 'MessageUpdated')
+      def process_user_update(tx, ipfs_hash)
+        account = tx.from_account
+
+        begin
+          json = IpfsServer.cat(ipfs_hash)
+          username = json.preferredUsername.downcase
+          if Account.where.not(id: account.id).where("lower(username) = ?", username).first.present?
+            username = "#{username}_#{SecureRandom.hex(5)}"
+          end
+          account.confirm
+          account.update!(
+            username: username,
+            bio: json.summary,
+            display_name: json.name,
+            avatar_ipfs_hash: json.try(:icon).try(:ipfs_hash),
+            ipfs_hash: ipfs_hash
+          )
+
+          tx.update(transactable: account)
+
+          Contract.numa.contract_events.create!(
+            tx: tx,
+            event_name: 'UserUpdated'
+          )
+        rescue => e
+          Rails.logger.error(e.backtrace[0..5].join("\n"))
+          Rails.logger.error(e)
+        end
       end
 
-      def process_message_events(events, name: )
-        contract = Contract.numa
-        eth_contract = contract.eth_contract
+      def process_event(tx, foreign_id, ipfs_hash)
+        message_data = Hashie::Mash.new({foreign_id: foreign_id, ipfs_hash: ipfs_hash})
+        sender = tx.from_account
 
-        events.each do |event|
-          foreign_id = event.topics.first
-          tx = Transaction.make_by_address(event.transactionHash)
-
-          message_data = Networker.get_message(foreign_id, eth_contract)
-          sender = Account.make_by_address(event.topics[1])
-
-          begin
-            transactable = tx.transactable
-            Rails.logger.debug "Fetching IPFS hash: #{message_data.ipfs_hash}"
-            json = IpfsServer.cat(message_data.ipfs_hash)
-            Rails.logger.debug "Syncing object with type: #{json.type}"
-            # ap json
-            if json.type == "Follow"
-              transactable = sync_follow(transactable, sender: sender, json: json, tx: tx, message_data: message_data)
-            elsif json.type == "Like"
-              transactable = sync_favorite(transactable, sender: sender, json: json, tx: tx, message_data: message_data)
-            elsif json.type == "Tip"
-              transactable = sync_tip(transactable, sender: sender, json: json, tx: tx, message_data: message_data)
-            else
-              transactable = sync_message(transactable, sender: sender, json: json, tx: tx, message_data: message_data)
-            end
-
-            transactable.confirm
-            transactable.save
-            contract.contract_events.create!(
-              tx: tx,
-              event_name: name
-            )
-          rescue => exception
-            # Rails.logger.debug "Error when syncing "
-            Rails.logger.error(exception)
+        begin
+          transactable = tx.transactable
+          Rails.logger.debug "Fetching IPFS hash: #{message_data.ipfs_hash}"
+          json = IpfsServer.cat(message_data.ipfs_hash)
+          Rails.logger.debug "Syncing object with type: #{json.type}"
+          # ap json
+          if json.type == "Follow"
+            transactable = sync_follow(transactable, sender: sender, json: json, tx: tx, message_data: message_data)
+          elsif json.type == "Like"
+            transactable = sync_favorite(transactable, sender: sender, json: json, tx: tx, message_data: message_data)
+          elsif json.type == "Tip"
+            transactable = sync_tip(transactable, sender: sender, json: json, tx: tx, message_data: message_data)
+          else
+            transactable = sync_message(transactable, sender: sender, json: json, tx: tx, message_data: message_data)
           end
+
+          transactable.confirm
+          transactable.save
+          Contract.numa.contract_events.create!(
+            tx: tx,
+            event_name: name
+          )
+        rescue => exception
+          # Rails.logger.debug "Error when syncing "
+          puts exception
+          Rails.logger.error(exception.backtrace[0..5].join("\n"))
+          Rails.logger.error(exception)
         end
       end
 

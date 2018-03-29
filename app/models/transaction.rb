@@ -20,20 +20,17 @@ class Transaction < ApplicationRecord
   }
 
   class << self
-    def make_by_address(address)
+    def make_by_address(address, data: nil)
       Transaction.transaction do
         tx = by_address(address)
-        if tx.blank?
-          tx = Transaction.new(address: address)
+        if data || tx.blank?
+          tx ||= Transaction.new(address: address)
           tx.strip_0x
-          # puts tx.address
-          data = tx.get_blockchain_info
+          data ||= tx.get_blockchain_info
           if data.present?
             tx.from_data(data)
-            tx.save!
-            tx.update_block_info(info: data)
           end
-          tx.save
+          tx.save!
         end
         tx
       end
@@ -43,19 +40,20 @@ class Transaction < ApplicationRecord
   def from_data(tx)
     # ap tx
     assign_attributes(
-      block_hash: tx.blockHash,
-      block_number: tx.blockNumber.try(:from_hex),
-      from: tx.from,
-      to: tx.to,
-      gas: tx.gas.try(:from_hex),
-      gas_price: tx.gasPrice.try(:from_hex),
+      block_hash: tx['blockHash'],
+      block_number: tx['blockNumber'].try(:from_hex),
+      from: tx['from'],
+      to: tx['to'],
+      gas: tx['gas'].try(:from_hex),
+      gas_price: tx['gasPrice'].try(:from_hex),
       address: tx['hash'],
-      input: tx.input,
-      nonce: tx.nonce,
-      to_account: tx.to.present? ? Account.make_by_address(tx.to) : nil,
-      from_account: tx.from.present? ? Account.make_by_address(tx.from) : nil,
-      value_nuwei: tx.value.try(:from_hex),
+      input: tx['input'],
+      nonce: tx['nonce'],
+      to_account: tx['to'].present? ? Account.make_by_address(tx['to']) : nil,
+      from_account: tx['from'].present? ? Account.make_by_address(tx['from']) : nil,
+      value_nuwei: tx['value'].try(:from_hex),
     )
+    strip_0x
     self
   end
 
