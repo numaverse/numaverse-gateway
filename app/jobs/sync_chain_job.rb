@@ -3,6 +3,6 @@ class SyncChainJob < ApplicationJob
 
   def perform
     NumaChain::Sync.sync!
-    SyncChainJob.set(wait: 10.seconds).perform_later
+    SyncChainJob.set(wait: 1.minute).perform_later
   end
 end
