@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180328233947) do
+ActiveRecord::Schema.define(version: 20180329015705) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 20180328233947) do
     t.string "miner"
     t.string "nonce"
     t.datetime "timestamp"
-    t.integer "number"
+    t.bigint "number"
     t.integer "difficulty"
     t.integer "size"
     t.integer "gas_limit"
@@ -201,7 +201,7 @@ ActiveRecord::Schema.define(version: 20180328233947) do
 
   create_table "transactions", force: :cascade do |t|
     t.string "block_hash"
-    t.integer "block_number"
+    t.bigint "block_number"
     t.string "from"
     t.string "to"
     t.integer "gas"
