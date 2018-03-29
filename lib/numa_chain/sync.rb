@@ -14,7 +14,7 @@ module NumaChain
           block = client.eth_get_block_by_number(block_number, true)['result']
 
           block['transactions'].each do |transaction|
-            next if transaction['to'].casecmp(contract.hash_address) != 0
+            next if transaction['to'].blank? || transaction['to'].casecmp(contract.hash_address) != 0
             tx = Transaction.make_by_address(transaction['hash'], data: transaction)
             receipt = client.eth_get_transaction_receipt(tx.hash_address)['result']
 
