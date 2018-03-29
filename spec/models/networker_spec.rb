@@ -5,26 +5,6 @@ describe Networker do
 
   context 'end-to-end', :end_to_end do
 
-    it 'can interact with a newly deployed messages contract' do
-      messages_contract = Contract.numa.eth_contract
-      expect(messages_contract.call.messages_length).to eql(0)
-      account = make_eth_account
-      message = create(:message, account: account)
-      post_message_on_chain(message)
-      expect(messages_contract.call.messages_length).to eql(1)
-
-      events = Networker.message_created_events
-      event = events.first
-      expect(event.topics[1]).to eql(account.hash_address)
-      expect(event.topics.first).to eql(0)
-      expect(event.transactionHash).to eql(message.tx.hash_address)
-
-      from_chain = Networker.message_created_events
-      message = Networker.get_message(from_chain.first.topics.first, messages_contract)
-      expect(message.ipfs_hash).to eql(message.ipfs_hash)
-      expect(message.sender).to eql(account.address)
-    end
-
     it 'can interact with a users contract', :vcr do
       account = make_eth_account
       users_contract = Contract.numa.eth_contract
@@ -37,17 +17,13 @@ describe Networker do
       ipfs_hash = IpfsServer.data_to_hash(18, 32, contract_hash)
       expect(ipfs_hash).to eql(account.ipfs_hash)
 
-      from_chain = Networker.users_events
-
-      expect(from_chain.first.topics.first).to eql(account.hash_address)
-
       account = make_eth_account
       tx = post_account_on_chain(account)
       address = account.hash_address
       json = account.ipfs_json
       account.destroy
 
-      NumaChain::Sync.users
+      NumaChain::Sync.sync!
 
       account = Account.by_address(address)
       expect(account).to be_present
@@ -63,10 +39,9 @@ describe Networker do
       expect(account.transactions.size).to eql(2)
       json = account.ipfs_json
 
-      NumaChain::Sync.users
+      NumaChain::Sync.sync!
       account.reload
       expect(account.ipfs_json).to eql(json)
-
     end
 
     describe '.events' do
@@ -75,17 +50,16 @@ describe Networker do
         users_contract = Contract.numa.eth_contract
         expect(users_contract.call.users(account.hash_address)).to be_blank
         tx = post_account_on_chain(account)
-        expect(Networker.users_events.size).to eql(1)
-        NumaChain::Sync.users
+        expect(NumaChain::Sync).to receive(:process_user_update).once.and_call_original
+        NumaChain::Sync.sync!
 
         expect(Contract.numa.contract_events.size).to eql(1)
-
-        expect(Networker.users_events.size).to eql(0)
 
         account.update(username: 'anoda')
         post_account_on_chain(account)
 
-        expect(Networker.users_events.size).to eql(1)
+        expect(NumaChain::Sync).to receive(:process_user_update).once.and_call_original
+        NumaChain::Sync.sync!
       end
     end
   end
