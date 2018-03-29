@@ -3,9 +3,9 @@
 #js-message{ data: render(partial: 'show.json.jbuilder', locals: { message: @message, replies: @message.replies.order('created_at desc'), tips: @message.tips }) }
 
 .row.mt-3
-  .col-3
+  .col-md-3.d-none.d-md-block
 
-  .col-6
+  .col-md-6.col-xs-12
     .space3
     %hr
     .space3

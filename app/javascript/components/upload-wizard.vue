@@ -123,16 +123,6 @@ export default {
         this.alertError("Sorry, there was an error when updating your profile on Ethereum.");
         console.log(error);
       }
-      // contract.updateUser(this.ipfsBytes32, this.transactionOptions).then((result) => {
-      //   console.log(result);
-      //   this.attachTransaction(result);
-      //   this.alertSuccess("Awesome! Your profile has been updated on Ethereum.");
-      //   this.hide();
-      //   this.$emit("userSuccess");
-      // }).catch((error) => {
-      //   this.alertError("Sorry, there was an error when updating your profile on Ethereum.");
-      //   console.log(error);
-      // })
     },
     async postOnEthereum(event) {
       event.preventDefault();

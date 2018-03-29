@@ -40,13 +40,10 @@ div
         .message-body(v-html="message.sanitized_body")
   div(v-else)
     .row
-      .col-3
+      .col-3.d-none.d-md-block
         user-card(:user="message.user")
-      .col-6
-        div(v-if="message.json_schema === 'article'")
-          h2 
-        div(v-else)
-          message(:message="message", @reply="reply => { newReply(reply) }")
+      .col-md-6.col-xs-12
+        message(:message="message", @reply="reply => { newReply(reply) }")
 
         div(v-if="replies.length > 0")
           .space
