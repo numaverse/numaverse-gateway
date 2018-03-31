@@ -1,5 +1,4 @@
 class AccountsController < ApplicationController
-  skip_before_action :verify_authenticity_token, only: [:update, :attach_transaction]
   before_action :authenticate_user!, except: [:show]
   before_action :load_account, except: [:federated_account]
 
@@ -14,8 +13,8 @@ class AccountsController < ApplicationController
   def update
     authorize! :manage, @account
     if @account.update(account_params)
-      @account.post_on_ipfs
-      render json: { ipfs_hash: @account.ipfs_hash }
+      @account.batch
+      render partial: 'accounts/show.json.jbuilder', locals: { account: @account } 
     else
       render json: { errors: @account.errors.full_messages }, status: :error
     end

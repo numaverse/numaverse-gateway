@@ -1,5 +1,4 @@
 class PagesController < ApplicationController
-  skip_before_action :verify_authenticity_token, only: [:upload_avatar]
   before_action :authenticate_user!, only: [:new_message]
 
   def home

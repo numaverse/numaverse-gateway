@@ -1,6 +1,5 @@
 class FavoritesController < ApplicationController
   before_action :authenticate_user!
-  skip_before_action :verify_authenticity_token
 
   def create
     @favorite = current_account.favorites.create(message_id: params[:message_id])

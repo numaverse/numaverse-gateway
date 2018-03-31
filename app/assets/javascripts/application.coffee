@@ -29,3 +29,9 @@ $ ->
     { name } = this.files[0]
     $('label[for="avatar"]').text(name)
     $('#avatar').blur()
+
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')['content']
+    }
+  })

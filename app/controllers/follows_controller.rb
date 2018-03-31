@@ -1,6 +1,5 @@
 class FollowsController < ApplicationController
   before_action :authenticate_user!
-  skip_before_action :verify_authenticity_token
 
   def create
     @follow = Follow.find_by(from_account_id: current_account.id, to_account_id: params[:to_account_id])
