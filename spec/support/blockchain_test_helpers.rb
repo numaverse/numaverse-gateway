@@ -79,7 +79,6 @@ module BlockchainTestHelpers
     account = batch.account
     
     encoded = js_sign('0x'+IpfsServer.hash_data(batch.ipfs_hash).last)
-
     tx_hash = Networker.get_client.eth_send_transaction({
       from: account.hash_address,
       to: contract.hash_address,
@@ -92,6 +91,7 @@ module BlockchainTestHelpers
     tx.from_data(Hashie::Mash.new(tx_data))
     tx.transactable = batch
     tx.save!
+    batch.transact!
     tx
   end
 end

@@ -42,6 +42,11 @@ Rails.application.routes.draw do
   resources :blocks, only: [:index, :show]
   resources :transactions, only: [:index, :show]
 
+  get 'batches/show'
+  post 'batches/:id/upload' => 'batches#upload'
+  post 'batches/:id/attach_transaction' => 'batches#attach_transaction'
+  post 'batches/:id/cancel' => 'batches#cancel'
+
   # ActivityPub routes
   get '/activity_pub/:account_id/outbox' => 'activity_pub#outbox', as: :ap_outbox
   get '/activity_pub/:account_id/account' => 'activity_pub#account', as: :ap_account

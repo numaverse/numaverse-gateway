@@ -15,19 +15,23 @@ module ActivityStreamable
       state :uploaded, :pending, :confirmed, :batched
 
       event :upload do
-        transitions from: [:draft, :uploaded, :pending, :confirmed], to: :uploaded
+        transitions from: [:draft, :uploaded, :pending, :confirmed, :batched], to: :uploaded
       end
 
       event :batch, after: [:update_federated_model, :add_to_batch] do
-        transitions from: [:draft, :uploaded, :pending, :confirmed], to: :batched
+        transitions from: [:draft, :uploaded, :pending, :confirmed, :batched], to: :batched
       end
 
-      event :transact, after: :update_federated_model do
-        transitions from: [:draft, :uploaded, :pending, :confirmed], to: :pending
+      event :transact, after: [:update_federated_model, :after_pending] do
+        transitions from: [:draft, :uploaded, :pending, :confirmed, :batched], to: :pending
       end
 
-      event :confirm do
+      event :confirm, after: [:after_confirmed] do
         transitions from: [:draft, :uploaded, :pending, :confirmed, :batched], to: :confirmed
+      end
+
+      event :cancel, after: [:after_canceled] do
+        transitions from: [:uploaded, :pending], to: :batched
       end
     end
   end
@@ -81,6 +85,14 @@ module ActivityStreamable
   end
 
   def update_federated_model
-    # skip, implement in base level class
+    # skip, implemented in base class
+  end
+
+  def after_confirmed
+    # skip, implemented in base class
+  end
+
+  def after_pending
+    # skip, implemented in base class
   end
 end

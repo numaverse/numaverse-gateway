@@ -39,10 +39,16 @@ module NumaChain
               process_favorite(tx, item)
             end
           end
-          batch = sender.fetch_batch
+          begin
+            batch = Batch.find_by!(uuid: json.uuid, account_id: sender.id)
+          rescue ActiveRecord::RecordNotFound
+            batch = sender.fetch_batch
+          end
           tx.update(transactable: batch)
-          batch.batch_items.batched.each(&:confirm!)
+          batch.confirm!
         rescue => e
+          raise e if Rails.env.test?
+          Raven.capture_exception(e)
           Rails.logger.error(e.backtrace[0..5].join("\n"))
           Rails.logger.error(e)
         end

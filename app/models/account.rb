@@ -42,7 +42,7 @@ class Account < ApplicationRecord
   end
 
   def fetch_batch
-    @fetched_batch ||= Batch.find_or_create_by(account_id: id)
+    Batch.find_or_create_by(account_id: id, aasm_state: 'batched')
   end
 
   def update_balance(save: true)

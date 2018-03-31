@@ -11,4 +11,17 @@ class Batch < ApplicationRecord
   def activity_stream
     ActivityPub::Batch.new(self)
   end
+
+  def after_confirmed
+    batch_items.each(&:confirm!)
+  end
+
+  def after_pending
+    batch_items.each(&:transact!)
+  end
+
+  def after_canceled
+    update(ipfs_hash: nil)
+    batch_items.each(&:cancel!)
+  end
 end
