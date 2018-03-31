@@ -1,6 +1,6 @@
 <template lang="jade">
 .row
-  check-network
+  common
   alerts(ref="alerts")
   .col-3
   .col-6
@@ -9,13 +9,17 @@
     .space3
     textarea.form-control(placeholder="Write something on the blockchain", v-model="editedMessage")
     .space3
-    a.btn.btn-primary.btn-block.btn-lg(@click="sendUpdate", href="javascript:;") Update
+    b-button(:disabled="loading", variant="primary", :block="true", @click="sendUpdate()", size="lg")
+      span(v-if="loading")
+        i.fa.fa-spinner.fa-pulse.mr-2
+      | Update
     p.mt-3(v-if="message")
       a(:href="'/messages/'+message.id") Go back to this message
-  upload-wizard(ref="uploadWizard", model="message", @messageSuccess="messageUpdateSuccess")
 </template>
 
 <script>
+import batchEvents from '../libs/batch-events';
+
 export default {
   props: [
     'message'
@@ -23,29 +27,29 @@ export default {
   data() {
     return {
       currentUser: null,
-      editedMessage: null
+      editedMessage: null,
+      loading: false,
     }
   },
   methods: {
     async sendUpdate () {
-      const body = this.editedMessage;
-      const { uploadWizard } = this.$refs;
-      uploadWizard.show();
-
+      console.log("sending")
+      this.loading = true;
       try {
         const result = await $.ajax({
           url: `/messages/${this.message.id}`,
           method: 'PUT',
-          data: {
-            body: body
-          }
+          data: { body: this.editedMessage }
         });
 
-        uploadWizard.ipfsUploadSuccess(result);
+        batchEvents.triggerNewBatch();
+        const link = `<br/><a href="/messages/${this.message.id}">View Message</a>`;
+        this.alertSuccess("Your message has been successfully updated.", { text: link });
       } catch (error) {
         console.log(error);
         this.alertError("Sorry, we're to update this message.");
       }
+      this.loading = false;
     },
     messageUpdateSuccess(message) {
       console.log(message);

@@ -40,13 +40,6 @@ export default {
       address: currentAccount.hash_address,
       metamaskPending: false,
       modelData: null,
-      modelTypes: [
-        'message',
-        'account',
-        'follow',
-        'favorite',
-        'tip'
-      ]
     }
   },
   methods: {
@@ -152,11 +145,7 @@ export default {
       return { from: this.address };
     }
   },
-  async mounted() {
-    if (this.modelTypes.indexOf(this.model) === -1) {
-      throw "You must specify a valid model type for upload-wizard component.";
-    }
-  }
+  async mounted() { }
 }
 </script>
 

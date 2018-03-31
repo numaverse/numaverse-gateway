@@ -37,6 +37,12 @@ Vue.component('alerts', Alerts);
 import CheckNetwork from './components/check-network.vue';
 Vue.component('check-network', CheckNetwork);
 
+import Common from './components/common.vue';
+Vue.component('common', Common);
+
+import Batch from './components/batch.vue';
+Vue.component('batch', Batch);
+
 import AlertsMixin from './components/mixins/alert-mixins';
 Vue.mixin(AlertsMixin);
 

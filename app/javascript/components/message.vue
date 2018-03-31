@@ -21,7 +21,7 @@
       .mt-2.mb-3
         .mt-2
 
-        div(v-if="messageData.json_schema == 'micro'")
+        div(v-if="messageData.json_schema === 'micro'")
           message-body(:message="message")
 
         div(v-else-if="messageData.json_schema === 'article'")
@@ -63,9 +63,10 @@
           span(v-if="messageData.favorites_count > 0")
             {{ messageData.favorites_count }}
 
-          i.ml-3.mr-1.fa.fa-refresh(title="Repost", v-bind:class="{pointer: (currentAccount && !messageData.is_reposted)}", v-on:click="repost", :id="'repost-message-'+messageData.id")
-          span(v-if="messageData.repost_count > 0")
-            {{ messageData.repost_count }}
+          span(v-if="message.json_schema === 'micro'")
+            i.ml-3.mr-1.fa.fa-refresh(title="Repost", v-bind:class="{pointer: (currentAccount && !messageData.is_reposted)}", v-on:click="repost", :id="'repost-message-'+messageData.id")
+            span(v-if="messageData.repost_count > 0")
+              {{ messageData.repost_count }}
 
           //- i.ml-3.mr-1.fa.fa-refresh(title="Tip", v-bind:class="{pointer: (currentAccount && !messageData.is_tipped)}", v-on:click="repost(message)", :id="'repost-message-'+messageData.id")
           //- a.text-muted.ml-3.mr-1(title="Tip", v-bind:class="{pointer: (currentAccount && !messageData.is_tipped)}", v-on:click="tip", :id="'tip-message-'+messageData.id")
@@ -73,14 +74,11 @@
         
         b-tooltip(:target="'reply-message-'+messageData.id", title="Reply")
         b-tooltip(:target="'favorite-message-'+messageData.id", title="Favorite")
-        b-tooltip(:target="'repost-message-'+messageData.id", title="Repost")
+        span(v-if="message.json_schema === 'micro'")
+          b-tooltip(:target="'repost-message-'+messageData.id", title="Repost")
         //- b-tooltip(:target="'tip-message-'+messageData.id", :title="messageData.is_tipped ? 'Tips' : 'Send a Tip'")
 
         div(v-if="currentAccount")
-          upload-wizard(ref="replyUploadWizard", model="message", @messageSuccess="replySuccess")
-          upload-wizard(ref="repostUploadWizard", model="message", @messageSuccess="repostSuccess")
-          upload-wizard(ref="hideUploadWizard", model="message", @messageSuccess="hideSuccess")
-          upload-wizard(ref="favoriteUploadWizard", model="favorite", @favoriteSuccess="favoriteSuccess")
           b-modal(:ref="'reply-modal-'+messageData.id", title="Reply", @ok="submitReply", ok-title="Reply")
             p
               small
@@ -109,6 +107,7 @@
 
 <script>
 import moment from 'moment';
+import batchEvents from '../libs/batch-events';
 
 export default {
   props: {
@@ -140,8 +139,6 @@ export default {
       const url = `/favorites?message_id=${messageData.id}`;
 
       messageData.is_loading = true;
-      const uploadWizard = this.$refs.favoriteUploadWizard;
-      uploadWizard.show();
 
       try {
         const favorite = await $.ajax({
@@ -149,18 +146,15 @@ export default {
           method: 'POST',
           dataType: 'json'
         });
-        uploadWizard.ipfsUploadSuccess(favorite);
+        batchEvents.triggerNewBatch();
+        this.alertSuccess("Your favorite has been created");
+        messageData.is_favorited = true;
+        messageData.favorites_count += 1;
+        messageData.is_loading = false;
       } catch (error) {
         messageData.is_loading = false;
-        uploadWizard.hide();
         this.alertError("Sorry, there was an error when uploading your favorite to IPFS.");
       }
-    },
-    favoriteSuccess(favorite) {
-      const { messageData } = this;
-      messageData.is_favorited = true;
-      messageData.favorites_count += 1;
-      messageData.is_loading = false;
     },
     async repost() {
       const { messageData } = this;
@@ -169,9 +163,6 @@ export default {
       }  
       
       messageData.is_loading = true;
-      const uploadWizard = this.$refs.repostUploadWizard;
-      uploadWizard.loading = true;
-      uploadWizard.show();
 
       try {
         const repost = await $.ajax({
@@ -179,22 +170,18 @@ export default {
           method: 'POST',
           dataType: 'json'
         }); 
-        uploadWizard.ipfsUploadSuccess(repost)
+        batchEvents.triggerNewBatch();
+        messageData.is_reposted = true;
+        messageData.repost_count += 1;
+        messageData.is_loading = false;
+
+        this.$emit('repost', repost);
+        this.alertSuccess("Your repost has been created");
       } catch (error) {
         console.log(error);
         messageData.is_loading = false;
         this.alertError("Sorry, there was an error when uploading your repost to IPFS.")
-        uploadWizard.hide();
-        uploadWizard.loading = false;
       }
-    },
-    repostSuccess(repost) {
-      const { messageData } = this;
-      messageData.is_reposted = true;
-      messageData.repost_count += 1;
-      messageData.is_loading = false;
-
-      this.$emit('repost', repost);
     },
     async reply() {
       const { messageData } = this;
@@ -212,9 +199,6 @@ export default {
         return true;
       }
       messageData.is_loading = true;
-      const uploadWizard = this.$refs.replyUploadWizard;
-      uploadWizard.loading = true;
-      uploadWizard.show();
 
       try {
         const reply = await $.ajax({
@@ -227,23 +211,19 @@ export default {
           }
         });
         console.log(reply);
-        uploadWizard.ipfsUploadSuccess(reply);
+        batchEvents.triggerNewBatch();
+        this.alertSuccess("Your reply has been created");
+        messageData.is_replied = true;
+        messageData.reply_count += 1;
+        this.$emit('reply', reply);
       } catch (error) {
         console.log(error);
-        messageData.is_loading = false;
         this.alertError("Sorry, there was an error when uploading your reply to IPFS.")
-        uploadWizard.hide();
       }
-    },
-    replySuccess(reply) {
-      const { messageData } = this;
       messageData.is_loading = false;
-      messageData.is_replied = true;
-      messageData.reply_count += 1;
-      this.$emit('reply', reply);
     },
     messageOwnedBycurrentAccount() {
-      return this.currentAccount && (this.currentAccount.id == this.messageData.account.id);
+      return this.currentAccount && (this.currentAccount.id === this.messageData.account.id);
     },
     tip() {
       if (!this.currentAccount || this.messageData.is_tipped || this.messageOwnedBycurrentAccount()) {
@@ -265,26 +245,21 @@ export default {
       if (!this.messageOwnedBycurrentAccount()) {
         return true;
       }
-
-      const uploadWizard = this.$refs.hideUploadWizard;
-      uploadWizard.show();
-
+      messageData.is_loading = true;
       try {
         const message = await $.ajax({
           url: `/messages/${this.messageData.id}`,
           dataType: 'json',
           method: 'delete'
         });
-
-        uploadWizard.ipfsUploadSuccess(message);
+        this.messageData = message;
+        batchEvents.triggerNewBatch();
+        this.alertSuccess("Your message has been hidden.");
       } catch (error) {
         console.log(error);
         this.alertError('Sorry, an error occurred while trying to hide this message.');
-        uploadWizard.hide();
       }
-    },
-    hideSuccess(message) {
-      this.messageData = message;
+      messageData.is_loading = false;
     }
   }
 }

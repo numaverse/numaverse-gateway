@@ -1,9 +1,7 @@
 <template lang="jade">
 div
-  check-network
+  common
   alerts(ref="alerts")
-  notifications(group="account-error", :duration="10000")
-  notifications(group="account-success", :duration="10000")
   .row(v-if="!account.ipfs_hash")
     .col-3.d-none.d-md-block
     .col-md-6.col-xs-12
@@ -41,30 +39,28 @@ div
             input.form-control(type="text", v-model="location", name="location", placeholder="i.e. 'Mars'")
           
           b-button(:block="true", variant="primary", size="lg", @click="sendUpdate") Update
-  upload-wizard(ref="uploadWizard", model="account", @accountSuccess="transactionSent")
 </template>
 
 <script>
 import vue2Dropzone from 'vue2-dropzone';
 import 'vue2-dropzone/dist/vue2Dropzone.css';
 import loginVue from '../login.vue';
+import batchEvents from '../../libs/batch-events';
 
 export default {
-  props: [
-    'account',
-  ],
   data() {
     return {
+      account: currentAccount,
       dropzoneOptions: {
         url: "/upload_avatar",
         maxFileSize: 2,
         addRemoveLinks: true
       },
-      avatar_ipfs_hash: this.account.avatar_ipfs_hash,
-      username: this.account.username,
-      display_name: this.account.display_name,
-      bio: this.account.bio,
-      location: this.account.location,
+      avatar_ipfs_hash: currentAccount.avatar_ipfs_hash,
+      username: currentAccount.username,
+      display_name: currentAccount.display_name,
+      bio: currentAccount.bio,
+      location: currentAccount.location,
     }
   },
   components: {
@@ -82,11 +78,7 @@ export default {
       while (dropzone.files.length > 1) {
         dropzone.removeFile(dropzone.files[0]);
       };
-      this.$notify({
-        group: 'account-success',
-        title: "Successfully uploaded a new image.",
-        type: 'success'
-      });
+      this.alertSuccess("Successfully uploaded a new image.");
     },
     uploadError(file, data, xhr) {
       console.log(file, data, xhr);
@@ -97,7 +89,7 @@ export default {
       this.$refs.dropzone.removeAllFiles();
       this.alertError(message);
     },
-    sendUpdate() {
+    async sendUpdate() {
       console.log("sending data", this);
       const data = {
         username: this.username,
@@ -107,26 +99,24 @@ export default {
         display_name: this.display_name
       }
 
-      const { uploadWizard } = this.$refs;
-      uploadWizard.loading = true;
-      uploadWizard.show();
-
-      const request = $.ajax({
-        url: `/u/${this.account.hash_address}`,
-        method: 'put',
-        dataType: 'json',
-        data: { account: data },
-        success: uploadWizard.ipfsUploadSuccess,
-        error: this.ipfsUploadFailed
-      })
-    },
-    ipfsUploadFailed(xhr, message, data) {
-      this.$refs.uploadWizard.hide();
-      const error = xhr.responseJSON.errors[0];
-      this.alertError("There was an error with your update: " + error);
-    },
-    transactionSent() {
-      document.location = "/";
+      try {
+        const response = await $.ajax({
+          url: `/u/${this.account.hash_address}`,
+          method: 'put',
+          dataType: 'json',
+          data: { account: data },
+        });
+        batchEvents.triggerNewBatch();
+        this.alertSuccess("Your account has been updated!")
+        document.location = "/";
+      } catch (error) {
+        console.log(error);
+        let message = 'There was an error with your update';
+        if (error.responseJSON && error.responseJSON.errors) {
+          message += `: ${error.responseJSON.errors[0]}`;
+        }
+        this.alertError(message);
+      }
     }
   }
 }

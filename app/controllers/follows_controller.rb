@@ -11,7 +11,7 @@ class FollowsController < ApplicationController
         to_account_id: params[:to_account_id]
       )
     end
-    @follow.post_on_ipfs
+    @follow.batch
 
     render json: { id: @follow.id, ipfs_hash: @follow.ipfs_hash }
   end
@@ -36,7 +36,7 @@ class FollowsController < ApplicationController
     @follow = Follow.find(params[:id])
     authorize! :destroy, @follow
     @follow.update(hidden_at: DateTime.now)
-    @follow.post_on_ipfs
+    @follow.batch
     render json: { id: @follow.id, ipfs_hash: @follow.ipfs_hash }
   end
 end

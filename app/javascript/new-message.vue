@@ -1,6 +1,7 @@
 <template lang="jade">
 #new_message.new_message
   alerts(ref="alerts")
+  common
   .row
     .col-12
       .form-group
@@ -25,21 +26,16 @@
             a(href="https://simplemde.com/markdown-guide", target="_blank") Markdown
         textarea.CodeMirror(placeholder="Post Something", ref="body")
       a.toolbar-btn.btn.btn-primary(href="javascript:;", v-on:click="save", ref="save") Save
-  upload-wizard(ref="uploadWizard", model="message", @messageSuccess="messageSuccess")
 </template>
 
 <script>
-import $ from 'jquery';
-import Multiselect from 'vue-multiselect';
 import _ from 'underscore';
+import batchEvents from './libs/batch-events';
 
 export default {
   props: [
     'message'
   ],
-  components: {
-    Multiselect
-  },
   data: function () {
     return {
       coinbase: null,
@@ -74,26 +70,23 @@ export default {
       const url = this.message ? `/messages/${this.message.id}` : '/messages';
       const method = this.message ? 'PUT' : 'POST';
 
-      const { uploadWizard } = this.$refs;
-      uploadWizard.show();
-
       try {
-        const result = await $.ajax({
+        const message = await $.ajax({
           url: url,
           data: data,
           method: method,
           dataType: 'json'
         });
-
-        uploadWizard.ipfsUploadSuccess(result);
+        batchEvents.triggerNewBatch();
+        const link = `<br/><a href="/messages/${message.id}">View Message</a>`;
+        const alert = `Your message has been successfully ${this.messageId ? 'updated' : 'created'}.`;
+        this.alertSuccess(alert, { text: link });
+        this.messageId = message.id;
       } catch (error) {
         console.log(error);
         this.alertError("Sorry, there was an error when posting your article.");
       }
     },
-    messageSuccess(message) {
-      this.messageId = message.id;
-    }
   },
   async mounted () {
     this.editor = new SimpleMDE({

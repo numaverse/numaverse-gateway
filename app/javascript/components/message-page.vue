@@ -1,10 +1,10 @@
 <template lang="jade">
 div
-  check-network
+  common
   div(v-if="message.json_schema === 'article'")
     .row
-      .col-2
-      .col-8
+      .col-2.d-none.d-md-block
+      .col-md-8.col-xs-12
         .row
           .col-2
             img.img-fluid.rounded-circle(:src="message.account.avatar.medium")
@@ -40,8 +40,8 @@ div
         .message-body(v-html="message.sanitized_body")
   div(v-else)
     .row
-      .col-3.d-none.d-md-block
-        user-card(:user="message.user")
+      .col-md-3.col-xs-12.mb-2
+        user-card(:account="message.account")
       .col-md-6.col-xs-12
         message(:message="message", @reply="reply => { newReply(reply) }")
 

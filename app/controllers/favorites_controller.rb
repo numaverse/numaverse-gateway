@@ -3,7 +3,7 @@ class FavoritesController < ApplicationController
 
   def create
     @favorite = current_account.favorites.create(message_id: params[:message_id])
-    @favorite.post_on_ipfs
+    @favorite.batch
 
     render 'show'
   end

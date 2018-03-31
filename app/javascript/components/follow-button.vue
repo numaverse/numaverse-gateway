@@ -8,11 +8,12 @@ div(v-if="visible()")
       | Follow
     span(v-if="!isLoading && follow")
       | Unfollow
-  upload-wizard(ref="uploadWizard", model="follow")
   alerts(ref="alerts")
 </template>
 
 <script>
+import batchEvents from '../libs/batch-events';
+
 export default {
   props: [
     'account',
@@ -35,10 +36,6 @@ export default {
       this.isLoading = false;
     },
     async createFollow() {
-      const { uploadWizard } = this.$refs;
-      uploadWizard.loading = true;
-      uploadWizard.show();
-
       try {
         const follow = await $.ajax({
           url: '/follows',
@@ -48,19 +45,14 @@ export default {
           type: 'post',
           dataType: 'json'
         });
-        uploadWizard.ipfsUploadSuccess(follow);
+        batchEvents.triggerNewBatch();
         this.follow = follow;
+        this.alertSuccess(`You've followed @${this.account.username}`);
       } catch (error) {
-        uploadWizard.hide();
         this.alertError("Sorry, there was an error when creating this follow.");
       }
-      
     },
     async unfollow() {
-      const { uploadWizard } = this.$refs;
-      uploadWizard.loading = true;
-      uploadWizard.show();
-
       try {
         const follow = await $.ajax({
           url: `/follows/${this.follow.id}`,
@@ -70,11 +62,10 @@ export default {
           type: 'post',
           dataType: 'json'
         });
-        console.log(follow);
-        uploadWizard.ipfsUploadSuccess(follow);
+        batchEvents.triggerNewBatch();
+        this.alertSuccess(`You've unfollowed @${this.account.username}`);
         this.follow = null;
       } catch (error) {
-        uploadWizard.hide();
         this.alertError("Sorry, there was an error when creating this follow.");
       }
     },

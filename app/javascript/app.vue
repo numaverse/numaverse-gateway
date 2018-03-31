@@ -42,8 +42,7 @@
         
     .col-md-6.col-xs-12
       div(v-if="currentAccount")
-        check-network
-        upload-wizard(ref="uploadWizard", model="message", @messageSuccess="showNewMessage")
+        common
         textarea.form-control(placeholder="Write something on the Ethereum blockchain", v-model="newMessage")
         a.btn.btn-primary.mt-1(v-on:click="postMessage()", href="javascript:;", 
           v-bind:class="{ disabled: !canSendNewMessage() }",
@@ -76,6 +75,7 @@
 
 <script>
 import moment from 'moment';
+import batchEvents from './libs/batch-events';
 
 export default {
   props: [
@@ -109,23 +109,23 @@ export default {
       this.newMessage = "";
       this.isLoading = true;
 
-      const { uploadWizard } = this.$refs;
-      uploadWizard.loading = true;
-      uploadWizard.show();
+      try {
+        const message = await $.ajax({
+          url: url,
+          data: data,
+          dataType: 'json',
+          method: method,
+        });
+        batchEvents.triggerNewBatch();
+        this.addMessage(message);
+      } catch (error) {
+        console.log(error);
+        this.newMessage = data.body;
+        this.alertError('Sorry, an error happened when posting that message.');
+      }
 
-      $.ajax({
-        url: url,
-        data: data,
-        dataType: 'json',
-        method: method,
-        success: this.$refs.uploadWizard.ipfsUploadSuccess,
-        error: (error) => {
-          this.newMessage = data.body;
-          uploadWizard.hide();
-          this.alertError('Sorry, an error happened when posting that message.');
-        }
-      });
       this.isLoading = false;
+      
     },
     showNewMessage(message) {
       this.messages.unshift(message)
