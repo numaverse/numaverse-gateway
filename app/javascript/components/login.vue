@@ -5,7 +5,7 @@
   .col-2.d-none.d-md-block
   .col-md-8.col-xs-12
     .card
-      h4.card-header Login with MetaMask
+      h4.card-header Login with Ethereum
       .card-body
         .row
           .col-2.d-none.d-md-block
@@ -15,7 +15,7 @@
                 p.text-center
                   | To login, first select an account in your dapp browser. 
                 p.text-center.mt-1
-                  |When you click 'sign in', we'll ask you to sign
+                  | When you click 'sign in', we'll ask you to sign
                   | a message, which allows us to verify that you own this address.
                 .form-group
                   label(for="address") Address
@@ -27,16 +27,36 @@
 
             div(v-else)
               p.text-center
-                | To interact with the Ethereum blockchain securely, you need to install
-                a(href="https://metamask.io", target="_blank")  Metamask
-                |.
+                | To interact with the Ethereum blockchain securely, you need to use a web3 compatible browser.
 
-              p.text-center.mt-1
-                | Once you've installed Metamask, just refresh this page to sign in.
-              
-              .mt-3
-              p.mt-3.text-center
-                a.btn.btn-primary.btn-lg.btn-block(href="https://metamask.io", target="_blank")  Install Metamask
+              div.text-center.mt-1(v-if="isMobile")
+                p Here are a few great mobile apps you can use:
+
+                .card.mt-2      
+                  a.card-body.text-left(href="http://www.toshi.org/", target="_blank")
+                    .row
+                      .col-4
+                        img.img-fluid.rounded(src="/toshi.png", title="Toshi")
+                      .col-8
+                        h4.mt-3 Toshi
+                
+                .card.mt-2                      
+                  a.card-body.text-left(href="https://trustwalletapp.com/", target="_blank")
+                    .row
+                      .col-4
+                        img.img-fluid.rounded(src="/trust.jpg", title="Trust")
+                      .col-8
+                        h4.mt-3 Trust
+
+              div.text-center.mt-1(v-else)
+                p 
+                  | On desktop, we recommend using the MetaMask browser extension.
+                  | Once you've installed Metamask, just refresh this page to sign in.
+                
+                .mt-3
+
+                a(href="https://metamask.io", target="_blank")
+                  img.img-fluid(src="/metamask.png", title="MetaMask")
 </template>
 
 <script>
@@ -96,6 +116,11 @@ export default {
           }
         });
       });
+    }
+  },
+  computed: {
+    isMobile() {
+      return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     }
   }
 };
