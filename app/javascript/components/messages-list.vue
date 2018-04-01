@@ -33,7 +33,7 @@ export default {
       page: 1,
       isLoading: true,
       finished: false
-    } 
+    };
   },
   methods: {
     addMessage(message) {
@@ -77,9 +77,9 @@ export default {
     this.$nextTick(() => {
       this.messagesList = this.messages;
       this.isLoading = false;
-    })
+    });
   }
-}
+};
 </script>
 
 <style lang="sass" scoped>

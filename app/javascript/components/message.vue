@@ -139,7 +139,7 @@ export default {
       messageData.is_loading = true;
 
       try {
-        const favorite = await $.ajax({
+        await $.ajax({
           url: url,
           method: 'POST',
           dataType: 'json'

@@ -11,7 +11,6 @@ class PagesController < ApplicationController
     @messages = Message.order('created_at desc')
       .visible
       .page(params[:page])
-      .where('json_schema in (1,2)')
     if current_account && request.path == "/" && has_follows
       @messages = current_account.following_messages(relation: @messages)
     end

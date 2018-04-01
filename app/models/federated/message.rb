@@ -8,6 +8,7 @@ class Federated::Message < ApplicationRecord
   before_update :update_versions, if: :local?
 
   scope :visible, -> { where('hidden_at is null')}
+  scope :remote, -> { where('local_message_id is null') }
 
   def local?
     local_message_id.present?

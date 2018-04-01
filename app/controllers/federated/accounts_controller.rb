@@ -13,10 +13,7 @@ class Federated::AccountsController < ApplicationController
       account = Account.find_by!(username: parts[1])
       redirect_to account_path(account)
     else
-      ssl_context = OpenSSL::SSL::SSLContext.new
-      ssl_context.verify_mode = OpenSSL::SSL::VERIFY_NONE if Rails.env.development?
-      puts ssl_context.verify_mode
-      data = Goldfinger.finger(params[:handle].gsub(/^@/, 'acct:'), ssl_context: ssl_context)
+      data = Goldfinger.finger(params[:handle].gsub(/^@/, 'acct:'))
       ap_url = data.link('self')&.href
       puts ap_url
       @account = Federated::Account.from_remote_id(ap_url)

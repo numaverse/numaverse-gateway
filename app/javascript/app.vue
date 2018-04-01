@@ -70,19 +70,23 @@
       p.small.text-muted(v-else) Public Feed:
       .mt-3
       messages-list(:messages="messages")
-    .col-md-4.d-none.d-md-block
-      p Federated Timeline goes here..
+    .col-md-4.d-none.d-md-block(v-if="currentAccount")
+      federated-timeline
   
 </template>
 
 <script>
 import moment from 'moment';
 import batchEvents from './libs/batch-events';
+import FederatedTimeline from './components/federated-timeline.vue';
 
 export default {
   props: [
     '_messages'
   ],
+  components: {
+    'federated-timeline': FederatedTimeline,
+  },
   data: function () {
     return {
       newMessage: "",
