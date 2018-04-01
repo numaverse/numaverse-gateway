@@ -2,6 +2,57 @@
 http_interactions:
 - request:
     method: get
+    uri: https://mastodon.social/.well-known/webfinger?resource=acct:hstove@mastodon.social
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Connection:
+      - close
+      Host:
+      - mastodon.social
+      User-Agent:
+      - http.rb/3.0.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.3
+      Date:
+      - Sun, 01 Apr 2018 23:36:00 GMT
+      Content-Type:
+      - application/jrd+json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - close
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - 1; mode=block
+      Vary:
+      - Accept,Accept-Encoding
+      Cache-Control:
+      - max-age=259200, public
+      Etag:
+      - W/"393d7215ed553b400cca265ff42662fa"
+      X-Request-Id:
+      - 386efd3d-2203-4fe1-9961-73d531f8406c
+      X-Runtime:
+      - '0.015465'
+      Strict-Transport-Security:
+      - max-age=31536000
+    body:
+      encoding: UTF-8
+      string: '{"subject":"acct:hstove@mastodon.social","aliases":["https://mastodon.social/@hstove","https://mastodon.social/users/hstove"],"links":[{"rel":"http://webfinger.net/rel/profile-page","type":"text/html","href":"https://mastodon.social/@hstove"},{"rel":"http://schemas.google.com/g/2010#updates-from","type":"application/atom+xml","href":"https://mastodon.social/users/hstove.atom"},{"rel":"self","type":"application/activity+json","href":"https://mastodon.social/users/hstove"},{"rel":"salmon","href":"https://mastodon.social/api/salmon/292391"},{"rel":"magic-public-key","href":"data:application/magic-public-key,RSA.txRTVA7Su8N2H-C10irth8bP5aXd4HAyM1c4LIHh2M_fd10j2578Kups4-V4ufwwF18ICzGrljZgyvh4jxtctRmtI8hVWpA1YI648Zl5ldvKoW_sNPbWG4rnOlWNrjWaBeTX6Xh5et0319GhyLRkRA8UB04E1PljSRz-9QA5V03LYQi5YDFSemPIBhXsgiz4xfYFRoT37zRqp6bmAfskfjW-60HF6eNSDGRhBoVyJwhYhyr-VPbhu0j7FXWAwQBgcquZZvq8zf2ehzDjFf0yZeHUjC0rQH68Bb5mO0gd8T8Wtfy8taovIdPAOSsG57TpLhjwAPePy8JNgZykw3M72w==.AQAB"},{"rel":"http://ostatus.org/schema/1.0/subscribe","template":"https://mastodon.social/authorize_follow?acct={uri}"}]}'
+    http_version: 
+  recorded_at: Sun, 01 Apr 2018 23:36:00 GMT
+- request:
+    method: get
     uri: https://mastodon.social/users/hstove
     body:
       encoding: UTF-8
@@ -19,7 +70,7 @@ http_interactions:
       Server:
       - nginx/1.10.3
       Date:
-      - Tue, 27 Mar 2018 22:34:46 GMT
+      - Sun, 01 Apr 2018 23:36:01 GMT
       Content-Type:
       - application/activity+json; charset=utf-8
       Transfer-Encoding:
@@ -44,9 +95,9 @@ http_interactions:
       Etag:
       - W/"509ab054179517674e62ad06037060bc"
       X-Request-Id:
-      - ba384e1d-339b-42fd-a6a2-a18725d4db4e
+      - 3f0d95da-f38e-46ff-bbd3-c50921c91fb6
       X-Runtime:
-      - '0.601549'
+      - '0.457660'
       Strict-Transport-Security:
       - max-age=31536000
     body:
@@ -55,5 +106,5 @@ http_interactions:
         PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtxRTVA7Su8N2H+C10irt\nh8bP5aXd4HAyM1c4LIHh2M/fd10j2578Kups4+V4ufwwF18ICzGrljZgyvh4jxtc\ntRmtI8hVWpA1YI648Zl5ldvKoW/sNPbWG4rnOlWNrjWaBeTX6Xh5et0319GhyLRk\nRA8UB04E1PljSRz+9QA5V03LYQi5YDFSemPIBhXsgiz4xfYFRoT37zRqp6bmAfsk\nfjW+60HF6eNSDGRhBoVyJwhYhyr+VPbhu0j7FXWAwQBgcquZZvq8zf2ehzDjFf0y\nZeHUjC0rQH68Bb5mO0gd8T8Wtfy8taovIdPAOSsG57TpLhjwAPePy8JNgZykw3M7\n2wIDAQAB\n-----END
         PUBLIC KEY-----\n"},"endpoints":{"sharedInbox":"https://mastodon.social/inbox"},"icon":{"type":"Image","mediaType":"image/jpeg","url":"https://files.mastodon.social/accounts/avatars/000/292/391/original/b7345e5d5ef91433.jpg"},"image":{"type":"Image","mediaType":"image/jpeg","url":"https://files.mastodon.social/accounts/headers/000/292/391/original/bd5658effbabebe8.jpg"}}'
     http_version: 
-  recorded_at: Tue, 27 Mar 2018 22:34:46 GMT
+  recorded_at: Sun, 01 Apr 2018 23:36:01 GMT
 recorded_with: VCR 4.0.0

@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+ruby '2.5.1'
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
   "https://github.com/#{repo_name}.git"
@@ -62,10 +63,8 @@ gem 'awesome_print'
 gem 'google-analytics-rails'
 gem 'paper_trail'
 gem 'nokogiri'
-gem 'dalli'
 gem 'split', require: 'split/dashboard'
 gem 'rails_12factor'
-gem 'unicorn'
 gem 'hashie'
 gem 'memcachier'
 gem 'font-awesome-rails'
@@ -73,7 +72,6 @@ gem 'sidekiq', require: 'sidekiq/web'
 gem 'money-tree', github: 'numaverse/money-tree', branch: 'numa'
 gem 'ethereum.rb', github: 'numaverse/ethereum.rb', branch: 'numa'
 gem 'eth'
-gem "attr_encrypted", "~> 3.0.0"
 gem 'faker'
 gem 'redcarpet', '~> 3.4.0'
 gem 'sanitize', '~> 4.6.3'
@@ -96,6 +94,7 @@ gem 'redis-namespace'
 gem 'redis-rails'
 gem 'sinatra', '~> 2.0.1'
 gem 'rails-html-sanitizer', '~> 1.0.4'
+gem 'rack-timeout'
 group :test, :development do
   gem 'rspec-rails'
   gem 'factory_bot_rails'
@@ -114,7 +113,7 @@ group :test, :development do
   gem 'ruby-progressbar'
   gem 'better_errors'
   gem 'database_cleaner'
-  gem 'binding_of_caller'
+  # gem 'binding_of_caller'
   gem 'vcr'
   gem 'simplecov', require: false
   gem 'guard-sidekiq'
@@ -129,5 +128,5 @@ group :test, :development do
 end
 
 group :test do
-  gem 'webmock', '< 1.16'
+  gem 'webmock', '~> 3.3.0'
 end

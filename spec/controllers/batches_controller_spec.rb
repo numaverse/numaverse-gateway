@@ -17,7 +17,7 @@ RSpec.describe BatchesController, type: :controller do
     describe "GET #show" do
 
       before do
-        get :show
+        get :show, format: :json
       end
 
       it "returns http success" do

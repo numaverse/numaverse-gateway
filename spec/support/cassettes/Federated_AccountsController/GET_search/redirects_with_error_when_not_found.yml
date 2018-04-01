@@ -1,0 +1,154 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://mastodon.social/.well-known/webfinger?resource=acct:asfsdafsdsdsfdfasfsdafasdfsad@mastodon.social
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Connection:
+      - close
+      Host:
+      - mastodon.social
+      User-Agent:
+      - http.rb/3.0.0
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Server:
+      - nginx/1.10.3
+      Date:
+      - Sun, 01 Apr 2018 23:39:12 GMT
+      Content-Type:
+      - text/html
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - close
+      Vary:
+      - Accept,Accept-Encoding
+      - Accept-Encoding
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - 1; mode=block
+      Cache-Control:
+      - no-cache
+      X-Request-Id:
+      - cc104e51-c532-49b3-80a7-57608363e97a
+      X-Runtime:
+      - '0.008394'
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    http_version: 
+  recorded_at: Sun, 01 Apr 2018 23:39:13 GMT
+- request:
+    method: get
+    uri: https://mastodon.social/.well-known/host-meta
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Connection:
+      - close
+      Host:
+      - mastodon.social
+      User-Agent:
+      - http.rb/3.0.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.3
+      Date:
+      - Sun, 01 Apr 2018 23:39:13 GMT
+      Content-Type:
+      - application/xrd+xml; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - close
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - 1; mode=block
+      Vary:
+      - Accept,Accept-Encoding
+      Cache-Control:
+      - max-age=259200, public
+      Etag:
+      - W/"370b7884611841c0146f89d72d9d1690"
+      X-Request-Id:
+      - 7fed226d-0af2-4717-831d-1d8b9ba0470f
+      X-Runtime:
+      - '0.002810'
+      Strict-Transport-Security:
+      - max-age=31536000
+    body:
+      encoding: UTF-8
+      string: |
+        <?xml version="1.0"?>
+        <XRD xmlns="http://docs.oasis-open.org/ns/xri/xrd-1.0">
+          <Link rel="lrdd" type="application/xrd+xml" template="https://mastodon.social/.well-known/webfinger?resource={uri}"/>
+        </XRD>
+    http_version: 
+  recorded_at: Sun, 01 Apr 2018 23:39:13 GMT
+- request:
+    method: get
+    uri: https://mastodon.social/.well-known/webfinger?resource=acct:asfsdafsdsdsfdfasfsdafasdfsad@mastodon.social
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Connection:
+      - close
+      Host:
+      - mastodon.social
+      User-Agent:
+      - http.rb/3.0.0
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Server:
+      - nginx/1.10.3
+      Date:
+      - Sun, 01 Apr 2018 23:39:14 GMT
+      Content-Type:
+      - text/html
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - close
+      Vary:
+      - Accept,Accept-Encoding
+      - Accept-Encoding
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - 1; mode=block
+      Cache-Control:
+      - no-cache
+      X-Request-Id:
+      - 7d365586-21da-455a-837b-54d68b334ae7
+      X-Runtime:
+      - '0.005722'
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    http_version: 
+  recorded_at: Sun, 01 Apr 2018 23:39:14 GMT
+recorded_with: VCR 4.0.0

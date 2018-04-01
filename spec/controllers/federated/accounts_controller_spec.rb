@@ -20,7 +20,7 @@ RSpec.describe Federated::AccountsController, type: :controller do
     end
 
     it 'redirects with error when not found', :vcr do
-      get :search, params: { handle: "@#{SecureRandom.hex(12)}@mastodon.social" }
+      get :search, params: { handle: "@asfsdafsdsdsfdfasfsdafasdfsad@mastodon.social" }
       expect(response).to redirect_to(root_path)
       expect(flash[:alert]).not_to be_blank
     end

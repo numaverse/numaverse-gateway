@@ -4,7 +4,7 @@ class BatchesController < ApplicationController
 
   def show
     @batch = current_account.fetch_batch
-    render template: 'batches/show.json.jbuilder'
+    render 'batches/show.json.jbuilder'
   end
 
   def upload
