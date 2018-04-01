@@ -20,11 +20,6 @@ class AccountsController < ApplicationController
     end
   end
 
-  def attach_transaction
-    authorize! :manage, @account
-    attach_transaction_to(@account)
-  end
-
   def edit
     authorize! :manage, @account
   end

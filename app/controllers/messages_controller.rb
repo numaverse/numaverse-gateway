@@ -10,11 +10,6 @@ class MessagesController < ApplicationController
     @message.batch!
   end
 
-  def attach_transaction
-    authorize! :manage, @message
-    attach_transaction_to(@message)
-  end
-
   def show
     @batches = @message.batches
   end

@@ -8,15 +8,18 @@ class BatchesController < ApplicationController
   end
 
   def upload
+    authorize! :manage, @batch
     @batch.post_on_ipfs
     render json: { ipfs_hash: @batch.ipfs_hash, id: @batch.id }
   end
 
   def attach_transaction
+    authorize! :manage, @batch
     attach_transaction_to(@batch)
   end
 
   def cancel
+    authorize! :manage, @batch
     @batch.cancel!
     render json: { success: true }
   end

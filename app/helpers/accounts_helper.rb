@@ -2,7 +2,7 @@ module AccountsHelper
   def link_to_account(account)
     if account.blank?
       nil
-    elsif account.hash_address.downcase == Contract.numa.hash_address.downcase
+    elsif account.hash_address.downcase == Contract.numa&.hash_address&.downcase
       "Numa Smart Contract"
     elsif account.username.present?
       link_to "@#{account.username}", account_path(account.username)
