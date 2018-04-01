@@ -2,6 +2,7 @@ class Federated::Account < ApplicationRecord
   belongs_to :local_account, foreign_key: 'local_account_id', class_name: 'Account', optional: true
   has_many :from_follows, foreign_key: 'from_account_id', class_name: "Federated::Follow"
   has_many :to_follows, foreign_key: 'to_account_id', class_name: "Federated::Follow"
+  has_many :messages, foreign_key: 'federated_account_id', class_name: 'Federated::Message'
 
   before_create :generate_keypair, if: :local?
 

@@ -14,6 +14,19 @@ class ActivityPub::InboxFactoryJob < ApplicationJob
         follow = Federated::Follow.find_by(federated_id: object.id)
         follow.try(:destroy)
       end
+    elsif json.type == 'Create'
+      process_create(from_account, json)
     end
+  end
+
+  def process_create(from_account, json)
+    if json&.object&.type != "Note"
+      Rails.logger.debug("Tried to create message of type: #{json&.object&.type}, which is unsupported")
+      return true
+    end
+    # ap json
+    message = from_account.messages.new
+    message.object_data = json.object
+    message.save!
   end
 end
