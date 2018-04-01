@@ -13,7 +13,7 @@
             div(v-if="enabled")
               div(v-if="address")
                 p.text-center
-                  | To login, first select an account in MetaMask. 
+                  | To login, first select an account in your dapp browser. 
                 p.text-center.mt-1
                   |When you click 'sign in', we'll ask you to sign
                   | a message, which allows us to verify that you own this address.
@@ -92,13 +92,13 @@ export default {
               group: 'login-error',
               title: 'Sorry, we were unable to verify your signature.',
               type: 'error'
-            })
+            });
           }
-        })
-      })
+        });
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="sass" scoped>

@@ -42,7 +42,9 @@ class Account < ApplicationRecord
   end
 
   def fetch_batch
-    Batch.find_or_create_by(account_id: id, aasm_state: 'batched')
+    batch = Batch.where(account_id: id).where.not(aasm_state: [:confirmed, :pending]).first
+    return batch if batch.present?
+    Batch.create(account_id: id, aasm_state: 'batched')
   end
 
   def update_balance(save: true)

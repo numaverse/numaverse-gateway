@@ -10,52 +10,60 @@
     %hr
     .space3
 
-    %h4 Network Data:
-    %dl.row.small
-      - confirmations = @message.confirmations
-      %dt.col-5 Confirmations
-      %dd.col-7
-        - if confirmations
-          = number_with_delimiter confirmations
-        - else
-          %span.font-italic Pending
+    %h4 Batches:
 
-      %dt.col-5 ID on the smart contract
-      %dd.col-7= @message.foreign_id || content_tag(:e, 'n/a')
+    - @batches.each do |batch|
 
-      %dt.col-5 IPFS File
-      %dd.col-7.text-truncate
-        - url = IpfsServer.gateway_url(@message.ipfs_hash)
-        = link_to url, url, target: :_blank
+      %hr.mt-3.mb-3
 
-      %dt.col-5 Raw IPFS Link
-      %dd.col-7.text-truncate
-        - url = "ipfs://#{@message.ipfs_hash}"
-        = link_to url, url, target: :_blank
-      
-      .col-12
-        %h5.mt-2 Transaction Data:
-      
-      - if @message.tx
-        %dt.col-5 Transaction
-        %dd.col-7.text-truncate
-          = link_to @message.tx.hash_address, @message.tx
-
-        %dt.col-5 Block
-        %dd.col-7.text-truncate
-          - block = @message.tx.block
-          - if block.present?
-            = link_to @message.tx.block.number, @message.tx.block
+      %dl.row.small
+        %dt.col-5 Status
+        %dd.col-7
+          - if batch.batched?
+            Waiting to be sent to Ethereum
+          - elsif batch.uploaded?
+            Uploaded to IPFS, waiting for transaction
+          - elsif batch.pending?
+            Sent to Ethereum, awaiting confirmation
           - else
-            Not confirmed yet
+            = batch.aasm_state.titleize
 
-      
-      
-      - if @message.tx_data
-        - @message.tx_data.each do |key, val|
-          %dt.col-5= key.humanize
-          %dd.col-7.text-truncate{title: val}
-            - if val.is_a?(String) && val.starts_with?('0x') && val.size < 20
-              = val.to_i(16)
+        - if tx = batch.tx
+
+          %dt.col-12.h5 Network Data:
+
+          - confirmations = tx.confirmations
+          %dt.col-5 Confirmations
+          %dd.col-7
+            - if confirmations
+              = number_with_delimiter confirmations
             - else
-              = val  
+              %span.font-italic Pending
+          
+          %dt.col-5 Transaction
+          %dd.col-7.text-truncate= link_to tx.hash_address, tx
+
+          %dt.col-5 IPFS File
+          %dd.col-7.text-truncate
+            - url = IpfsServer.gateway_url(batch.ipfs_hash)
+            = link_to url, url, target: :_blank
+
+          %dt.col-5 Raw IPFS Link
+          %dd.col-7.text-truncate
+            - url = "ipfs://#{batch.ipfs_hash}"
+            = link_to url, url, target: :_blank
+
+          %dt.col-5 Block
+          %dd.col-7.text-truncate
+            - if tx.block_number.present?
+              = tx.block_number
+            - else
+              Not confirmed yet
+
+          %dt.col-12.h4 Transaction Data:
+
+          - [:block_hash, :from, :to, :gas, :gas_price, :input, :nonce]. each do |key|
+
+            - if tx[key].present?
+              %dt.col-5= key.to_s.titleize
+              %dd.col-7.text-truncate= tx[key]

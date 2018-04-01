@@ -14,5 +14,10 @@ module.exports = {
   env: {
     browser: true,
     jquery: true,
+  },
+  globals: {
+    currentAccount: true,
+    contractAddress: true,
+    ipfsGatewayAddress: true,
   }
 };

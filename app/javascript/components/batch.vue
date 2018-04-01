@@ -42,7 +42,7 @@ export default {
       loadingBatch: false,
       items: [],
       groupedItems: {},
-    }
+    };
   },
   mounted() {
     batchEvents.addListener(batchEvents.BATCH_UPDATED, this.newBatchItem);
@@ -58,17 +58,30 @@ export default {
       this.count = response.count;
       this.batchID = response.id;
       this.items = response.items;
-      this.groupedItems = _.groupBy(this.items, 'item_type')
+      this.groupedItems = _.groupBy(this.items, 'item_type');
       this.loading = false;
     },
     async showModal() {
       this.$refs.modal.show();
     },
     async upload() {
-      console.log("uploading batch");
+      // console.log("uploading batch");
+      const { uploadWizard } = this.$refs;
+      uploadWizard.show();
+
+      try {
+        const result = await $.ajax({
+          url: `/batches/${this.batchID}/upload`,
+          method: 'post',
+        });
+        uploadWizard.ipfsUploadSuccess(result);
+      } catch (error) {
+        console.log(error);
+        uploadWizard.hide();
+      }
     },
     itemMessage(key, list) {
-      const plural = list.length === 1 ? '' : 's'
+      const plural = list.length === 1 ? '' : 's';
       return `${list.length} ${key} update${plural}`;
     },
     batchSent() {
@@ -86,7 +99,7 @@ export default {
       return this.count === 1 ? 'item' : 'items';
     }
   }
-}
+};
 </script>
 
 <style lang="sass" scoped>

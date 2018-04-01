@@ -81,7 +81,9 @@ module ActivityStreamable
   end
 
   def batches
-    Batch.joins(:batch_items).where('batch_items.batchable_type = ? AND batch_items.batchable_id = ?', self.class, id)
+    Batch.joins(:batch_items)
+      .where('batch_items.batchable_type = ? AND batch_items.batchable_id = ?', self.class, id)
+      .order('created_at desc')
   end
 
   def update_federated_model

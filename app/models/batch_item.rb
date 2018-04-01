@@ -10,15 +10,15 @@ class BatchItem < ApplicationRecord
     state :confirmed
 
     event :transact do
-      transitions from: [:pending, :batched], to: :pending
+      transitions from: [:pending, :batched, :confirmed], to: :pending
     end
 
     event :confirm do
-      transitions from: [:batched, :pending], to: :confirmed
+      transitions from: [:batched, :pending, :confirmed], to: :confirmed
     end
 
     event :cancel do
-      transitions from: [:batched, :pending], to: :batched
+      transitions from: [:batched, :pending, :confirmed], to: :batched
     end
   end
 end

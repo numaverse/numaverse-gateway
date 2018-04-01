@@ -1,108 +1,106 @@
 <template lang="jade">
-  .card.mb-3.message
-    alerts(ref="alerts")
-    notifications(group="hide-errors", :duration="-1")
-    notifications(group="hide-message", :duration="10000")
-    b-dropdown(:id="'message-actions-dropdown-'+messageData.id", class="message-actions-dropdown", size="sm", text="Actions", :right="true")
-      b-dropdown-item(:href="'/transactions/'+messageData.tx_id", v-if="messageData.tx_id") View Transaction
-      b-dropdown-item(:href="'/messages/'+messageData.id") Details
-      b-dropdown-item(:href="'/messages/'+messageData.id+'/edit'", v-if="messageOwnedBycurrentAccount()") Edit
-      b-dropdown-item(href="javascript:;", v-if="messageOwnedBycurrentAccount()", @click="hideMessage") Hide
-    .card-header
-      .row
-        .col-2
-          img.img-fluid.img-thumbnail(:src='messageData.account.avatar.thumb', :alt='messageData.sender')
-        .col
-          h5.mt-1.mb-0.text-truncate.username 
-            a.text-dark(:href="'/u/'+messageData.account.username") @{{ messageData.account.username }}
-          small
-            a.text-dark(:href="'/messages/'+messageData.id"){{ moment(messageData.timestamp).fromNow() }}
-    .card-body
-      .mt-2.mb-3
-        .mt-2
-
-        div(v-if="messageData.json_schema === 'micro'")
-          message-body(:message="message")
-
-        div(v-else-if="messageData.json_schema === 'article'")
-          h5
-            a.text-dark(:href="'/messages/'+messageData.id")
-              {{ messageData.title }}
-          
-          p.small.font-italic {{ messageData.tldr }}
-
-          p.small
-            a(:href="'/messages/'+messageData.id")
-              | Read More
-
-        div(v-else)
-          .alert.alert-warning This message is improperly formatted.
-          p.small {{ messageData.body }}
-        .mb-3
-      .space
-    .card-footer
-      p.mb-0(v-if="messageData.repost")
+.card.mb-3.message(v-if="!messageData.hidden_at")
+  alerts(ref="alerts")
+  b-dropdown(:id="'message-actions-dropdown-'+messageData.id", class="message-actions-dropdown", size="sm", text="Actions", :right="true")
+    b-dropdown-item(:href="'/transactions/'+messageData.tx_id", v-if="messageData.tx_id") View Transaction
+    b-dropdown-item(:href="'/messages/'+messageData.id") Details
+    b-dropdown-item(:href="'/messages/'+messageData.id+'/edit'", v-if="messageOwnedBycurrentAccount()") Edit
+    b-dropdown-item(href="javascript:;", v-if="messageOwnedBycurrentAccount()", @click="hideMessage") Hide
+  .card-header
+    .row
+      .col-2
+        img.img-fluid.img-thumbnail(:src='messageData.account.avatar.thumb', :alt='messageData.sender')
+      .col
+        h5.mt-1.mb-0.text-truncate.username 
+          a.text-dark(:href="'/u/'+messageData.account.username") @{{ messageData.account.username }}
         small
-          a.text-muted(:href="'/messages/'+messageData.repost.id")
-            | Reposting a message from @{{ messageData.repost.account.username }}
+          a.text-dark(:href="'/messages/'+messageData.id"){{ moment(messageData.timestamp).fromNow() }}
+  .card-body
+    .mt-2.mb-3
+      .mt-2
 
-      p.mb-0(v-if="messageData.reply_to")
-        small
-          a.text-muted(:href="'/messages/'+messageData.reply_to.id")
-            | Replying to a message from @{{ messageData.reply_to.account.username }}
+      div(v-if="messageData.json_schema === 'micro'")
+        message-body(:message="message")
 
-      small.text-muted
-        i.fa.fa-spin.fa-spinner.mr-1(v-if="messageData.is_loading")
-        span(v-if="!messageData.is_loading")
-
-          i.fa.mr-1(title="Reply", v-bind:class="{pointer: (currentAccount && !messageData.is_replied), 'fa-comment-o': !messageData.is_replied, 'fa-comment': messageData.is_replied}", v-on:click="reply", :id="'reply-message-'+messageData.id")
-          span(v-if="messageData.reply_count > 0")
-            {{ messageData.reply_count }}
-
-          i.ml-3.fa.mr-1(title="Favorite", v-bind:class="{pointer: (currentAccount && !messageData.is_favorited), 'fa-star-o': !messageData.is_favorited, 'fa-star': messageData.is_favorited}", v-on:click="toggleFavorite", :id="'favorite-message-'+messageData.id")
-          span(v-if="messageData.favorites_count > 0")
-            {{ messageData.favorites_count }}
-
-          span(v-if="message.json_schema === 'micro'")
-            i.ml-3.mr-1.fa.fa-refresh(title="Repost", v-bind:class="{pointer: (currentAccount && !messageData.is_reposted)}", v-on:click="repost", :id="'repost-message-'+messageData.id")
-            span(v-if="messageData.repost_count > 0")
-              {{ messageData.repost_count }}
-
-          //- i.ml-3.mr-1.fa.fa-refresh(title="Tip", v-bind:class="{pointer: (currentAccount && !messageData.is_tipped)}", v-on:click="repost(message)", :id="'repost-message-'+messageData.id")
-          //- a.text-muted.ml-3.mr-1(title="Tip", v-bind:class="{pointer: (currentAccount && !messageData.is_tipped)}", v-on:click="tip", :id="'tip-message-'+messageData.id")
-          //-   {{ messageData.tips }}
+      div(v-else-if="messageData.json_schema === 'article'")
+        h5
+          a.text-dark(:href="'/messages/'+messageData.id")
+            {{ messageData.title }}
         
-        b-tooltip(:target="'reply-message-'+messageData.id", title="Reply")
-        b-tooltip(:target="'favorite-message-'+messageData.id", title="Favorite")
+        p.small.font-italic {{ messageData.tldr }}
+
+        p.small
+          a(:href="'/messages/'+messageData.id")
+            | Read More
+
+      div(v-else)
+        .alert.alert-warning This message is improperly formatted.
+        p.small {{ messageData.body }}
+      .mb-3
+    .space
+  .card-footer
+    p.mb-0(v-if="messageData.repost")
+      small
+        a.text-muted(:href="'/messages/'+messageData.repost.id")
+          | Reposting a message from @{{ messageData.repost.account.username }}
+
+    p.mb-0(v-if="messageData.reply_to")
+      small
+        a.text-muted(:href="'/messages/'+messageData.reply_to.id")
+          | Replying to a message from @{{ messageData.reply_to.account.username }}
+
+    small.text-muted
+      i.fa.fa-spin.fa-spinner.mr-1(v-if="messageData.is_loading")
+      span(v-if="!messageData.is_loading")
+
+        i.fa.mr-1(title="Reply", v-bind:class="{pointer: (currentAccount && !messageData.is_replied), 'fa-comment-o': !messageData.is_replied, 'fa-comment': messageData.is_replied}", v-on:click="reply", :id="'reply-message-'+messageData.id")
+        span(v-if="messageData.reply_count > 0")
+          {{ messageData.reply_count }}
+
+        i.ml-3.fa.mr-1(title="Favorite", v-bind:class="{pointer: (currentAccount && !messageData.is_favorited), 'fa-star-o': !messageData.is_favorited, 'fa-star': messageData.is_favorited}", v-on:click="toggleFavorite", :id="'favorite-message-'+messageData.id")
+        span(v-if="messageData.favorites_count > 0")
+          {{ messageData.favorites_count }}
+
         span(v-if="message.json_schema === 'micro'")
-          b-tooltip(:target="'repost-message-'+messageData.id", title="Repost")
-        //- b-tooltip(:target="'tip-message-'+messageData.id", :title="messageData.is_tipped ? 'Tips' : 'Send a Tip'")
+          i.ml-3.mr-1.fa.fa-refresh(title="Repost", v-bind:class="{pointer: (currentAccount && !messageData.is_reposted)}", v-on:click="repost", :id="'repost-message-'+messageData.id")
+          span(v-if="messageData.repost_count > 0")
+            {{ messageData.repost_count }}
 
-        div(v-if="currentAccount")
-          b-modal(:ref="'reply-modal-'+messageData.id", title="Reply", @ok="submitReply", ok-title="Reply")
-            p
-              small
-                strong Original Message:
-              br
-              {{ messageData.body }}
-            .mt-2
-            textarea.form-control(placeholder="Type your response", v-model="replyBody")
-            p.small
-              span.text-muted  Max 280 characters.
-              span(v-if="replyBody.length > 0", v-bind:class="{ 'text-muted': (replyBody.length <= 280), 'text-danger': (replyBody.length > 280) }")
-                |  Currently {{ replyBody.length }} {{ replyBody.length === 0 ? 'character' : 'characters' }}.
+        //- i.ml-3.mr-1.fa.fa-refresh(title="Tip", v-bind:class="{pointer: (currentAccount && !messageData.is_tipped)}", v-on:click="repost(message)", :id="'repost-message-'+messageData.id")
+        //- a.text-muted.ml-3.mr-1(title="Tip", v-bind:class="{pointer: (currentAccount && !messageData.is_tipped)}", v-on:click="tip", :id="'tip-message-'+messageData.id")
+        //-   {{ messageData.tips }}
+      
+      b-tooltip(:target="'reply-message-'+messageData.id", title="Reply")
+      b-tooltip(:target="'favorite-message-'+messageData.id", title="Favorite")
+      span(v-if="message.json_schema === 'micro'")
+        b-tooltip(:target="'repost-message-'+messageData.id", title="Repost")
+      //- b-tooltip(:target="'tip-message-'+messageData.id", :title="messageData.is_tipped ? 'Tips' : 'Send a Tip'")
 
-          b-modal(ref="confirmHideModal", title="Are you sure?", @ok="submitHide", ok-title="Hide")
-            p
-              | Because Numa is built on top of a public blockchain, no one can ever permanently 'delete' a record.
-              |  However, you can mark your message as hidden, which will prevent it from being displayed publicly.
+      div(v-if="currentAccount")
+        b-modal(:ref="'reply-modal-'+messageData.id", title="Reply", @ok="submitReply", ok-title="Reply")
+          p
+            small
+              strong Original Message:
+            br
+            {{ messageData.body }}
+          .mt-2
+          textarea.form-control(placeholder="Type your response", v-model="replyBody")
+          p.small
+            span.text-muted  Max 280 characters.
+            span(v-if="replyBody.length > 0", v-bind:class="{ 'text-muted': (replyBody.length <= 280), 'text-danger': (replyBody.length > 280) }")
+              |  Currently {{ replyBody.length }} {{ replyBody.length === 0 ? 'character' : 'characters' }}.
 
-            p To confirm that you want to hide this message, click "Hide".
-        
-        //- send-numa-modal(ref="modal",
-        //-                 :account="messageData.account",
-        //-                 :message="messageData"
-        //-                 @sent="handleTipResponse")
+        b-modal(ref="confirmHideModal", title="Are you sure?", @ok="submitHide", ok-title="Hide")
+          p
+            | Because Numa is built on top of a public blockchain, no one can ever permanently 'delete' a record.
+            |  However, you can mark your message as hidden, which will prevent it from being displayed publicly.
+
+          p To confirm that you want to hide this message, click "Hide".
+      
+      //- send-numa-modal(ref="modal",
+      //-                 :account="messageData.account",
+      //-                 :message="messageData"
+      //-                 @sent="handleTipResponse")
 </template>
 
 <script>
@@ -125,11 +123,11 @@ export default {
       replyBody: '',
       currentAccount: window.currentAccount,
       messageData: this.message,
-    }
+    };
   },
   methods: {
     userLink(username) {
-      return `/u/${username}`
+      return `/u/${username}`;
     },
     async toggleFavorite() {
       const { messageData } = this;
@@ -180,7 +178,7 @@ export default {
       } catch (error) {
         console.log(error);
         messageData.is_loading = false;
-        this.alertError("Sorry, there was an error when uploading your repost to IPFS.")
+        this.alertError("Sorry, there was an error when uploading your repost to IPFS.");
       }
     },
     async reply() {
@@ -218,7 +216,7 @@ export default {
         this.$emit('reply', reply);
       } catch (error) {
         console.log(error);
-        this.alertError("Sorry, there was an error when uploading your reply to IPFS.")
+        this.alertError("Sorry, there was an error when uploading your reply to IPFS.");
       }
       messageData.is_loading = false;
     },
@@ -263,7 +261,7 @@ export default {
       messageData.is_loading = false;
     }
   }
-}
+};
 </script>
 
 <style lang="sass" scoped>

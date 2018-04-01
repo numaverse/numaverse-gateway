@@ -16,6 +16,7 @@ class MessagesController < ApplicationController
   end
 
   def show
+    @batches = @message.batches
   end
 
   def edit

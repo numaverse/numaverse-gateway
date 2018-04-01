@@ -7,7 +7,7 @@ module NumaChain
         client = Networker.get_client
         contract = Contract.numa
         contract_account = Account.make_by_address(contract.hash_address)
-        min_block_num = contract_account.to_transactions.maximum('block_number')
+        min_block_num = contract_account.to_transactions.maximum('block_number') + 1
         max_block_num = client.eth_block_number['result'].from_hex
         (min_block_num..max_block_num).each do |block_number|
           Rails.logger.info("Syncing block ##{block_number}")

@@ -9,7 +9,7 @@ class BatchesController < ApplicationController
 
   def upload
     @batch.post_on_ipfs
-    render json: { ipfs_hash: @batch.ipfs_hash }
+    render json: { ipfs_hash: @batch.ipfs_hash, id: @batch.id }
   end
 
   def attach_transaction
