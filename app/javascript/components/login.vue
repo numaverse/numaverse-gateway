@@ -1,5 +1,6 @@
 <template lang="jade">
 .row
+  alerts(ref="alerts")
   notifications(group="login-error", :duration="10000")
   notifications(group="login-success", :duration="10000")
   .col-2.d-none.d-md-block
@@ -14,7 +15,10 @@
               div(v-if="address")
                 p.text-center
                   | To login, first select an account in your dapp browser. 
-                p.text-center.mt-1
+                .text-center.mt-1
+                p(v-if="pendingSignature")
+                  | We sent a request for you to sign a message - please confirm to continue.
+                p(v-else)
                   | When you click 'sign in', we'll ask you to sign
                   | a message, which allows us to verify that you own this address.
                 .form-group
@@ -69,6 +73,7 @@ export default {
       account: null,
       enabled: metamask.enabled,
       locked: false,
+      pendingSignature: false,
     };
   },
   mounted() {
@@ -80,41 +85,41 @@ export default {
     accountCallback(address) {
       this.address = address;
     },
-    sign() {
-      console.log('signing');
-      metamask.sign('numa', (error, signature) => {
-        console.log(error, signature);
-        $.ajax({
+    async uploadSignature(signature) {
+      try {
+        const account = await $.ajax({
           url: '/auth/sign',
           dataType: 'json',
           data: {
             signature: signature,
             address: this.address
-          },
-          success: (account) => {
-            console.log('logged in!', account);
-            this.account = account;
-            this.$notify({
-              group: 'login-success',
-              title: "You've been logged in!",
-              type: 'success'
-            });
-
-            if (account.aasm_state == 'draft') {
-              document.location = `/u/${account.hash_address}/edit`;
-            } else {
-              document.location = '/';
-            }
-          },
-          error: (error) => {
-            console.log(error);
-            this.$notify({
-              group: 'login-error',
-              title: 'Sorry, we were unable to verify your signature.',
-              type: 'error'
-            });
           }
         });
+        console.log('logged in!', account);
+        this.account = account;
+        this.alertSuccess("You've been logged in!");
+
+        if (account.aasm_state == 'draft') {
+          document.location = `/u/${account.hash_address}/edit`;
+        } else {
+          document.location = '/';
+        }
+      } catch (error) {
+        console.log(error);
+        this.alertError('Sorry, we were unable to verify your signature.');
+      }
+    },
+    sign() {
+      console.log('signing');
+      this.pendingSignature = true;
+      metamask.sign('numa', (error, signature) => {
+        if (error) {
+          console.log(error);
+          this.alertError("We were unable to get your signature.");
+        } else {
+          this.uploadSignature(signature);
+        }
+        this.pendingSignature = false;
       });
     }
   },
