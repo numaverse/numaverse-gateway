@@ -1,15 +1,21 @@
 .row
-  .col-2
-  .col-8
+  .col-2.d-none.d-md-block
+  .col-md-8.col-xs-12
     .row
       .col-2
         - avatar = @account.avatar_url || default_avatar
         -# = image_tag(avatar, class: '')
-        %img.rounded-circle{src: avatar, title: @account.username}
-      .col-10
+        %img.rounded-circle.img-fluid{src: avatar, title: @account.username}
+      .col-8
         .display-4= @account.display_name
         %h4= '@' + @account.username
-        %p= link_to @account.federated_id, @account.federated_id, target: :_blank
+        %p.text-truncate= link_to "View Full Profile", @account.federated_id, target: :_blank
+      .col-md-2.col-xs-12.mb-3
+        - if current_account
+          - if @follow
+            = link_to 'Unfollow', federated_follow_path(@follow), method: :delete, class: 'btn btn-warning'
+          - else
+            = link_to 'Follow', federated_follows_path(to_account_id: @account.id), method: :post, class: 'btn btn-primary'
           
     %p
       = '@' + @account.username

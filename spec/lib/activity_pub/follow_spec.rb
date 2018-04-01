@@ -20,4 +20,13 @@ describe ActivityPub::Follow do
     follow = create(:follow, hidden_at: DateTime.now)
     expect(follow.activity_stream.hashie_data.hiddenAt).not_to be_nil
   end
+
+  context 'federated follows' do
+    let(:follow) { create(:federated_follow) }
+
+    it 'sets URI for target and object' do
+      expect(data.object).to eql(follow.to_account.url_id)
+      expect(data.actor).to eql(follow.from_account.url_id)
+    end
+  end
 end

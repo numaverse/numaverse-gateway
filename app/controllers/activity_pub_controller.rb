@@ -1,4 +1,5 @@
 class ActivityPubController < ApplicationController
+  skip_before_action :verify_authenticity_token, only: [:inbox_incoming_message]
   before_action :set_content_type
   before_action :set_account, only: [:outbox, :account, :inbox, :inbox_incoming_message, :followers, :following]
 

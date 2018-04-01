@@ -64,6 +64,7 @@ Rails.application.routes.draw do
         get :search
       end
     end
+    resources :follows, only: [:create, :destroy]
   end
 
   mount Sidekiq::Web => '/sidekiq'

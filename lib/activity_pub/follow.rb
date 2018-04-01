@@ -3,11 +3,11 @@ module ActivityPub
     def object_data
       {
         type: "Follow",
-        actor: person(object.from_account),
-        object: person(object.to_account),
+        actor: object.from_account.try(:url_id) || person(object.from_account),
+        object: object.to_account.try(:url_id) || person(object.to_account),
         id: url_helpers.follow_url(object),
-        uuid: object.uuid,
-        hiddenAt: object.hidden_at,
+        uuid: object.try(:uuid),
+        hiddenAt: object.try(:hidden_at),
       }
     end
   end

@@ -2,6 +2,8 @@ class Federated::Follow < ApplicationRecord
   belongs_to :from_account, foreign_key: 'from_account_id', class_name: 'Federated::Account'
   belongs_to :to_account, foreign_key: 'to_account_id', class_name: 'Federated::Account'
 
+  after_create :deliver!
+
   def accept!
     return true unless from_account.remote? && to_account.local?
 
@@ -15,5 +17,11 @@ class Federated::Follow < ApplicationRecord
     )
     response = request.perform
     Rails.logger.info("Response code #{response.code} from Accept request to #{from_account.inbox}")
+  end
+
+  def deliver!
+    if to_account.remote?
+      ActivityPub::DeliveryJob.perform_later(self)
+    end
   end
 end

@@ -7,6 +7,7 @@ class Ability
       can :manage, Message, { account_id: account.id }
       can :manage, Follow, { from_account_id: account.id }
       can :manage, Account, { id: account.id }
+      can :manage, Federated::Follow, { from_account: { local_account_id: account.id }}
     else
       can :read, Message
     end 

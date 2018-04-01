@@ -1,0 +1,51 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: http://localhost:3000/inbox
+    body:
+      encoding: UTF-8
+      string: '{"@context":["https://www.w3.org/ns/activitystreams",{"numa":"https://numaverse.com/ns","address":"numa:address","location":"numa:location","Tip":"as:Tip","valueNuwei":"numa:valueNuwei","message":"numa:message","toMessage":"numa:toMessage","transactionHash":"numa:transactionHash","manuallyApprovesFollowers":"as:manuallyApprovesFollowers"}],"type":"Follow","actor":"https://numa.localtunnel.me/activity_pub/0x69259eef222c232a3cb3599a3556cc371f014121/account","object":"http://localhost:3000/users/admin","id":"https://numa.localtunnel.me/follows/1","uuid":null,"hiddenAt":null}'
+    headers:
+      Content-Type:
+      - application/activity+json
+      Accept:
+      - application/activity+json
+      Host:
+      - localhost
+      Date:
+      - Sun, 01 Apr 2018 17:09:59 GMT
+      Digest:
+      - SHA-256=4PRhAN953Tr6Xew2AhxgloEykk/PelCoH0BxUg7CFSg=
+      Signature:
+      - keyId="https://numa.localtunnel.me/activity_pub/0x69259eef222c232a3cb3599a3556cc371f014121/account#main-key",algorithm="rsa-sha256",headers="(request-target)
+        host date content-type accept digest",signature="D53BFI3BBom7aN2/N4smaMIKhzL2Nd93gC5T+JgoN01sxoyfgUHxvBlvuiJwDKNSHL2V+la0YsvHXUF9j4Hdn/pOF0Y4nwSG5A2EvqlshsSiB/WhFVegLgb0kTV9kpnYPCxRH8wpHbsyBi54Sc5Fam55s2PriKyPG746VK1pOZViUMUK2QSQXh6cPrqD9fNGcluBnceZs/vh6vMf1CwQpZPXjdcFGqE8kKv6jfEwc+0vvmugzQnXlxzsK+tj5FR8SpWxCvG7HPXXG12mf7MA6edK2pU1pS9B6ADc5G8QfueAG8TD7S3iBbkz8WDcy6BUkBmAHp/ZGFtHZEO9iVVJgQ=="
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Content-Type:
+      - application/json
+      Vary:
+      - Accept-Encoding
+      Cache-Control:
+      - no-cache
+      X-Request-Id:
+      - 78101564-0236-462b-b3ea-813722140671
+      X-Runtime:
+      - '0.129219'
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Sun, 01 Apr 2018 17:09:59 GMT
+recorded_with: VCR 4.0.0
