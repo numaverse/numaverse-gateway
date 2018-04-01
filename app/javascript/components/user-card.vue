@@ -5,11 +5,10 @@
       .col-4
         img.img-fluid.rounded-circle(:src='account.avatar.medium')
       .col-8
-        a(:href='"/u/"+account.username') @{{ account.username }}
-        .mt-1.text-muted(v-if="account.location")
-          small 
-            i.fa.fa-globe.mr-1
-            {{ account.location }}
+        a.small(:href='"/u/"+account.username') @{{ account.username }}
+        .mt-1.text-muted.small(v-if="account.location")
+          i.fa.fa-globe.mr-1
+          {{ account.location }}
       .col-12.mt-3
         follow-button(:account="account")
         small {{ account.bio }}
@@ -36,7 +35,7 @@ export default {
   data() {
     return {
       updatedBalance: null
-    }
+    };
   },
   computed: {
     balance() {
@@ -54,7 +53,7 @@ export default {
       return `@${currentAccount.username}@${document.location.host}`;
     }
   }
-}
+};
 </script>
 
 <style lang="sass" scoped>

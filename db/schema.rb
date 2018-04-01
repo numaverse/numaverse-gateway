@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180329142031) do
+ActiveRecord::Schema.define(version: 20180401181603) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -121,6 +121,8 @@ ActiveRecord::Schema.define(version: 20180329142031) do
     t.integer "to_account_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "local_follow_id"
+    t.datetime "hidden_at"
   end
 
   create_table "federated_messages", force: :cascade do |t|
@@ -130,6 +132,7 @@ ActiveRecord::Schema.define(version: 20180329142031) do
     t.integer "local_message_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "hidden_at"
   end
 
   create_table "federated_versions", force: :cascade do |t|

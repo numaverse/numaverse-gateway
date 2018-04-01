@@ -33,4 +33,12 @@ RSpec.describe Follow, type: :model do
       expect(follow.batch_items.first).to be_confirmed
     end
   end
+
+  it 'creates a federated version of the follow' do
+    follow.batch
+    federated_follow = follow.reload.federated_follow
+    expect(federated_follow).to be_present
+    expect(federated_follow.from_account).to eql(follow.from_account.federated_account)
+    expect(federated_follow.to_account).to eql(follow.to_account.federated_account)
+  end
 end

@@ -145,6 +145,7 @@ class Message < ApplicationRecord
       local_account: account,
       federated_account: account.federated_account,
       local_message: self,
+      hidden_at: hidden_at,
     )
     model
   end

@@ -70,7 +70,7 @@
                 %a.nav-link{href: login_path} Get Started
 
     = content_for :hero
-    .container.mt-3
+    .mt-3{class: (content_for?(:container_fluid) ? 'container-fluid' : 'container')}
       = render 'layouts/messages'
       = yield
 

@@ -40,7 +40,7 @@
       .home-user(v-if="currentAccount")
         user-card(:account="currentAccount")
         
-    .col-md-6.col-xs-12
+    .col-md-5.col-xs-12
       div(v-if="currentAccount")
         common
         textarea.form-control(placeholder="Write something on the Ethereum blockchain", v-model="newMessage")
@@ -70,6 +70,8 @@
       p.small.text-muted(v-else) Public Feed:
       .mt-3
       messages-list(:messages="messages")
+    .col-md-4.d-none.d-md-block
+      p Federated Timeline goes here..
   
 </template>
 
@@ -91,7 +93,7 @@ export default {
       replyBody: "",
       isLoading: false,
       currentAccount: window.currentAccount,
-    }
+    };
   },
   methods: {
     async postMessage() {
@@ -101,7 +103,7 @@ export default {
       const data = {
         body: this.newMessage,
         json_schema: 'micro'
-      }
+      };
 
       const url = '/messages';
       const method = 'POST';
@@ -128,10 +130,10 @@ export default {
       
     },
     showNewMessage(message) {
-      this.messages.unshift(message)
+      this.messages.unshift(message);
     },
     userLink(username) {
-      return `/u/${username}`
+      return `/u/${username}`;
     },
     addMessage(message) {
       this.messages.unshift(message);
@@ -148,7 +150,7 @@ export default {
   mounted: async function () {
     this.messages = this._messages;
   }
-}
+};
 </script>
 
 <style scoped lang="scss">
