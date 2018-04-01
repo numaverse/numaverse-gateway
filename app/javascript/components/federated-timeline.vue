@@ -22,8 +22,8 @@ div
   div(v-else-if="!finished")
     div(v-observe-visibility="bottomVisible")
   div(v-if="!loading && followsCount === 0")
-    p You aren't following any federated accounts yet!
-    p 
+    p.small You aren't following any federated accounts yet!
+    p.small 
       | Looking for a federated account to follow? Check out
       a(href="/federated/accounts/search?handle=@gargron@mastodon.social")  @gargron@mastodon.social
       |  - the creator of Mastodon!

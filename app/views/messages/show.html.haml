@@ -3,9 +3,9 @@
 #js-message{ data: render(partial: 'show.json.jbuilder', locals: { message: @message, replies: @message.replies.order('created_at desc'), tips: @message.tips }) }
 
 .row.mt-3
-  .col-md-3.d-none.d-md-block
+  .d-none.d-md-block{class: @message.article? ? 'col-md-2' : 'col-md-3'}
 
-  .col-md-6.col-xs-12
+  .col-xs-12{class: @message.article? ? 'col-md-8' : 'col-md-6'}
     .space3
     %hr
     .space3
@@ -42,6 +42,15 @@
           
           %dt.col-5 Transaction
           %dd.col-7.text-truncate= link_to tx.hash_address, tx
+
+          - if ENV['CHAIN_ID'] == '1'
+            %dt.col-5 View on Etherscan
+            %dd.col-7.text-truncate= link_to tx.hash_address, "https://etherscan.io/tx/#{tx.hash_address}", target: :_blank
+          
+          - if ENV['CHAIN_ID'] == '3'
+            %dt.col-5 View on Etherscan
+            %dd.col-7.text-truncate= link_to tx.hash_address, "https://ropsten.etherscan.io/tx/#{tx.hash_address}", target: :_blank
+            
 
           %dt.col-5 IPFS File
           %dd.col-7.text-truncate

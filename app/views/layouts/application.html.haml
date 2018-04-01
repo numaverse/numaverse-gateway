@@ -45,8 +45,19 @@
           %ul.navbar-nav.mr-auto
             %li.nav-item
               %a.nav-link{href: all_path} All
-            %li.nav-item
-              %a.nav-link{:href => welcome_path} About
+            %li.nav-item.dropdown
+              %a.nav-link.dropdown-toggle{href: 'javascript:;', id: 'nav-about-dropdown', role: :button, data: { toggle: 'dropdown' }, aria: { haspopup: "true", expanded: "false" }}
+                About
+              .dropdown-menu.dropdown-menu-left{aria: { labelledby: 'nav-about-dropdown' }}
+                %a.dropdown-item{href: welcome_path} Welcome
+                - if ENV['CHAIN_ID'] == '1'
+                  %a.dropdown-item{href: "https://etherscan.io/address/0x0bec4767cd170242895d244d7ff73feaff6c2598", target: :_blank} Smart Contract
+                - if ENV['CHAIN_ID'] == '3'
+                  %a.dropdown-item{href: "https://etherscan.io/address/0x2096bbcb8814ef7af4f49ad793d3fc311f5cfba6", target: :_blank} Smart Contract
+                %a.dropdown-item{href: "https://numaverse.com/messages/4"} FAQ
+                %a.dropdown-item{href: "https://github.com/numaverse/numaverse-gateway", target: :_blank}
+                  %i.fa.fa-github
+                  Github
           %form.form-inline.my-2.my-lg-0{action: all_path, method: :get}
             %input.form-control.mr-sm-2{"aria-label" => "Search", :placeholder => "Search", :type => "search", name: :query}
             %button.btn.btn-outline-success.my-2.my-sm-0{:type => "submit"} Search
