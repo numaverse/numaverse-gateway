@@ -7,7 +7,7 @@ module NumaChain
         client = Networker.get_client
         contract = Contract.numa
         contract_account = Account.make_by_address(contract.hash_address)
-        min_block_num = contract_account.to_transactions.maximum('block_number') + 1
+        min_block_num = contract_account.to_transactions.maximum('block_number')
         max_block_num = client.eth_block_number['result'].from_hex
         (min_block_num..max_block_num).each do |block_number|
           Rails.logger.info("Syncing block ##{block_number}")
@@ -16,10 +16,16 @@ module NumaChain
           block['transactions'].each do |transaction|
             next if transaction['to'].blank? || transaction['to'].casecmp(contract.hash_address) != 0
             tx = Transaction.make_by_address(transaction['hash'], data: transaction)
-            res = JSON.parse(`node app/javascript/commands/decode-transaction #{tx.input}`)
-            hash = res['params'].first['value'][2..-1]
-            ipfs_hash = IpfsServer.data_to_hash(18, 32, hash)
-            process_batch(tx, ipfs_hash)
+            next if tx.transactable&.confirmed?
+            output, status = Open3.capture2('node', 'app/javascript/commands/decode-transaction.js', tx.input)
+            if status.exitstatus == 0
+              res = JSON.parse(output)
+              hash = res['params'].first['value'][2..-1]
+              ipfs_hash = IpfsServer.data_to_hash(18, 32, hash)
+              process_batch(tx, ipfs_hash)
+            else
+              Raven.capture_message("Error when decoding transaction input for hash: #{tx.hash_address}")
+            end
           end
         end
       end

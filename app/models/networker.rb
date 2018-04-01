@@ -11,8 +11,8 @@ class Networker
 
     def validate_signature(signature)
       if /^0x[a-zA-Z\d]{130}$/.match?(signature)
-        output = `node app/javascript/commands/validate-signature.js #{signature}`
-        if $?.exitstatus == 0
+        output, status = Open3.capture2('node',"#{Rails.root}/app/javascript/commands/validate-signature.js", signature)
+        if status.exitstatus == 0
           output.split("\n").first
         else
           raise ArgumentError.new("Error when validating signature: #{signature}. Message: #{output}")

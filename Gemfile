@@ -95,6 +95,7 @@ gem "sentry-raven"
 gem 'redis-namespace'
 gem 'redis-rails'
 gem 'sinatra', '~> 2.0.1'
+gem 'rails-html-sanitizer', '~> 1.0.4'
 group :test, :development do
   gem 'rspec-rails'
   gem 'factory_bot_rails'
@@ -124,6 +125,7 @@ group :test, :development do
   gem 'pronto'
   gem 'pronto-rubocop', require: false
   gem 'rails-controller-testing'
+  gem 'brakeman', require: false
 end
 
 group :test do
