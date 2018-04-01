@@ -43,6 +43,8 @@
     "wolfy87-eventemitter": "https://github.com/Olical/EventEmitter"
   },
   "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-plugin-vue": "^4.4.0",
     "webpack-dev-server": "2.9.7"
   }
 }
