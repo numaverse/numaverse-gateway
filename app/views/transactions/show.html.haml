@@ -75,3 +75,25 @@
       %dt.col-3 Block Hash
       %dd.col-9
         %code= @transaction.block_hash || "n/a"
+
+    - if @transaction.transactable&.is_a?(Batch)
+      - batch = @transaction.transactable
+      %hr.mt-3.mb-3
+      
+      %h4 Batch Details:
+
+      %dl.row
+        - batch.batch_items.each do |batch_item|
+          - batchable = batch_item.batchable
+          %dt.col-3= batchable.class
+          %dd.col-9
+            - if batchable.is_a?(Message)
+              = link_to batchable.title || batchable.body, message_path(batchable), class: 'text-truncate'
+            - elsif batchable.is_a?(Account)
+              'Account Update'
+            - elsif batchable.is_a?(Favorite)
+              = link_to "Favorite of post by @#{batchable.message.account.username}", message_path(batchable.message)
+            - elsif batchable.is_a?(Follow)
+              = link_to "Follow of @#{batchable.to_account.username}", account_path(batchable.to_account.username)
+            - else
+              = batchable.id
