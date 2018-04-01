@@ -115,7 +115,7 @@ $darkPurple: #574b90;
   cursor: pointer
   z-index: 10
   bottom: 20px
-  right: 20px
+  left: 20px
   background-color: $lightPeach
   color: $darkPurple
   border-radius: 5px
