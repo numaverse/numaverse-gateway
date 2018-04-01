@@ -13,7 +13,7 @@ class AccountsController < ApplicationController
   def update
     authorize! :manage, @account
     if @account.update(account_params)
-      @account.batch
+      @account.batch!
       render partial: 'accounts/show.json.jbuilder', locals: { account: @account } 
     else
       render json: { errors: @account.errors.full_messages }, status: :error

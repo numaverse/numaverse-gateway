@@ -1,6 +1,6 @@
 const decoder = require('abi-decoder');
 
-const NumaContract = require(`../../../build/contracts/StatelessNuma.json`);
+const NumaContract = require(`../../../build/contracts/Numa.json`);
 // const Logs = require('../../../tmp/contract-logs.json');
 
 decoder.addABI(NumaContract.abi);

@@ -7,7 +7,7 @@ Rails.application.configure do
   config.active_job.queue_adapter = :test
 
   # ActiveJob::Base.logger.level = 2
-  config.log_level = :warn
+  config.log_level = :error
 
   # Settings specified here will take precedence over those in config/application.rb.
 

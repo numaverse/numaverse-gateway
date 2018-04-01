@@ -13,13 +13,13 @@ FactoryBot.define do
     
     factory :confirmed_account, parent: :account_with_data do
       after(:create) do |account|
-        account.confirm
+        account.confirm!
       end
     end
 
     factory :transacted_account, parent: :account_with_data do
       after(:create) do |account|
-        account.transact
+        account.transact!
       end
     end
   end

@@ -29,8 +29,6 @@ describe NumaChain::Sync, :end_to_end do
 
     it 'can interact with a users contract' do
       account = make_eth_account
-      batch_contract = Contract.numa.eth_contract
-      expect(batch_contract.call.users(account.hash_address)).to be_blank
       account.batch
       post_batch_on_chain(account.fetch_batch)
 
@@ -98,7 +96,6 @@ describe NumaChain::Sync, :end_to_end do
       end
 
       it 'works with updates' do
-        messages_contract = Contract.numa.eth_contract
         account = make_eth_account
         message = create(:message, account: account)
         message.batch
@@ -124,7 +121,6 @@ describe NumaChain::Sync, :end_to_end do
 
     context 'articles' do
       it 'works for articles' do
-        messages_contract = Contract.numa.eth_contract
         account = make_eth_account
         message = create(:article, account: account)
 
@@ -144,7 +140,6 @@ describe NumaChain::Sync, :end_to_end do
       end
 
       it 'works with updates' do
-        messages_contract = Contract.numa.eth_contract
         account = make_eth_account
         message = create(:article, account: account)
         message.batch

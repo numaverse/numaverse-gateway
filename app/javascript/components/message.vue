@@ -245,6 +245,7 @@ export default {
       if (!this.messageOwnedBycurrentAccount()) {
         return true;
       }
+      const { messageData } = this;
       messageData.is_loading = true;
       try {
         const message = await $.ajax({

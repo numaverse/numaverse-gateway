@@ -5,7 +5,7 @@ module NumaChain
 
       def sync!
         client = Networker.get_client
-        contract = Contract.stateless_numa
+        contract = Contract.numa
         contract_account = Account.make_by_address(contract.hash_address)
         min_block_num = contract_account.to_transactions.maximum('block_number')
         max_block_num = client.eth_block_number['result'].from_hex
@@ -60,7 +60,7 @@ module NumaChain
         if Account.where.not(id: account.id).where("lower(username) = ?", username).first.present?
           username = "#{username}_#{SecureRandom.hex(5)}"
         end
-        account.confirm
+        account.confirm!
         account.update!(
           username: username,
           bio: json.summary,
@@ -162,7 +162,7 @@ module NumaChain
             transactable = sync_message(transactable, sender: sender, json: json, tx: tx, message_data: message_data)
           end
 
-          transactable.confirm
+          transactable.confirm!
           transactable.save
           Contract.numa.contract_events.create!(
             tx: tx,

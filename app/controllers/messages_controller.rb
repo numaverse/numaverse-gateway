@@ -7,7 +7,7 @@ class MessagesController < ApplicationController
 
   def create
     @message = current_account.messages.create(message_params)
-    @message.batch
+    @message.batch!
   end
 
   def attach_transaction
@@ -27,7 +27,7 @@ class MessagesController < ApplicationController
     if @message.article? || @message.micro?
       @message.assign_attributes(message_params)
     end
-    @message.batch
+    @message.batch!
 
     @message.save!
 
@@ -37,7 +37,7 @@ class MessagesController < ApplicationController
   def destroy
     authorize! :destroy, @message
     @message.hidden_at ||= DateTime.now
-    @message.batch
+    @message.batch!
 
     render 'create'
   end
@@ -48,7 +48,7 @@ class MessagesController < ApplicationController
       body: @message.body,
       json_schema: :micro
     )
-    @repost.batch
+    @repost.batch!
 
     @message = @repost
     render 'create'
@@ -61,7 +61,7 @@ class MessagesController < ApplicationController
       json_schema: :micro,
     )
 
-    @reply.batch
+    @reply.batch!
 
     @message = @reply
     render 'create'

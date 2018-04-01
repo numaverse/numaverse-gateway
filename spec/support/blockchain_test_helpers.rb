@@ -72,7 +72,7 @@ module BlockchainTestHelpers
   end
 
   def post_batch_on_chain(batch)
-    contract = Contract.stateless_numa
+    contract = Contract.numa
     return false unless contract
 
     batch.post_on_ipfs

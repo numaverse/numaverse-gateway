@@ -30,12 +30,12 @@ module.exports = {
     });
   },
   logGasEstimate: function(gas, fn) {
-    console.log(`Gas estimation for ${fn}: ${gas}`);
+    console.log(`Gas estimation for ${fn}: ${gas} wei`);
     const gasPrice = web3.toWei(1, 'gwei');
     const totalGas = gasPrice * gas;
     const ethCost = web3.fromWei(totalGas, 'ether');
     // console.log(web3.fromWei(totalGas, 'szabo'));
-    console.log(`Total gas cost: ${ethCost} ETH`);
+    console.log(`Total gas cost (@ 1 Gwei): ${ethCost} ETH`);
     console.log(`Estimated cost in $USD, assuming $1000 USD / ETH: $${(ethCost * 1000).toFixed(4)}`);
     console.log(`Estimated cost in $USD, assuming $600 USD / ETH: $${(ethCost * 600).toFixed(4)}`);
   }
