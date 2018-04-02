@@ -33,7 +33,7 @@ class ActivityPubController < ApplicationController
 
   def inbox_incoming_message
     if @signed_account = ActivityPub::Signature.verify_request(request)
-      ActivityPub::InboxFactoryJob.perform_later(@signed_account, @account.federated_account, request.raw_post)
+      ActivityPub::InboxFactoryJob.perform_later(@signed_account, @account.federated_account, request.raw_post.force_encoding('UTF-8'))
       head 200
     else
       render plain: "Invalid signature", status: 401
