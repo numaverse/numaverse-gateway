@@ -40,6 +40,8 @@ json.is_reposted current_account && message.reposts.where(account: current_accou
 json.is_replied current_account && message.replies.where(account: current_account).exists?
 json.is_tipped current_account && ((message.account == current_account) || message.tips.where(from_account: current_account).exists?)
 
+json.onebox message.onebox
+
 json.is_loading false
 
 if message.account

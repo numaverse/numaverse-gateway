@@ -1,9 +1,13 @@
 module WebText
   class << self
+    def uri_regex
+      URI::regexp(%w(http https ipfs))
+    end
+
     def format(string)
       string = string.gsub(/@(\w+)/) { username_link Regexp.last_match[1] }
       string = string.gsub(/([\$|#][a-zA-Z]+)/) { hashtag_link Regexp.last_match[1] }
-      string = string.gsub(URI::regexp(%w(http https ipfs))) { url_link Regexp.last_match }
+      string = string.gsub(uri_regex) { url_link Regexp.last_match }
       string
     end
 
@@ -17,7 +21,7 @@ module WebText
 
     def url_link(matches)
       url = matches[0]
-      "<a href='#{url}' target='_blank' class='web-text__url'>#{url.truncate(30)}</a>"
+      "<a href='#{url}' target='_blank' class='web-text__url'>#{url.truncate(80)}</a>"
     end
 
     def mentions(string)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180401181603) do
+ActiveRecord::Schema.define(version: 20180402020124) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -206,6 +206,7 @@ ActiveRecord::Schema.define(version: 20180401181603) do
     t.integer "json_schema"
     t.string "json_schema_other"
     t.string "aasm_state"
+    t.text "onebox"
     t.index ["account_id"], name: "index_messages_on_account_id"
   end
 

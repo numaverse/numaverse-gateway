@@ -16,7 +16,7 @@
         small
           a.text-dark(:href="'/messages/'+messageData.id"){{ moment(messageData.timestamp).fromNow() }}
   .card-body
-    .mt-2.mb-3
+    .mt-2
       .mt-2
 
       div(v-if="messageData.json_schema === 'micro'")
@@ -36,7 +36,8 @@
       div(v-else)
         .alert.alert-warning This message is improperly formatted.
         p.small {{ messageData.body }}
-      .mb-3
+
+      div.mt-2.onebox-container(v-if="messageData.onebox", v-html="messageData.onebox")
     .space
   .card-footer
     p.mb-0(v-if="messageData.repost")
@@ -275,4 +276,9 @@ export default {
     position: absolute;
     right: 10px;
     top: 5px;
+
+.onebox-container
+  max-width: 100%
+  iframe
+    max-width: 100%
 </style>

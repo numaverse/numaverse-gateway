@@ -95,6 +95,7 @@ gem 'redis-rails'
 gem 'sinatra', '~> 2.0.1'
 gem 'rails-html-sanitizer', '~> 1.0.4'
 gem 'rack-timeout'
+gem 'onebox'
 group :test, :development do
   gem 'rspec-rails'
   gem 'factory_bot_rails'

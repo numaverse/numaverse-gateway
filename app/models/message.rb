@@ -22,6 +22,7 @@ class Message < ApplicationRecord
   after_create :update_repost_count
   after_create :update_reply_count
   after_create :send_mentions
+  before_save :fetch_onebox
 
   enum json_schema: {
     other: 0,
@@ -148,5 +149,16 @@ class Message < ApplicationRecord
       hidden_at: hidden_at,
     )
     model
+  end
+
+  def fetch_onebox
+    return true unless micro?
+
+    matches = WebText.uri_regex.match(body)
+    return true if matches.to_s.blank?
+
+    preview = Onebox.preview(matches.to_s)
+    return true if preview.to_s.blank?
+    self.onebox = preview.to_s
   end
 end

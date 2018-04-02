@@ -53,4 +53,16 @@ RSpec.describe Message, type: :model do
       expect(fed_message.object_data).to hash_eql(message.activity_stream.object_data)
     end    
   end
+
+  describe 'onebox', :vcr do
+    it 'saves a onebox for the first URL in the message' do
+      message = create(:message, body: 'check this out - http://www.amazon.com/gp/product/B005T3GRNW/ref=s9_simh_gw_p147_d0_i2')
+      expect(message.onebox).not_to be_blank
+    end
+
+    it 'only saves the first URL' do
+      message = create(:message, body: 'first http://www.amazon.com/gp/product/B005T3GRNW/ref=s9_simh_gw_p147_d0_i2 second https://www.youtube.com/watch?v=DV1OqgHb3jc')
+      expect(message.onebox).not_to include('youtube')
+    end
+  end
 end

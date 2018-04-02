@@ -29,7 +29,7 @@ RSpec.configure do |config|
   config.include BlockchainTestHelpers
   config.include ActivityPubSpecHelpers
   config.include ActiveJob::TestHelper
-  config.full_backtrace = true
+  # config.full_backtrace = true
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :truncation
