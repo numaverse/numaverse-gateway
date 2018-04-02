@@ -21,12 +21,12 @@
         %dd.col-9= number_with_delimiter confirmations
 
       - if ENV['CHAIN_ID'] == '1'
-        %dt.col-5 View on Etherscan
-        %dd.col-7.text-truncate= link_to @transaction.hash_address, "https://etherscan.io/tx/#{@transaction.hash_address}", target: :_blank
+        %dt.col-3 View on Etherscan
+        %dd.col-9.text-truncate= link_to @transaction.hash_address, "https://etherscan.io/tx/#{@transaction.hash_address}", target: :_blank
       
       - if ENV['CHAIN_ID'] == '3'
-        %dt.col-5 View on Etherscan
-        %dd.col-7.text-truncate= link_to @transaction.hash_address, "https://ropsten.etherscan.io/tx/#{@transaction.hash_address}", target: :_blank
+        %dt.col-3 View on Etherscan
+        %dd.col-9.text-truncate= link_to @transaction.hash_address, "https://ropsten.etherscan.io/tx/#{@transaction.hash_address}", target: :_blank
 
       - if @transaction.message
         %dt.col-3 Message
