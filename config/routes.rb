@@ -29,7 +29,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :messages, except: [:index] do
+  resources :messages do
     member do
       post :repost
       post :reply

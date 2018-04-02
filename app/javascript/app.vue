@@ -69,7 +69,7 @@
       p.small.text-muted(v-if="isFollowingFeed") Messages from people you follow:
       p.small.text-muted(v-else) Public Feed:
       .mt-3
-      messages-list(:messages="messages")
+      messages-list(:messages="[]")
     .col-md-4.d-none.d-md-block(v-if="currentAccount")
       federated-timeline
   

@@ -8,15 +8,6 @@ class PagesController < ApplicationController
       redirect_to search_federated_accounts_path(handle: query)
       return
     end
-    @messages = Message.order('created_at desc')
-      .visible
-      .page(params[:page])
-    if current_account && request.path == "/" && has_follows
-      @messages = current_account.following_messages(relation: @messages)
-    end
-    if params[:query]
-      @messages = @messages.advanced_search(body: params[:query])
-    end
   end
 
   def new_message
@@ -35,11 +26,5 @@ class PagesController < ApplicationController
   end
   
   def welcome
-  end
-
-  private
-
-  def has_follows
-    current_account&.following_account_ids != [current_account.id]
   end
 end
