@@ -35,6 +35,7 @@
     - if current_account
       :javascript
         window.currentAccountAddress = "#{current_account.hash_address}";
+        window.currentAccountEmail = "#{current_account.email}";
         window.currentAccount = #{raw render partial: 'accounts/show.json.jbuilder', locals: { account: current_account }};
     %nav.navbar.navbar-expand-lg.navbar-light.bg-light
       .container

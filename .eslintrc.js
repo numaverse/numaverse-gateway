@@ -19,5 +19,6 @@ module.exports = {
     currentAccount: true,
     contractAddress: true,
     ipfsGatewayAddress: true,
+    currentAccountEmail: true,
   }
 };

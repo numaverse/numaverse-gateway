@@ -37,6 +37,13 @@ div
               | Location
               span.small.text-muted  Optional
             input.form-control(type="text", v-model="location", name="location", placeholder="i.e. 'Mars'")
+
+          .form-group
+            label(for="email") 
+              | Email Address
+              span.small.text-muted  Optional
+            input.form-control(type="email", v-model="email", name="email")
+            span.small.text-muted Your email is only used to send you notifications. It is never shared or posted on the blockchain.
           
           b-button(:block="true", variant="primary", size="lg", @click="sendUpdate") Update
 </template>
@@ -44,7 +51,6 @@ div
 <script>
 import vue2Dropzone from 'vue2-dropzone';
 import 'vue2-dropzone/dist/vue2Dropzone.css';
-import loginVue from '../login.vue';
 import batchEvents from '../../libs/batch-events';
 
 export default {
@@ -61,7 +67,8 @@ export default {
       display_name: currentAccount.display_name,
       bio: currentAccount.bio,
       location: currentAccount.location,
-    }
+      email: currentAccountEmail,
+    };
   },
   components: {
     vueDropzone: vue2Dropzone
@@ -72,12 +79,12 @@ export default {
   methods: {
     uploadSuccess(file, response) {
       console.log(file, response);
-      const json = JSON.parse(response)
+      const json = JSON.parse(response);
       this.avatar_ipfs_hash = json.ipfs_hash;
       const { dropzone } = this.$refs.dropzone;
       while (dropzone.files.length > 1) {
         dropzone.removeFile(dropzone.files[0]);
-      };
+      }
       this.alertSuccess("Successfully uploaded a new image.");
     },
     uploadError(file, data, xhr) {
@@ -96,8 +103,9 @@ export default {
         bio: this.bio,
         location: this.location,
         avatar_ipfs_hash: this.avatar_ipfs_hash,
-        display_name: this.display_name
-      }
+        display_name: this.display_name,
+        email: this.email,
+      };
 
       try {
         const response = await $.ajax({
@@ -107,7 +115,7 @@ export default {
           data: { account: data },
         });
         batchEvents.triggerNewBatch();
-        this.alertSuccess("Your account has been updated!")
+        this.alertSuccess("Your account has been updated!");
         document.location = "/";
       } catch (error) {
         console.log(error);
@@ -119,7 +127,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style lang="sass" scoped>

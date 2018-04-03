@@ -37,7 +37,7 @@ class AccountsController < ApplicationController
   private
 
   def account_params
-    params.require(:account).permit(:username, :display_name, :bio, :location, :avatar_ipfs_hash)
+    params.require(:account).permit(:username, :display_name, :bio, :location, :avatar_ipfs_hash, :email)
   end
 
   def load_account
