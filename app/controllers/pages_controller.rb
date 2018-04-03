@@ -1,5 +1,5 @@
 class PagesController < ApplicationController
-  before_action :authenticate_user!, only: [:new_message]
+  before_action :authenticate_user!, only: [:new_message, :upload_avatar]
 
   def home
     query = params[:query]
@@ -15,14 +15,15 @@ class PagesController < ApplicationController
   end
 
   def upload_avatar
-    if params[:file].size > 2.megabytes
-      size = helpers.number_to_human_size(params[:file].size)
-      message = "Sorry, profile pictures must be less than 2 MB. The file you uploaded was #{size}."
-      render json: { message: message }, status: 422
-    else
-      ipfs_hash = IpfsServer.add(params[:file].tempfile).hashcode
-      render json: { ipfs_hash: ipfs_hash, gateway_url: helpers.ipfs_image_url(ipfs_hash) }
-    end
+    ipfs_hash = IpfsServer.add(params[:file].tempfile).hashcode
+    render json: { ipfs_hash: ipfs_hash, gateway_url: helpers.ipfs_image_url(ipfs_hash) }
+    # if params[:file].size > 2.megabytes
+    #   size = helpers.number_to_human_size(params[:file].size)
+    #   message = "Sorry, profile pictures must be less than 2 MB. The file you uploaded was #{size}."
+    #   render json: { message: message }, status: 422
+    # else
+      
+    # end
   end
   
   def welcome
