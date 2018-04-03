@@ -15,6 +15,10 @@ Rails.application.routes.draw do
       post :transfer
       post :attach_transaction
     end
+    collection do
+      get :settings
+      post :update_settings
+    end
   end
 
   resources :follows do

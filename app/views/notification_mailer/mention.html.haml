@@ -1,10 +1,10 @@
 %p
   Hello
-  == @#{@user.username},
+  == @#{@account.username},
 
 %p
-  - if @message.user
-    = link_to "@#{@message.user.username}", user_url(@message.user.username)
+  - if @message.account
+    = link_to "@#{@message.account.username}", account_url(@message.account.username)
   - else
     Someone
   mentioned you in a message on 

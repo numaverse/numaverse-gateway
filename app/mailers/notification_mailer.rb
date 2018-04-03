@@ -5,10 +5,10 @@ class NotificationMailer < ApplicationMailer
   #
   #   en.notification_mailer.mention.subject
   #
-  def mention(user, message)
-    @user = user
+  def mention(account, message)
+    @account = account
     @message = message
 
-    mail to: @user.email, subject: "You've been mentioned in a message on Numa"
+    mail to: @account.email, subject: "You've been mentioned in a message on Numa"
   end
 end

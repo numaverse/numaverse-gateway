@@ -1,6 +1,6 @@
 class AccountsController < ApplicationController
   before_action :authenticate_user!, except: [:show]
-  before_action :load_account, except: [:federated_account]
+  before_action :load_account, except: [:settings, :update_settings]
 
   def show
     @messages = @account.messages.visible.order('created_at desc').page(params[:page])
@@ -22,6 +22,16 @@ class AccountsController < ApplicationController
 
   def edit
     authorize! :manage, @account
+  end
+
+  def settings
+    @account = current_account
+  end
+
+  def update_settings
+    @account = current_account
+    @account.update(params.require(:account).permit(:email))
+    redirect_to settings_accounts_path, notice: "Your settings have been updated successfully."
   end
 
   private

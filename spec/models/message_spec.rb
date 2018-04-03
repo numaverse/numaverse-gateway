@@ -65,4 +65,14 @@ RSpec.describe Message, type: :model do
       expect(message.onebox).not_to include('youtube')
     end
   end
+
+  describe '#send_mentions' do
+    let(:mentioned) { create(:account, email: 'hank@numaverse.com', username: 'hank') }
+    it 'sends an email to an account when their handle is mentioned' do
+      delivery = double
+      expect(delivery).to receive(:deliver_later).with(no_args)
+      expect(NotificationMailer).to receive(:mention).with(eql(mentioned), instance_of(Message)).and_return(delivery)
+      message = create(:message, body: "hello @hank!")
+    end    
+  end
 end

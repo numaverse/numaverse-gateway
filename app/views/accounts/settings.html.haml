@@ -1,0 +1,22 @@
+.row
+  .col-2.d-none.d-md-block
+  .col-md-8.col-xs-12
+    %h2 Settings
+
+    .space3
+    %hr
+    .space3
+
+    %h4 Notifications
+
+    = form_for @account, method: :post, url: update_settings_accounts_path do |form|
+      .form-group
+        = form.label :email
+        = form.email_field :email, class: 'form-control'
+      %span.small.text-muted 
+        This is only used to send you notifications for new messages. 
+        Your email will never be posted publicly or on the blockchain.
+    
+      .space3
+
+      = form.submit "Save", class: 'btn btn-block btn-lg btn-success'

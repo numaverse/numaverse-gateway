@@ -104,7 +104,9 @@ class Message < ApplicationRecord
   def send_mentions
     usernames = WebText.mentions(body)
     usernames.each do |username|
-      # TODO
+      account = Account.find_by(username: username)
+      next if account.blank? || account&.email.blank?
+      NotificationMailer.mention(account, self).deliver_later
     end
   end
 
