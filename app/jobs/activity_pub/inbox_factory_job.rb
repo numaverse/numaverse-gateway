@@ -25,8 +25,10 @@ class ActivityPub::InboxFactoryJob < ApplicationJob
       return true
     end
     # ap json
-    message = from_account.messages.new
-    message.object_data = json.object
-    message.save!
+    Federated::Message.transaction do
+      message = from_account.messages.find_or_initialize_by(federated_id: json['object']['id'])
+      message.object_data = json.object
+      message.save!
+    end
   end
 end
