@@ -10,9 +10,9 @@
     .row
       .col-2
         img.img-fluid.img-thumbnail(:src='messageData.account.avatar.thumb', :alt='messageData.sender')
-      .col
+      .col-10
         h5.mt-1.mb-0.text-truncate.username 
-          a.text-dark(:href="'/u/'+messageData.account.username") @{{ messageData.account.username }}
+          a.text-dark(:href="'/u/'+messageData.account.username_or_address") {{ messageData.account.username_or_address }}
         small
           a.text-dark(:href="'/messages/'+messageData.id"){{ moment(messageData.timestamp).fromNow() }}
   .card-body
@@ -40,7 +40,7 @@
       div(v-if="messageData.reply_to")
         p.small.text-muted.mt-3
           a.text-muted(:href="'/messages/'+messageData.reply_to.id")
-            | Replying to a message from @{{ messageData.reply_to.account.username }}
+            | Replying to a message from {{ messageData.reply_to.account.username_or_address }}
         .card
           .card-body
             .row
@@ -48,7 +48,7 @@
                 img.img-fluid.img-thumbnail(:src='messageData.reply_to.account.avatar.thumb', :alt='messageData.reply_to.sender')
               .col-10
                 h6.mt-0.mb-0.text-truncate.username 
-                  a.text-dark(:href="'/u/'+messageData.reply_to.account.username") @{{ messageData.reply_to.account.username }}
+                  a.text-dark(:href="'/u/'+messageData.reply_to.account.username_or_address") {{ messageData.reply_to.account.username_or_address }}
                 small
                   a.text-dark(:href="'/messages/'+messageData.reply_to.id"){{ moment(messageData.reply_to.timestamp).fromNow() }}
               .col-12.mt-2
@@ -57,7 +57,7 @@
       div(v-if="messageData.repost")
         p.small.text-muted.mt-3
           a.text-muted(:href="'/messages/'+messageData.repost.id")
-            | Reposting a message from @{{ messageData.repost.account.username }}
+            | Reposting a message from {{ messageData.repost.account.username_or_address }}
         .card
           .card-body
             .row
@@ -65,7 +65,7 @@
                 img.img-fluid.img-thumbnail(:src='messageData.repost.account.avatar.thumb', :alt='messageData.repost.sender')
               .col-10
                 h6.mt-0.mb-0.text-truncate.username 
-                  a.text-dark(:href="'/u/'+messageData.repost.account.username") @{{ messageData.repost.account.username }}
+                  a.text-dark(:href="'/u/'+messageData.repost.account.username_or_address") {{ messageData.repost.account.username_or_address }}
                 small
                   a.text-dark(:href="'/messages/'+messageData.repost.id"){{ moment(messageData.repost.timestamp).fromNow() }}
               .col-12.mt-2
