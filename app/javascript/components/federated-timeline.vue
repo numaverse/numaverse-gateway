@@ -10,9 +10,9 @@ div
             img.img-fluid.img-thumbnail(:src='message.account.avatar_url', :alt='message.account.username')
           .col-10
             h5.mt-1.mb-0.text-truncate.username 
-              a.text-dark(:href="'/u/'+message.account.username") @{{ message.account.username }}
+              a.text-dark(:href="message.account.federated_id", target="_blank") @{{ message.account.username }}
             small
-              a.text-dark(:href="message.object_data.url"){{ moment(message.published).fromNow() }}
+              a.text-dark(:href="message.object_data.url", target="_blank"){{ moment(message.published).fromNow() }}
       .card-body
         .small.message-body(v-html="message.object_data.content")
   div(v-if="loading")
