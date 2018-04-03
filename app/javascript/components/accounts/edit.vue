@@ -108,7 +108,7 @@ export default {
       };
 
       try {
-        const response = await $.ajax({
+        await $.ajax({
           url: `/u/${this.account.hash_address}`,
           method: 'put',
           dataType: 'json',
