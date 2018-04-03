@@ -1,25 +1,27 @@
 <template lang="jade">
-.message-body(v-html="message.sanitized_body")
-//- .message-body
-//-   {{ message.body }}
+div
+  div(v-if="!message.repost")
+    div(v-if="message.json_schema === 'micro'")
+      .message-body(v-html="message.sanitized_body")
+
+    div(v-else-if="message.json_schema === 'article'")
+      h5
+        a.text-dark(:href="'/messages/'+message.id")
+          {{ message.title }}
+      
+      p.small.font-italic {{ message.tldr }}
+
+      p.small
+        a(:href="'/messages/'+message.id")
+          | Read More
 </template>
 
 <script>
-// import linkify from 'linkifyjs';
-// import hashtag from 'linkifyjs/plugins/hashtag';
-// hashtag(linkify);
-// import html from 'linkifyjs/html';
-
 export default {
   props: [
     'message'
   ],
-  computed: {
-    linkifiedBody() {
-      // return html(this.message.body);
-    }
-  }
-}
+};
 </script>
 
 

@@ -18,24 +18,7 @@
   .card-body
     .mt-2
       .mt-2
-
-      div(v-if="messageData.json_schema === 'micro'")
-        message-body(:message="message", v-if="!messageData.repost")
-
-      div(v-else-if="messageData.json_schema === 'article'")
-        h5
-          a.text-dark(:href="'/messages/'+messageData.id")
-            {{ messageData.title }}
-        
-        p.small.font-italic {{ messageData.tldr }}
-
-        p.small
-          a(:href="'/messages/'+messageData.id")
-            | Read More
-
-      div(v-else)
-        .alert.alert-warning This message is improperly formatted.
-        p.small {{ messageData.body }}
+      message-body(:message="message")
 
       div(v-if="messageData.reply_to")
         p.small.text-muted.mt-3
@@ -52,7 +35,8 @@
                 small
                   a.text-dark(:href="'/messages/'+messageData.reply_to.id"){{ moment(messageData.reply_to.timestamp).fromNow() }}
               .col-12.mt-2
-                small(v-html="message.reply_to.sanitized_body")
+                small
+                  message-body(:message="message.reply_to")
 
       div(v-if="messageData.repost")
         p.small.text-muted.mt-3
@@ -69,7 +53,8 @@
                 small
                   a.text-dark(:href="'/messages/'+messageData.repost.id"){{ moment(messageData.repost.timestamp).fromNow() }}
               .col-12.mt-2
-                small(v-html="message.repost.sanitized_body")
+                small
+                  message-body(:message="message.repost")
 
 
       div.mt-2.onebox-container(v-if="messageData.onebox", v-html="messageData.onebox")
