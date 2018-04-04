@@ -88,5 +88,14 @@ RSpec.describe Message, type: :model do
 
       create(:message, reply_to: original)
     end
+
+    it 'sends a notification for reposts' do
+      delivery = double
+      expect(delivery).to receive(:deliver_later).with(no_args)
+
+      expect(NotificationMailer).to receive(:repost).with(instance_of(Message)).and_return(delivery)
+
+      create(:message, repost: original)
+    end
   end
 end

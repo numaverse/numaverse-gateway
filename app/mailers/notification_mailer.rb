@@ -36,4 +36,12 @@ class NotificationMailer < ApplicationMailer
 
     mail to: @to.email, subject: "@#{@from.username} just replied to your message on Numa!"
   end
+
+  def repost(repost)
+    @to = repost.repost.account
+    @from = repost.account
+    @repost = repost
+
+    mail to: @to.email, subject: "@#{@from.username} just reposted your message on Numa!"
+  end
 end

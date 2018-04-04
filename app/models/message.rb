@@ -169,5 +169,8 @@ class Message < ApplicationRecord
     if reply_to_id.present? && reply_to.account.email.present?
       NotificationMailer.reply(self).deliver_later
     end
+    if repost_id.present? && repost.account.email.present?
+      NotificationMailer.repost(self).deliver_later
+    end
   end
 end

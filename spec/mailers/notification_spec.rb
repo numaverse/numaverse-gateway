@@ -63,4 +63,16 @@ RSpec.describe NotificationMailer, type: :mailer do
     end
   end
 
+  describe '#repost' do
+    let(:notified) { create(:account_with_data) }
+    let(:original) { create(:message, account: notified) }
+    let(:repost) { create(:message, repost: original) }
+
+    it 'sends a notification' do
+      mail = NotificationMailer.repost(repost)
+      expect(mail.to).to eql([notified.email])
+      expect(mail.body.encoded).to match(original.body)
+    end
+  end
+
 end

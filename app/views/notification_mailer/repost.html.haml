@@ -4,17 +4,17 @@
 
 %p
   = link_to "@#{@from.username}", account_url(@from.username)
-  just favorited your message.
+  just reposted to your message.
 
 %p
   Here's your original message:
 
-%p= @message.body
+%p= @repost.repost.body
 
 %p
-  = link_to "Click here", message_url(@message)
+  = link_to "Click here", message_url(@repost)
   to join the conversation.
 
 %p
   Numa is a distributed social network, built on blockchain technology. You're receiving this email because you signed up
-  for Numa, and someone favorited your message.
+  for Numa, and someone reposted your message.
