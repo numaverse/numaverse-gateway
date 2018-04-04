@@ -79,7 +79,7 @@ describe Networker do
   describe 'eth_usd' do
     it 'fetches the ticker from coinmarketcap', :vcr do
       price = Networker.eth_usd
-      expect(price).to eql(415.163)
+      expect(price).to eql(415.16)
     end
   end
 end

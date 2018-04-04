@@ -28,7 +28,8 @@ class Networker
       Rails.cache.fetch(ETH_USD_CACHE_KEY, expires_in: 10.minutes) do
         url = 'https://api.coinmarketcap.com/v1/ticker/ethereum/'
         response = HTTParty.get(url)
-        JSON.parse(response.body)[0]['price_usd']
+        price = JSON.parse(response.body)[0]['price_usd'].to_f
+        (price * 100.0).round / 100.0
       end.to_f
     end
   end

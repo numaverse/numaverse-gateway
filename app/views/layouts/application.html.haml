@@ -32,6 +32,7 @@
       window.currentAccount = null;
       window.currentAccountAddress = null;
       window.chainID = parseInt("#{ENV['CHAIN_ID'] || 1337}");
+      window.ETH_USD = parseFloat("#{eth_usd}");
     - if current_account
       :javascript
         window.currentAccountAddress = "#{current_account.hash_address}";
@@ -59,6 +60,9 @@
                 %a.dropdown-item{href: "https://github.com/numaverse/numaverse-gateway", target: :_blank}
                   %i.fa.fa-github
                   Github
+          %ul.navbar-nav.mr-3
+            %li.nav-item
+              %span.nav-link= "$#{eth_usd} ETH/USD"
           %form.form-inline.my-2.my-lg-0{action: all_path, method: :get}
             %input.form-control.mr-sm-2{"aria-label" => "Search", :placeholder => "Search", :type => "search", name: :query}
             %button.btn.btn-outline-success.my-2.my-sm-0{:type => "submit"} Search
