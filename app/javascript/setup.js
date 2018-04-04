@@ -1,4 +1,4 @@
-import "babel-polyfill"
+import "babel-polyfill";
 
 import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
@@ -22,8 +22,8 @@ Vue.component('messages-list', MessagesList);
 import SendNumaButton from './components/send-numa-button.vue';
 Vue.component('send-numa-button', SendNumaButton);
 
-import SendNumaModal from './components/send-numa-modal.vue';
-Vue.component('send-numa-modal', SendNumaModal);
+import SendTipModal from './components/send-tip-modal.vue';
+Vue.component('send-tip-modal', SendTipModal);
 
 import MessageBody from './components/message-body.vue';
 Vue.component('message-body', MessageBody);

@@ -52,7 +52,7 @@ MoneyRails.configure do |config|
     :priority            => 1,
     :iso_code            => "NUMA",
     :name                => "Numa",
-    :symbol              => "𝝂",
+    :symbol              => "Ξ",
     :symbol_first        => true,
     :subunit             => "Nuwei",
     :subunit_to_unit     => 1000000000000000000,

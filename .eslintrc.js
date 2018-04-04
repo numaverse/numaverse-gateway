@@ -20,5 +20,6 @@ module.exports = {
     contractAddress: true,
     ipfsGatewayAddress: true,
     currentAccountEmail: true,
+    ETH_USD: true,
   }
 };

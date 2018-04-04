@@ -78,15 +78,14 @@
           span(v-if="messageData.repost_count > 0")
             {{ messageData.repost_count }}
 
-        //- i.ml-3.mr-1.fa.fa-refresh(title="Tip", v-bind:class="{pointer: (currentAccount && !messageData.is_tipped)}", v-on:click="repost(message)", :id="'repost-message-'+messageData.id")
-        //- a.text-muted.ml-3.mr-1(title="Tip", v-bind:class="{pointer: (currentAccount && !messageData.is_tipped)}", v-on:click="tip", :id="'tip-message-'+messageData.id")
-        //-   {{ messageData.tips }}
+        a.text-muted.ml-3.mr-1(title="Tip", v-bind:class="{pointer: (currentAccount && !messageData.is_tipped)}", v-on:click="tip", :id="'tip-message-'+messageData.id")
+          {{ messageData.tips }}
       
       b-tooltip(:target="'reply-message-'+messageData.id", title="Reply")
       b-tooltip(:target="'favorite-message-'+messageData.id", title="Favorite")
       span(v-if="message.json_schema === 'micro'")
         b-tooltip(:target="'repost-message-'+messageData.id", title="Repost")
-      //- b-tooltip(:target="'tip-message-'+messageData.id", :title="messageData.is_tipped ? 'Tips' : 'Send a Tip'")
+      b-tooltip(:target="'tip-message-'+messageData.id", :title="messageData.is_tipped ? 'Tips' : 'Send a Tip'")
 
       div(v-if="currentAccount")
         b-modal(:ref="'reply-modal-'+messageData.id", title="Reply", @ok="submitReply", ok-title="Reply")
@@ -109,10 +108,10 @@
 
           p To confirm that you want to hide this message, click "Hide".
       
-      //- send-numa-modal(ref="modal",
-      //-                 :account="messageData.account",
-      //-                 :message="messageData"
-      //-                 @sent="handleTipResponse")
+      send-tip-modal(ref="sendTip",
+                      :account="messageData.account",
+                      :message="messageData"
+                      @sent="handleTipResponse")
 </template>
 
 <script>
@@ -239,7 +238,7 @@ export default {
       if (!this.currentAccount || this.messageData.is_tipped || this.messageOwnedBycurrentAccount()) {
         return true;
       }
-      this.$refs.modal.modal.show();
+      this.$refs.sendTip.show();
     },
     handleTipResponse(response) {
       console.log(response);

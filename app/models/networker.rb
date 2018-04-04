@@ -29,7 +29,7 @@ class Networker
         url = 'https://api.coinmarketcap.com/v1/ticker/ethereum/'
         response = HTTParty.get(url)
         price = JSON.parse(response.body)[0]['price_usd'].to_f
-        (price * 100.0).round / 100.0
+        '%.2f' % price
       end.to_f
     end
   end
