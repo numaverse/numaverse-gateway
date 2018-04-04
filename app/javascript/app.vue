@@ -69,7 +69,7 @@
       p.small.text-muted(v-if="isFollowingFeed") Messages from people you follow:
       p.small.text-muted(v-else) Public Feed:
       .mt-3
-      messages-list(:messages="[]")
+      messages-list(:messages="[]", ref="messagesList")
     .col-md-4.d-none.d-md-block(v-if="currentAccount")
       federated-timeline
   
@@ -133,14 +133,11 @@ export default {
       this.isLoading = false;
       
     },
-    showNewMessage(message) {
-      this.messages.unshift(message);
-    },
     userLink(username) {
       return `/u/${username}`;
     },
     addMessage(message) {
-      this.messages.unshift(message);
+      this.$refs.messagesList.messagesList.unshift(message);
     },
     canSendNewMessage() {
       return !this.isLoading && (this.newMessage.length <= 280);
