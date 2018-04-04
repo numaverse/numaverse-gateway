@@ -30,6 +30,7 @@ json.json_schema_other message.json_schema_other
 json.aasm_state message.aasm_state
 
 json.tips humanized_money_with_symbol message.tips_sum
+json.tips_sum message.tips_sum.to_f
 
 # json.avatar (message.user || User.new).avatar.url(:medium)
 json.sender message.account.address

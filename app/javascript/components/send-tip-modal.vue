@@ -120,7 +120,7 @@ export default {
               dataType: 'json',
             });
 
-            const { tx_url } = response.tip;
+            const { tx_url } = response;
             let link = `<a href="${tx_url}">View Transaction</a>`;
             this.alertSuccess("Your tip has been sent.", { text: link });
             this.$emit('response', response);

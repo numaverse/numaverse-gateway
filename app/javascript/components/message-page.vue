@@ -62,7 +62,7 @@ div
           ul(v-for="tip in tips")
             li
               a(:href="'/transactions/'+tip.tx_id")
-                {{ tip.humanized_value }} 
+                ${{ tipsAmount(tip.value) }} 
               | from 
               span(v-if="tip.username")
                 a(:href="'/u/'+tip.username")  @{{ tip.username }}
@@ -82,18 +82,21 @@ export default {
       replies: [],
       moment: moment,
       tips: []
-    }
+    };
   },
   methods: {
     newReply(reply) {
-      this.replies.unshift(reply)
+      this.replies.unshift(reply);
+    },
+    tipsAmount(value) {
+      return (value * ETH_USD).toFixed(2);
     }
   },
   mounted() {
     this.replies = this.message.replies;
     this.tips = this.message.tips_list;
   }
-}
+};
 </script>
 
 <style lang="sass" scoped>

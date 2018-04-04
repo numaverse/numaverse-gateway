@@ -5,7 +5,7 @@ class Batch < ApplicationRecord
   has_many :batch_items
 
   def batchables
-    batch_items.batched.order('batched_at asc').collect(&:batchable)
+    batch_items.batched.order('batched_at asc').collect(&:batchable).compact
   end
 
   def activity_stream

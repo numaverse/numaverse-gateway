@@ -19,8 +19,9 @@ if defined?(tips)
   json.tips_list tips do |tip|
     json.sender tip.from_account.hash_address
     json.tx_id tip.tx_id
-    json.username tip.from_account.try(:user).try(:username)
+    json.username tip.from_account.try(:username)
     json.humanized_value humanized_money_with_symbol tip.value
+    json.value tip.value.to_f
   end
 end
 

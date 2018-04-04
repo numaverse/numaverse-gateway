@@ -99,9 +99,7 @@ class MessagesController < ApplicationController
     tip.batch
     tip.save!
 
-    @message = from_message
-
-    render 'create'
+    render json: { tx_url: transaction_path(tx) }
   end
 
   private

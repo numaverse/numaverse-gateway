@@ -21,5 +21,7 @@ module.exports = {
     ipfsGatewayAddress: true,
     currentAccountEmail: true,
     ETH_USD: true,
+    chainID: true,
+    web3: true,
   }
 };

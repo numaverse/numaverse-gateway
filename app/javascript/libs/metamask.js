@@ -1,12 +1,12 @@
 import Web3 from 'web3';
 import EventEmitter from 'wolfy87-eventemitter';
-import NumaContract from '../../../build/contracts/Numa.json'
+import NumaContract from '../../../build/contracts/Numa.json';
 import contract from 'truffle-contract';
 
 const enabled = typeof web3 !== 'undefined';
 let web3js = null;
 let coinbase = null;
-let chainName = 'Development'
+let chainName = 'Development';
 let emitter = null;
 if (enabled) {
   web3js = new Web3(web3.currentProvider);
@@ -16,7 +16,7 @@ if (enabled) {
 
   coinbase = web3js.eth.accounts[0];
 
-  const coinbaseTimer = setInterval(() => {
+  setInterval(() => {
     const account = web3js.eth.accounts[0];
     if (coinbase != account) {
       coinbase = account;
@@ -45,6 +45,9 @@ export default {
   },
   chainName: chainName,
   coinbase: coinbase,
+  convertToUSD(value) {
+    return (value * ETH_USD).toFixed(2);
+  },
   async contract() {
     if (!contractAddress) {
       return null;
@@ -54,4 +57,4 @@ export default {
     const instance = await _contract.at(contractAddress);
     return instance;
   }
-}
+};

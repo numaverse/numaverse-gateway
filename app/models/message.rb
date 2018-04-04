@@ -134,7 +134,7 @@ class Message < ApplicationRecord
   end
 
   def tips_sum
-    tips.inject(0) {|sum, tip| tip.value}
+    tips.inject(0) {|sum, tip| sum + tip.value}
   end
 
   def sender_account

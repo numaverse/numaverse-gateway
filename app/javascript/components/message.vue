@@ -55,7 +55,7 @@
             {{ messageData.repost_count }}
 
         a.text-muted.ml-3.mr-1(title="Tip", v-bind:class="{pointer: (currentAccount && !messageData.is_tipped)}", v-on:click="tip", :id="'tip-message-'+messageData.id")
-          {{ messageData.tips }}
+          ${{ tipAmount(messageData.tips_sum) }}
       
       b-tooltip(:target="'reply-message-'+messageData.id", title="Reply")
       b-tooltip(:target="'favorite-message-'+messageData.id", title="Favorite")
