@@ -9,6 +9,7 @@ FactoryBot.define do
       display_name { Faker::Name.name }
       bio { Faker::Company.catch_phrase }
       avatar_ipfs_hash { 'Qm' + SecureRandom.hex(22) }
+      email { Faker::Internet.email }
     end
     
     factory :confirmed_account, parent: :account_with_data do

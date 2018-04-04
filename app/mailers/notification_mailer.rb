@@ -19,4 +19,13 @@ class NotificationMailer < ApplicationMailer
   
     mail to: @to.email, subject: "You just got a tip on Numa!"
   end
+
+  def favorite(favorite)
+    @favorite = favorite
+    @message = favorite.message
+    @from = favorite.account
+    @to = @message.account
+
+    mail to: @to.email, subject: "@#{@from.username} just favorited your message on Numa!"
+  end
 end

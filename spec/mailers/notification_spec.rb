@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe NotificationMailer, type: :mailer do
   describe "mention" do
-    let(:account) { create(:account, email: 'hank@numaverse.com') }
+    let(:account) { create(:account_with_data) }
     let(:message) { create(:message) }
     let(:mail) { NotificationMailer.mention(account, message) }
 
@@ -20,7 +20,7 @@ RSpec.describe NotificationMailer, type: :mailer do
   describe 'tip', :vcr do
     it 'sends a tip' do
       from = account_with_balance
-      to = create(:account, email: 'hank@numaverse.com')
+      to = create(:account_with_data)
       original = create(:message, account: to)
       tx = transfer_eth(from, original.account, 100)
 
@@ -35,7 +35,18 @@ RSpec.describe NotificationMailer, type: :mailer do
 
       mail = NotificationMailer.tip(tip)
 
+      expect(mail.to).to eql([to.email])
       expect(mail.body.encoded).to match(from_message.body)
+    end
+  end
+
+  describe 'favorite' do
+    it 'sends a notification' do
+      favorite = create(:favorite, account: create(:account_with_data))
+      mail = NotificationMailer.favorite(favorite)
+      
+      expect(mail.to).to eql([favorite.message.account.email])
+      expect(mail.body.encoded).to match(favorite.message.body)
     end
   end
 
