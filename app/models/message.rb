@@ -21,7 +21,7 @@ class Message < ApplicationRecord
   before_validation :sanitize_html, if: :body_changed?
   after_create :update_repost_count
   after_create :update_reply_count
-  after_create :send_mentions
+  after_create :send_notifications
   before_save :fetch_onebox
 
   enum json_schema: {
@@ -162,5 +162,12 @@ class Message < ApplicationRecord
     preview = Onebox.preview(matches.to_s)
     return true if preview.to_s.blank?
     self.onebox = preview.to_s
+  end
+
+  def send_notifications
+    send_mentions
+    if reply_to_id.present? && reply_to.account.email.present?
+      NotificationMailer.reply(self).deliver_later
+    end
   end
 end

@@ -50,4 +50,17 @@ RSpec.describe NotificationMailer, type: :mailer do
     end
   end
 
+  describe '#reply' do
+    let(:notified) { create(:account_with_data) }
+    let(:original) { create(:message, account: notified) }
+    let(:reply) { create(:message, reply_to: original) }
+
+    it 'sends a notification' do
+      mail = NotificationMailer.reply(reply)
+      expect(mail.to).to eql([notified.email])
+      expect(mail.body.encoded).to match(reply.body)
+      expect(mail.body.encoded).to match(original.body)
+    end
+  end
+
 end

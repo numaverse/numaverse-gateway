@@ -66,13 +66,27 @@ RSpec.describe Message, type: :model do
     end
   end
 
-  describe '#send_mentions' do
-    let(:mentioned) { create(:account, email: 'hank@numaverse.com', username: 'hank') }
-    it 'sends an email to an account when their handle is mentioned' do
+  describe 'notifications' do
+    let(:notified) { create(:account_with_data) }
+    let(:original) { create(:message, account: notified) }
+
+    describe '#send_mentions' do
+      
+      it 'sends an email to an account when their handle is mentioned' do
+        delivery = double
+        expect(delivery).to receive(:deliver_later).with(no_args)
+        expect(NotificationMailer).to receive(:mention).with(eql(notified), instance_of(Message)).and_return(delivery)
+        message = create(:message, body: "hello @#{notified.username}!")
+      end    
+    end
+
+    it 'sends a notification for replies' do
       delivery = double
       expect(delivery).to receive(:deliver_later).with(no_args)
-      expect(NotificationMailer).to receive(:mention).with(eql(mentioned), instance_of(Message)).and_return(delivery)
-      message = create(:message, body: "hello @hank!")
-    end    
+
+      expect(NotificationMailer).to receive(:reply).with(instance_of(Message)).and_return(delivery)
+
+      create(:message, reply_to: original)
+    end
   end
 end

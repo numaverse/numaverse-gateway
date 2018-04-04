@@ -28,4 +28,12 @@ class NotificationMailer < ApplicationMailer
 
     mail to: @to.email, subject: "@#{@from.username} just favorited your message on Numa!"
   end
+
+  def reply(reply)
+    @to = reply.reply_to.account
+    @from = reply.account
+    @reply = reply
+
+    mail to: @to.email, subject: "@#{@from.username} just replied to your message on Numa!"
+  end
 end
