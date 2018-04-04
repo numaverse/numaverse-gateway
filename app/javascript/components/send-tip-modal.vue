@@ -1,5 +1,5 @@
 <template lang="jade">
-b-modal(ref="modal", title="Send NUMA", @ok="submitSend", ok-title="Send")
+b-modal(ref="modal", title="Tip ETH", @ok="submitSend", ok-title="Send", :ok-disabled="pendingTransaction")
   alerts(ref='alerts')
   dl.row
     dt.col-6 To:
@@ -47,6 +47,10 @@ b-modal(ref="modal", title="Send NUMA", @ok="submitSend", ok-title="Send")
   div
     p Send a message with your tip (optional):
     textarea.form-control(v-model="body", placeholder="Awesome post!")
+
+  div(v-if="pendingTransaction")
+    .alert.alert-primary.mt-3
+      p Please approve of this transaction to continue.
         
 </template>
 
@@ -97,6 +101,7 @@ export default {
         return true;
       }
       const amountETH = web3js.toWei(this.amountETH.toFixed(18));
+      this.pendingTransaction = true;
       web3js.eth.sendTransaction({
         from: currentAccount.address, 
         to: this.message.account.address, 
@@ -105,6 +110,7 @@ export default {
         if (error) {
           console.log(error);
           this.alertError("Sorry, there was an error when sending your transaction");
+          this.pendingTransaction = false;
         } else {
           const data = {
             message_id: this.message.id,
@@ -120,11 +126,13 @@ export default {
               dataType: 'json',
             });
 
+            this.pendingTransaction = false;
             const { tx_url } = response;
             let link = `<a href="${tx_url}">View Transaction</a>`;
             this.alertSuccess("Your tip has been sent.", { text: link });
             this.$emit('response', response);
             this.$emit('sent', response);
+            this.$refs.modal.hide();
           } catch (error) {
             console.log(error);
             this.alertError("Your tip was sent, but we were unable to save it on the server.");

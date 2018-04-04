@@ -38,7 +38,6 @@ module NumaChain
         begin
           json = IpfsServer.cat(ipfs_hash)
           json.orderedItems.each do |item|
-            ap item
             if item.type == "Person"
               process_account(tx, item)
             elsif ['Note','Article'].include?(item.type)
