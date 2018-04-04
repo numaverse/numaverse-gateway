@@ -6,6 +6,7 @@ json.messages @messages do |message|
     json.username account.username
     json.url account.object_data['url']
     json.avatar_url account.avatar_url || default_avatar(size: :thumb)
+    json.federated_id account.federated_id
   end
   json.id message.id
 end

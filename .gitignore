@@ -35,3 +35,5 @@
 .ganache-seed.txt
 
 /ganache-data/*
+
+/bin/push.sh
