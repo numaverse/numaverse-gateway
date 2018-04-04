@@ -77,10 +77,10 @@ class MessagesController < ApplicationController
 
   def tip
     tx = Transaction.make_by_address(params[:tx_hash])
-    if (tx.from_account != current_account) || (tx.to_account != @message.account)
-      render json: { error: 'Invalid Tip' }, status: :unprocessable_entity
-      return
-    end
+    # if (tx.from_account != current_account) || (tx.to_account != @message.account)
+    #   render json: { error: 'Invalid Tip' }, status: :unprocessable_entity
+    #   return
+    # end
     from_message = nil
     if params[:body].present?
       from_message = current_account.messages.create(
