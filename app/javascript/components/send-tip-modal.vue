@@ -55,7 +55,7 @@ b-modal(ref="modal", title="Send NUMA", @ok="submitSend", ok-title="Send")
 // import metamask from 'metamask';
 import metamask from '../libs/metamask';
 import {BigNumber} from 'bignumber.js';
-const web3js = metamask.web3js;
+const { web3js } = metamask;
 
 export default {
   props: [
@@ -70,6 +70,7 @@ export default {
       balance: null,
       loadingBalance: false,
       body: "",
+      pendingTransaction: false,
     };
   },
   methods: {
@@ -77,7 +78,7 @@ export default {
       const modal = this.$refs.modal;
       this.loadingBalance = true;
       modal.show();
-      metamask.web3js.eth.getBalance(currentAccount.address, (error, balance) => {
+      metamask.web3js.eth.getBalance(this.currentAccount.address, (error, balance) => {
         if (error) {
           this.alertError("Sorry, we couldn't get your current balance.");
         } else {
@@ -91,40 +92,48 @@ export default {
       return this.currentAccount && this.currentAccount.id != this.account.id;
     },
     async submitSend(evt) {
+      evt.preventDefault();
       if (!this.isNumber() || this.scaleTooLarge() || this.amountTooHigh()) {
-        evt.preventDefault();
         return true;
       }
-      const nuweiAmount = web3js.toWei(this.sendAmount);
-      const data = {
-        amount: nuweiAmount
-      };
-      if (this.message) {
-        data.message_id = this.message.id;
-      }
+      const amountETH = web3js.toWei(this.amountETH.toFixed(18));
+      web3js.eth.sendTransaction({
+        from: currentAccount.address, 
+        to: this.message.account.address, 
+        value: amountETH,
+      }, async (error, txHash) => {
+        if (error) {
+          console.log(error);
+          this.alertError("Sorry, there was an error when sending your transaction");
+        } else {
+          const data = {
+            message_id: this.message.id,
+            tx_hash: txHash,
+            body: this.body,
+          };
 
-      const request = $.ajax({
-        url: `/messages/${this.account.address}/transfer`,
-        type: 'post',
-        data: data,
-        dataType: 'json',
-      });
+          try {
+            const response = await $.ajax({
+              url: `/messages/${this.message.id}/tip`,
+              type: 'post',
+              data: data,
+              dataType: 'json',
+            });
 
-      request.done((response) => {
-        this.account.balance = response.to_user.balance;
-        const tx = response.transaction;
-        this.$notify({
-          group: 'send-numa',
-          title: "Transaction Sent",
-          type: 'success',
-          text: `Sent ${tx.humanized_value} to @${this.account.username}.<br/><a href="${tx.url}">${tx.hash}</a>`
-        });
-        this.$emit('response', response);
-        this.$emit('sent', response);
+            const { tx_url } = response.tip;
+            let link = `<a href="${tx_url}">View Transaction</a>`;
+            this.alertSuccess("Your tip has been sent.", { text: link });
+            this.$emit('response', response);
+            this.$emit('sent', response);
+          } catch (error) {
+            console.log(error);
+            this.alertError("Your tip was sent, but we were unable to save it on the server.");
+          }
+        }
       });
     },
     scaleTooLarge() {
-      return (this.amount.toString().split('.')[1] || '').length > 18;
+      return false; //return (this.amountETH.toString().split('.')[1] || '').length > 18;
     },
     amountTooHigh() {
       return this.remainingBalance < new BigNumber(0);

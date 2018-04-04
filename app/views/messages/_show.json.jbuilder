@@ -23,5 +23,16 @@ if defined?(tips)
     json.humanized_value humanized_money_with_symbol tip.value
   end
 end
-# json.tag_names @message.tag_names
-# json.tag_options Gutentag::Tag.select(:name).all.collect(&:name)
+
+if message.tip.present?
+  tip = message.tip
+  json.tip do
+    json.tx_id tip.tx_id
+    json.humanized_value humanized_money_with_symbol tip.value
+    json.tx_url transaction_path(tip.tx)
+    json.value tip.value.to_f
+    json.to_message do
+      json.partial! 'messages/message.json.jbuilder', message: tip.to_message
+    end
+  end
+end

@@ -21,40 +21,16 @@
       message-body(:message="message")
 
       div(v-if="messageData.reply_to")
-        p.small.text-muted.mt-3
-          a.text-muted(:href="'/messages/'+messageData.reply_to.id")
-            | Replying to a message from {{ messageData.reply_to.account.username_or_address }}
-        .card
-          .card-body
-            .row
-              .col-2
-                img.img-fluid.img-thumbnail(:src='messageData.reply_to.account.avatar.thumb', :alt='messageData.reply_to.sender')
-              .col-10
-                h6.mt-0.mb-0.text-truncate.username 
-                  a.text-dark(:href="'/u/'+messageData.reply_to.account.username") {{ messageData.reply_to.account.username_or_address }}
-                small
-                  a.text-dark(:href="'/messages/'+messageData.reply_to.id"){{ moment(messageData.reply_to.timestamp).fromNow() }}
-              .col-12.mt-2
-                small
-                  message-body(:message="message.reply_to")
+        mini-message(:message="messageData.reply_to")
+          | Replying to a message from {{ messageData.reply_to.account.username_or_address }}
 
       div(v-if="messageData.repost")
-        p.small.text-muted.mt-3
-          a.text-muted(:href="'/messages/'+messageData.repost.id")
-            | Reposting a message from {{ messageData.repost.account.username_or_address }}
-        .card
-          .card-body
-            .row
-              .col-2
-                img.img-fluid.img-thumbnail(:src='messageData.repost.account.avatar.thumb', :alt='messageData.repost.sender')
-              .col-10
-                h6.mt-0.mb-0.text-truncate.username 
-                  a.text-dark(:href="'/u/'+messageData.repost.account.username") {{ messageData.repost.account.username_or_address }}
-                small
-                  a.text-dark(:href="'/messages/'+messageData.repost.id"){{ moment(messageData.repost.timestamp).fromNow() }}
-              .col-12.mt-2
-                small
-                  message-body(:message="message.repost")
+        mini-message(:message="messageData.repost")
+          | Reposting a message from {{ messageData.repost.account.username_or_address }}
+
+      div(v-if="messageData.tip")
+        mini-message(:message="messageData.tip.to_message")
+          | Tipping ${{ tipAmount(messageData.tip.value) }} to {{ messageData.tip.to_message.account.username_or_address }}
 
 
       div.mt-2.onebox-container(v-if="messageData.onebox", v-html="messageData.onebox")
@@ -117,6 +93,7 @@
 <script>
 import moment from 'moment';
 import batchEvents from '../libs/batch-events';
+import MiniMessage from './mini-message.vue';
 
 export default {
   props: {
@@ -127,6 +104,9 @@ export default {
       type: Boolean,
       default: true
     }
+  },
+  components: {
+    'mini-message': MiniMessage,
   },
   data() {
     return {
@@ -270,6 +250,9 @@ export default {
         this.alertError('Sorry, an error occurred while trying to hide this message.');
       }
       messageData.is_loading = false;
+    },
+    tipAmount(value) {
+      return (value * ETH_USD).toFixed(2);
     }
   }
 };
