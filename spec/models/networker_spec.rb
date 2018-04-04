@@ -75,4 +75,11 @@ describe Networker do
       expect(Networker.validate_signature(sig)).not_to eql("0x061ab91505a9e3d993cc27e7bc22a77b26a456bd")
     end
   end
+
+  describe 'eth_usd' do
+    it 'fetches the ticker from coinmarketcap', :vcr do
+      price = Networker.eth_usd
+      expect(price).to eql(415.163)
+    end
+  end
 end

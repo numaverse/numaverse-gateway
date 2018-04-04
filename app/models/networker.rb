@@ -1,4 +1,6 @@
 class Networker
+  ETH_USD_CACHE_KEY = 'eth_usd_cache_key'
+
   class << self
 
     def get_client
@@ -20,6 +22,14 @@ class Networker
       else
         raise ArgumentError.new("Tried to validate an invalid signature: #{signature}")
       end
+    end
+
+    def eth_usd
+      Rails.cache.fetch(ETH_USD_CACHE_KEY, expires_in: 10.minutes) do
+        url = 'https://api.coinmarketcap.com/v1/ticker/ethereum/'
+        response = HTTParty.get(url)
+        JSON.parse(response.body)[0]['price_usd']
+      end.to_f
     end
   end
 end
