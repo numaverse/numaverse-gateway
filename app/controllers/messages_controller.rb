@@ -1,6 +1,6 @@
 class MessagesController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
-  before_action :set_message, only: [:show, :edit, :update, :destroy, :repost, :reply, :attach_transaction]
+  before_action :set_message, only: [:show, :edit, :update, :destroy, :repost, :reply, :attach_transaction, :tip]
 
   def new
   end
@@ -72,6 +72,34 @@ class MessagesController < ApplicationController
     @reply.batch!
 
     @message = @reply
+    render 'create'
+  end
+
+  def tip
+    tx = Transaction.make_by_address(params[:tx_hash])
+    if (tx.from_account != current_account) || (tx.to_account != @message.account)
+      render json: { error: 'Invalid Tip' }, status: :unprocessable_entity
+      return
+    end
+    from_message = nil
+    if params[:body].present?
+      from_message = current_account.messages.create(
+        body: params[:body],
+        json_schema: :micro,
+      )
+    end
+    tip = current_account.from_tips.build(
+      to_account: @message.account,
+      tx_id: tx.id,
+      tx_hash: tx.hash_address,
+      to_message: @message,
+      message: from_message,
+    )
+    tip.batch
+    tip.save!
+
+    @message = from_message
+
     render 'create'
   end
 

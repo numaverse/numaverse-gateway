@@ -38,6 +38,7 @@ Rails.application.routes.draw do
       post :repost
       post :reply
       post :attach_transaction
+      post :tip
     end
   end
 

@@ -113,6 +113,21 @@ RSpec.describe MessagesController, type: :controller do
         expect(original.replies.first.body).to eql('its a reply')
       end
     end
+
+    describe 'tip' do
+      let(:account) { account_with_balance }
+      it 'makes a tip' do
+        original = create(:message)
+        tx = transfer_eth(account, original.account, 100)
+        post :tip, params: { id: original.id, body: 'nice post', tx_hash: tx.hash_address, format: :json }
+        expect(original.reload.tips.size).to eql(1)
+        tip = original.tips.first
+        expect(tip.message.body).to eql('nice post')
+        expect(tip.message.account).to eql(account)
+        expect(tip.value).to eql(tx.value)
+        expect(tip.batch_items.batched.count).to eql(1)
+      end
+    end
   end
 
   context 'as non-owner' do
