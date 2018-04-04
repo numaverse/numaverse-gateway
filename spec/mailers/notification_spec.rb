@@ -36,8 +36,6 @@ RSpec.describe NotificationMailer, type: :mailer do
       mail = NotificationMailer.tip(tip)
 
       expect(mail.body.encoded).to match(from_message.body)
-
-      fail 'its ok'
     end
   end
 

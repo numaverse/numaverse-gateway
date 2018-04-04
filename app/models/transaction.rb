@@ -10,6 +10,7 @@ class Transaction < ApplicationRecord
   belongs_to :from_account, class_name: 'Account', foreign_key: 'from_account_id', optional: true
 
   after_create :update_account_balances
+  after_create :fetch_transaction_data, if: :pending?
   after_save :update_balances_if_new_block
 
   monetize :value_nuwei
@@ -68,11 +69,19 @@ class Transaction < ApplicationRecord
   end
 
   def confirmations
-    return nil if block_number.blank?
+    return nil if pending?
     Block.eth_block_number - block_number
   end
 
   def get_blockchain_info
     Hashie::Mash.new(Networker.get_client.eth_get_transaction_by_hash(hash_address)['result'])
+  end
+
+  def pending?
+    block_number.blank?
+  end
+
+  def fetch_transaction_data
+    FetchTransactionDataJob.set(perform_in: 10.seconds).perform_later(self)
   end
 end
