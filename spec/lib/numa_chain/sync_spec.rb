@@ -220,56 +220,31 @@ describe NumaChain::Sync, :end_to_end do
   end
 
   context 'tips' do
-    skip 'works with tips' do
-      from = account_with_balance(balance: 10000)
-      to = create(:account)
-      tip = from.tip(to, 500)
 
-      post_message_on_chain(tip)
+    it 'works with tips that point to a message' do
+      from = account_with_balance
+      original = create(:message)
+      tx = transfer_eth(from, original.account, 100)
 
-      expect(tip.ipfs_hash).to be_present
-
+      from_message = create(:message, account: from)
+      from_message.batch!
+      tip = from.from_tips.build(
+        to_account: original.account,
+        tx_id: tx.id,
+        tx_hash: tx.hash_address,
+        to_message: original,
+        message: from_message,
+      )
+      tip.batch!
+      
+      post_batch_on_chain(from.fetch_batch)
       NumaChain::Sync.sync!
 
       tip.reload
-      expect(tip.foreign_id).to eql(0)
+      expect(tip).to be_confirmed
 
-      to = create(:account)
-      tip = from.tip(to, 250)
-
-      post_message_on_chain(tip)
-      
-      old_tip = tip
-      tip.destroy
-
-      NumaChain::Sync.sync!
-
-      tip = Tip.find_by(ipfs_hash: old_tip.ipfs_hash)
-      expect(tip).to be_present
-      expect(tip.tx).to eql(old_tip.tx)
-      expect(tip.from_account).to eql(from)
-      expect(tip.to_account).to eql(to)
-    end
-
-    skip 'works with tips that point to a message' do
-      from = account_with_balance(balance: 10000)
-      to = create(:account)
-      message = create(:message, account: to)
-      tip = from.tip(to, 250, message)
-
-      post_message_on_chain(tip)
-      
-      old_tip = tip
-      tip.destroy
-
-      NumaChain::Sync.sync!
-
-      tip = Tip.find_by(ipfs_hash: old_tip.ipfs_hash)
-      expect(tip).to be_present
-      expect(tip.tx).to eql(old_tip.tx)
-      expect(tip.from_account).to eql(from)
-      expect(tip.to_account).to eql(to)
-      expect(tip.to_message).to eql(message)
+      from_message.reload
+      expect(from_message).to be_confirmed
     end
   end
 

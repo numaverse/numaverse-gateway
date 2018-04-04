@@ -126,6 +126,7 @@ RSpec.describe MessagesController, type: :controller do
         expect(tip.message.account).to eql(account)
         expect(tip.value).to eql(tx.value)
         expect(tip.batch_items.batched.count).to eql(1)
+        expect(tip.message.batch_items.batched.count).to eql(1)
       end
     end
   end

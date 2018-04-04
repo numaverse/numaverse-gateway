@@ -38,6 +38,7 @@ module NumaChain
         begin
           json = IpfsServer.cat(ipfs_hash)
           json.orderedItems.each do |item|
+            ap item
             if item.type == "Person"
               process_account(tx, item)
             elsif ['Note','Article'].include?(item.type)
@@ -46,6 +47,8 @@ module NumaChain
               process_follow(tx, item)
             elsif item.type == "Like"
               process_favorite(tx, item)
+            elsif item.type == 'Tip'
+              process_tip(tx, item)
             end
           end
           begin
@@ -119,6 +122,35 @@ module NumaChain
         )
         favorite.confirm!
         favorite
+      end
+
+      def process_tip(tx, json)
+        tip = tx.from_account.from_tips.find_or_initialize_by(uuid: json.uuid)
+        to_account = Account.make_by_address(json.object.address)
+        tip_tx = Transaction.make_by_address(json.transactionHash)
+        if tip_tx.from_account != tx.from_account || tip_tx.to_account != to_account
+          Rails.logger.error "Attempted to process invalid tip."
+          return
+        end
+
+        tip_attrs = {
+          tx: tip_tx,
+          to_account: to_account,
+          tx_hash: tx.hash_address
+        }
+        if json.toMessage.present?
+          message = Message.find_by(uuid: json.toMessage.uuid, account: to_account)
+          tip_attrs[:to_message] = message if message.present?
+        end
+        if json.fromMessage.present?
+          message = Message.find_by(uuid: json.toMessage.uuid, account: tx.from_account)
+          if message.present?
+            tip_attrs[:from_account] = message 
+            message.confirm!
+          end
+        end
+        tip.update(tip_attrs)
+        tip.confirm!
       end
 
       # def sync_tip(tip, sender: , json: , tx: , message_data: )

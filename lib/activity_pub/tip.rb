@@ -12,6 +12,9 @@ module ActivityPub
       if object.to_message.present?
         data[:toMessage] = ActivityPub::Message.new(object.to_message).object_data
       end
+      if object.message.present?
+        data[:fromMessage] = ActivityPub::Message.new(object.message).object_data
+      end
       data
     end
   end

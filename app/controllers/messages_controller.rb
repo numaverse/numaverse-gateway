@@ -87,6 +87,7 @@ class MessagesController < ApplicationController
         body: params[:body],
         json_schema: :micro,
       )
+      from_message.batch!
     end
     tip = current_account.from_tips.build(
       to_account: @message.account,
