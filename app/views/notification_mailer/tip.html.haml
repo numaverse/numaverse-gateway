@@ -4,8 +4,7 @@
 
 %p
   = link_to "@#{@from.username}", account_url(@from.username)
-  just sent you a tip worth
-  = "$#{@tip.value_usd}!"
+  just sent you a tip with Ethereum!
 
 - if @tip.message
   %p
