@@ -92,7 +92,9 @@ export default {
       let message = "Sorry, there was an error when uploading a new avatar.";
       try {
         message = JSON.parse(data).message;
-      } catch (error) { }
+      } catch (error) { 
+        console.log(error);
+      }
       this.$refs.dropzone.removeAllFiles();
       this.alertError(message);
     },

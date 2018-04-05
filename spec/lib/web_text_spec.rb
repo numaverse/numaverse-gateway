@@ -5,6 +5,7 @@ describe WebText do
     formatted = WebText.format("hello @hank")
     # ap formatted
     expect(formatted).to include("<a href='/u/hank' class='web-text__username'>@hank</a>")
+    expect(formatted).to eql("hello <a href='/u/hank' class='web-text__username'>@hank</a>")
   end
 
   it 'replaces hashtags' do
@@ -15,6 +16,25 @@ describe WebText do
   it 'doesnt replace odd colons' do
     formatted = WebText.format('hey office:')
     expect(formatted).to eql('hey office:')
+  end
+
+  it 'works at the start' do
+    formatted = WebText.format("@hank")
+    expect(formatted).to eql("<a href='/u/hank' class='web-text__username'>@hank</a>")
+  end
+
+  it 'works with punctuation after mention' do
+    formatted = WebText.format("hey @hank!")
+    expect(formatted).to eql("hey <a href='/u/hank' class='web-text__username'>@hank</a>!")
+
+    formatted = WebText.format("hey @hank?")
+    expect(formatted).to eql("hey <a href='/u/hank' class='web-text__username'>@hank</a>?")
+
+    formatted = WebText.format("hey @hank.")
+    expect(formatted).to eql("hey <a href='/u/hank' class='web-text__username'>@hank</a>.")
+
+    formatted = WebText.format("hey @hank,")
+    expect(formatted).to eql("hey <a href='/u/hank' class='web-text__username'>@hank</a>,")
   end
 
   it 'replaces cashtags' do
@@ -45,5 +65,10 @@ describe WebText do
     expect(usernames).to include('hank')
     expect(usernames).to include('thomas')
     expect(usernames).to include('jess')
+  end
+
+  it 'works with fediverse handles' do
+    formatted = WebText.format("im @hstove@mastodon.social")
+    expect(formatted).to include("<a href='/federated/accounts/search?handle=@hstove@mastodon.social' class='web-text__username'>@hstove@mastodon.social</a>")
   end
 end
