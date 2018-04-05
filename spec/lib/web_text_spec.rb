@@ -71,4 +71,9 @@ describe WebText do
     formatted = WebText.format("im @hstove@mastodon.social")
     expect(formatted).to include("<a href='/federated/accounts/search?handle=@hstove@mastodon.social' class='web-text__username'>@hstove@mastodon.social</a>")
   end
+
+  it 'works with more complex fediverse handles' do
+    formatted = WebText.format("im @haru.i_n0731@mst-dn.y-zu.org")
+    expect(formatted).to include("<a href='/federated/accounts/search?handle=@haru.i_n0731@mst-dn.y-zu.org' class='web-text__username'>@haru.i_n0731@mst-dn.y-zu.org</a>")
+  end
 end

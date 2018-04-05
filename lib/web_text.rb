@@ -5,7 +5,7 @@ module WebText
     end
 
     def format(string)
-      string = string.gsub(/@(\w+@\w+\.\w+)/) { fediverse_link Regexp.last_match[1] }
+      string = string.gsub(/@([\w|_|\.]+@[\w|\-]+\.[\w|\-]+[\.[\w]+]+)/) { fediverse_link Regexp.last_match[1] }
       string = string.gsub(/(\s|^)@(\w+)([!\.\s\?,]|$)/) { username_link $~ }
       string = string.gsub(/([\$|#][a-zA-Z]+)/) { hashtag_link Regexp.last_match[1] }
       string = string.gsub(uri_regex) { url_link Regexp.last_match }
