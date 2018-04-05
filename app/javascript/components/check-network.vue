@@ -38,6 +38,9 @@ export default {
       if (this.networkResult && this.currentNetworkId !== this.chainID) {
         this.wrongNetwork = true;
         this.$refs.modal.show();
+      } else {
+        this.wrongNetwork = false;
+        this.$refs.modal.hide();
       }
     });
   },
