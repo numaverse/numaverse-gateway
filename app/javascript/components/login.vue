@@ -18,6 +18,9 @@
                 .text-center.mt-1
                 p(v-if="pendingSignature")
                   | We sent a request for you to sign a message - please confirm to continue.
+                p(v-else-if="loadingLogIn")
+                  i.fa.fa-spinner.fa-pulse.mr-2
+                  | Logging you in...
                 p(v-else)
                   | When you click 'sign in', we'll ask you to sign
                   | a message, which allows us to verify that you own this address.
@@ -74,6 +77,7 @@ export default {
       enabled: metamask.enabled,
       locked: false,
       pendingSignature: false,
+      loadingLogIn: false,
     };
   },
   mounted() {
@@ -86,6 +90,7 @@ export default {
       this.address = address;
     },
     async uploadSignature(signature) {
+      this.loadingLogIn = true;
       try {
         const account = await $.ajax({
           url: '/auth/sign',
@@ -108,18 +113,19 @@ export default {
         console.log(error);
         this.alertError('Sorry, we were unable to verify your signature.');
       }
+      this.loadingLogIn = false;
     },
     sign() {
       console.log('signing');
       this.pendingSignature = true;
       metamask.sign('numa', (error, signature) => {
+        this.pendingSignature = false;
         if (error) {
           console.log(error);
           this.alertError("We were unable to get your signature.");
         } else {
           this.uploadSignature(signature);
         }
-        this.pendingSignature = false;
       });
     }
   },
